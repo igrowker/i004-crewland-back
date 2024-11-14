@@ -11,6 +11,8 @@ async function bootstrap() {
   //convierte todo json q llega desde el fornt en JS
   app.use(bodyParser.json());
 
-  await app.listen(dotenvOptions.PORT, () => console.log(dotenvOptions.PORT));
+  await app.listen(dotenvOptions.PORT, () =>
+    console.log(`Servidor funcionando en el puerto : ${dotenvOptions.PORT}`),
+  );
 }
 bootstrap();
