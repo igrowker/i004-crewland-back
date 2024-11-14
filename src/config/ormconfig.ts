@@ -19,3 +19,5 @@ export const dataSourceOptions: DataSourceOptions = {
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);
+
+// entities: [ Usuario , Aplicacion , Comentario , Pago , Proyecto, Habilidad, Categoria ],
