@@ -1,5 +1,13 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
+<<<<<<< HEAD
 import dotEnvOptions from './dotenv.config';
+=======
+import { config as dotenvConfig } from 'dotenv';
+import Publication from '../modules/publications/entities/publication.entity';
+import { Chat } from '../modules/chat/entities/chat.entity';
+
+dotenvConfig({ path: '.env' });
+>>>>>>> 5cfad56f887ff36479147a0ea20f3a18d7a30921
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -11,7 +19,7 @@ export const dataSourceOptions: DataSourceOptions = {
   dropSchema: true,
   synchronize: true,
   logging: false,
-  entities: [],
+  entities: [Publication, Chat],
   subscribers: [],
   migrations: [],
 };
