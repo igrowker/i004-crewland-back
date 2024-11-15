@@ -1,6 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { config as dotenvConfig } from 'dotenv';
-import Publication from 'src/modules/publications/entities/publication.entity';
+import Publication from '../modules/publications/entities/publication.entity';
+import { Chat } from '../modules/chat/entities/chat.entity';
 
 dotenvConfig({ path: '.env' });
 
@@ -14,7 +15,7 @@ export const dataSourceOptions: DataSourceOptions = {
   dropSchema: true,
   synchronize: true,
   logging: false,
-  entities: [Publication],
+  entities: [Publication, Chat],
   subscribers: [],
   migrations: [],
 };
