@@ -12,9 +12,9 @@ export const dataSourceOptions: DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   dropSchema: true,
-  synchronize: true,
+  synchronize: true, //esto para q se sinconice auto y no tener q correr el comando de migracion
   logging: false,
-  entities: [],
+  entities: [], //aca hay q poner el nombre de la entidad
   subscribers: [],
   migrations: [],
 };
