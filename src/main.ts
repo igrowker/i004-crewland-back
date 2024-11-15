@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+// import { WinstonLoggerService } from './middleware/logger/logger.middleware';
 import dotenvOptions from './config/dotenv.config';
 import * as bodyParser from 'body-parser';
-// import { WinstonLoggerService } from './middleware/logger/logger.middleware'; // Asegúrate de que la ruta sea correcta
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
