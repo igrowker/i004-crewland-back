@@ -1,14 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-// import { WinstonLoggerService } from './middleware/logger/logger.middleware';
+import { WinstonLoggerService } from './middleware/logger/logger.middleware';
 import dotenvOptions from './config/dotenv.config';
 import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // const logger = app.get(WinstonLoggerService);
+  const logger = app.get(WinstonLoggerService);
 
-  // app.useLogger(logger);
+  app.useLogger(logger);
   app.enableCors();
   app.use(bodyParser.json());
 

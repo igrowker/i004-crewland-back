@@ -1,25 +1,25 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-<<<<<<< HEAD
-import dotEnvOptions from './dotenv.config';
-=======
-import { config as dotenvConfig } from 'dotenv';
-import Publication from '../modules/publications/entities/publication.entity';
 import { Chat } from '../modules/chat/entities/chat.entity';
+import { Publication } from '../modules/publications/entities/publication.entity';
+import User from '../modules/users/entities/user.entity';
 
-dotenvConfig({ path: '.env' });
->>>>>>> 5cfad56f887ff36479147a0ea20f3a18d7a30921
+import dotEnvOptions from './dotenv.config';
+
+console.log('DB_HOST:', dotEnvOptions.DB_HOST);
+console.log('DB_PORT:', dotEnvOptions.DB_PORT);
+console.log('DB_USERNAME:', dotEnvOptions.DB_USERNAME);
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  port: parseInt(process.env.DB_PORT || '5432', 10),
-  host: process.env.DB_HOST || dotEnvOptions.DB_HOST,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  port: parseInt(dotEnvOptions.DB_PORT || '5432', 10),
+  host: dotEnvOptions.DB_HOST,
+  username: dotEnvOptions.DB_USERNAME,
+  password: dotEnvOptions.DB_PASSWORD,
+  database: dotEnvOptions.DB_NAME,
   dropSchema: true,
   synchronize: true,
   logging: false,
-  entities: [Publication, Chat],
+  entities: [Publication, Chat, User],
   subscribers: [],
   migrations: [],
 };
