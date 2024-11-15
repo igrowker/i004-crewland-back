@@ -3,6 +3,7 @@ import { config as dotenvConfig } from 'dotenv';
 
 dotenvConfig({ path: '.env' });
 
+//en ves de process.env capaz seria importando las variables del dotenvConfig.ts
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   port: parseInt(process.env.DB_PORT || '5432', 10),
