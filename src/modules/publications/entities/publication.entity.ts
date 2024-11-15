@@ -8,7 +8,7 @@ import {
 @Entity({
   name: 'publications',
 })
-export default class Publication {
+export class Publication {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -30,3 +30,5 @@ export default class Publication {
   @CreateDateColumn()
   dateCreation: Date;
 }
+
+export default Publication;

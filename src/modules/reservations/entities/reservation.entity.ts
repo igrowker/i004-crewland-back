@@ -1,15 +1,15 @@
-import { Entity, ObjectIdColumn, ObjectId, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('reservations')
 export class Reservations {
-  @ObjectIdColumn()
-  id: ObjectId;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
-  usuarioId: ObjectId;
+  @Column('uuid')
+  usuarioId: string;
 
-  @Column()
-  postId: ObjectId;
+  @Column('uuid')
+  postId: string;
 
   @Column()
   estado: string;

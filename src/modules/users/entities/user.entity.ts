@@ -1,7 +1,8 @@
+import { IsOptional } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
-  name: 'users',
+  name: 'user',
 })
 export default class User {
   @PrimaryGeneratedColumn('uuid') //depende de como se origine la id se usa PrimaryColumn
@@ -14,9 +15,17 @@ export default class User {
   name: string;
 
   @Column()
+  @IsOptional()
   age: number;
 
+  @Column({ type: 'text', nullable: true })
+  password: string;
+
   @Column()
+  email: string;
+
+  @Column()
+  @IsOptional()
   gender: string;
 
   @Column({
@@ -31,13 +40,15 @@ export default class User {
     array: true,
     nullable: true,
   })
-  preferences: string[]; //puede ser un enum con strings acordadas (cambiar decorador)
+  @IsOptional()
+  preferences: string[];
 
   @Column({
     type: 'text',
     array: true,
     nullable: true,
   })
+  @IsOptional()
   travelHistory: string[];
 
   @Column({
@@ -45,5 +56,6 @@ export default class User {
     array: true,
     nullable: true,
   })
-  favorites: string[]; //array de festivales cuando este creado (cambiar decorador)
+  @IsOptional()
+  favorites: string[];
 }
