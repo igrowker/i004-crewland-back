@@ -1,12 +1,10 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { config as dotenvConfig } from 'dotenv';
-
-dotenvConfig({ path: '.env' });
+import dotEnvOptions from './dotenv.config';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   port: parseInt(process.env.DB_PORT || '5432', 10),
-  host: process.env.DB_HOST,
+  host: process.env.DB_HOST || dotEnvOptions.DB_HOST,
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
