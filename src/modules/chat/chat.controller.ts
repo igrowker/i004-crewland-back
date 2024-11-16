@@ -9,8 +9,7 @@ import {
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
-
-// npx prettier --write .
+import { UpdateChatDto } from './dto/update-chat.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -32,7 +31,7 @@ export class ChatController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChatDto: any) {
+  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
     return this.chatService.update(+id, updateChatDto);
   }
 
