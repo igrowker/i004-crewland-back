@@ -1,8 +1,8 @@
-import { LoggerService, Injectable } from '@nestjs/common';
+import { Injectable, LoggerService, NestMiddleware } from '@nestjs/common';
 import * as winston from 'winston';
 
 @Injectable()
-export class WinstonLoggerService implements LoggerService {
+export class WinstonLoggerService implements LoggerService, NestMiddleware {
   private logger: winston.Logger;
 
   constructor() {
@@ -11,7 +11,9 @@ export class WinstonLoggerService implements LoggerService {
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.printf(({ timestamp, level, message, context }) => {
-          return `${timestamp} [${level.toUpperCase()}]: ${message} ${context ? `(${context})` : ''}`;
+          return `${timestamp} [${level.toUpperCase()}]: ${message} ${
+            context ? `(${context})` : ''
+          }`;
         }),
       ),
       transports: [
@@ -25,6 +27,7 @@ export class WinstonLoggerService implements LoggerService {
     });
   }
 
+  // Métodos LoggerService
   log(message: string, context?: string) {
     this.logger.info(message, { context });
   }
@@ -43,5 +46,24 @@ export class WinstonLoggerService implements LoggerService {
 
   verbose?(message: string, context?: string) {
     this.logger.verbose(message, { context });
+  }
+
+  // Middleware para registrar solicitudes HTTP
+  use(req: any, res: any, next: () => void) {
+    const { method, url } = req;
+    const userAgent = req.headers['user-agent'] || '';
+    const startTime = Date.now();
+
+    res.on('finish', () => {
+      const { statusCode } = res;
+      const duration = Date.now() - startTime;
+
+      this.log(
+        `${method} ${url} ${statusCode} - ${userAgent} - ${duration}ms`,
+        'HttpLogger',
+      );
+    });
+
+    next();
   }
 }
