@@ -1,22 +1,22 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { config as dotenvConfig } from 'dotenv';
-import Publication from '../modules/publications/entities/publication.entity';
 import { Chat } from '../modules/chat/entities/chat.entity';
+import { Publication } from '../modules/publications/entities/publication.entity';
+import User from '../modules/users/entities/user.entity';
 import { Festival } from 'src/modules/festival/entities/festival.entity';
 
-dotenvConfig({ path: '.env' });
+import dotEnvOptions from './dotenv.config';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  port: parseInt(process.env.DB_PORT || '5432', 10),
-  host: process.env.DB_HOST,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  port: parseInt(dotEnvOptions.DB_PORT || '5432', 10),
+  host: dotEnvOptions.DB_HOST,
+  username: dotEnvOptions.DB_USERNAME,
+  password: dotEnvOptions.DB_PASSWORD,
+  database: dotEnvOptions.DB_NAME,
   dropSchema: true,
   synchronize: true,
   logging: false,
-  entities: [Festival, Publication, Chat],
+  entities: [Festival, Publication, Chat, User],
   subscribers: [],
   migrations: [],
 };
