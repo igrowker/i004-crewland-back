@@ -5,10 +5,6 @@ import User from '../modules/users/entities/user.entity';
 
 import dotEnvOptions from './dotenv.config';
 
-console.log('DB_HOST:', dotEnvOptions.DB_HOST);
-console.log('DB_PORT:', dotEnvOptions.DB_PORT);
-console.log('DB_USERNAME:', dotEnvOptions.DB_USERNAME);
-
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   port: parseInt(dotEnvOptions.DB_PORT || '5432', 10),

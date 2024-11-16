@@ -10,5 +10,6 @@ import { dataSourceOptions } from './config/ormconfig';
   imports: [UsersModule, TypeOrmModule.forRoot(dataSourceOptions)],
   controllers: [AppController],
   providers: [AppService, WinstonLoggerService],
+  exports: [WinstonLoggerService],
 })
 export class AppModule {}
