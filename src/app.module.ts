@@ -5,11 +5,16 @@ import { WinstonLoggerService } from './middleware/logger/logger.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './config/ormconfig';
+import { FestivalModule } from './modules/festival/festival.module';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forRoot(dataSourceOptions)],
+  imports: [
+    UsersModule,
+    FestivalModule,
+    TypeOrmModule.forRoot(dataSourceOptions),
+  ],
   controllers: [AppController],
-  providers: [AppService, WinstonLoggerService],
+  providers: [AppService, WinstonLoggerService, WinstonLoggerService],
   exports: [WinstonLoggerService],
 })
 export class AppModule {}

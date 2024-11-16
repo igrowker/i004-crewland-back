@@ -14,27 +14,37 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      const { name, email, password } = createUserDto;
+      const { name, email, password, age } = createUserDto;
+
+      console.log(createUserDto);
+      console.log(createUserDto.email);
+
+      //aca mejor buscar por email
       const existingUser = await this.userRepository.findOne({
-        where: [{ name }],
+        // where: [{ name }],
+        where: { email },
       });
 
+      console.log(existingUser);
+
       if (existingUser) {
-        throw new ConflictException(
+        console.log('entro');
+        throw new ConflictException( //OJO: si bien en el terminal de back este mensaje funciona perfecto, en el front tira un error 500 mirar para q tire un error personalizado
           'El usuario con este nombre de usuario o correo ya existe',
         );
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = this.userRepository.create({
-        name,
-        email,
+        ...createUserDto,
+        // name,
+        // email,
         password: hashedPassword,
-        age: parseInt(createUserDto.age.toString()) || 30,
-        favorites: createUserDto.favorites,
-        gender: createUserDto.gender || 'abc',
-        role: createUserDto.role,
-        preferences: createUserDto.preferences,
-        travelHistory: createUserDto.travelHistory,
+        // age: age ? parseInt(createUserDto.age.toString()) : 18,
+        // favorites: createUserDto.favorites,
+        // gender: createUserDto.gender || 'No especificado',
+        // role: createUserDto.role,
+        // preferences: createUserDto.preferences,
+        // travelHistory: createUserDto.travelHistory,
       });
       return this.userRepository.save(user);
     } catch (error) {

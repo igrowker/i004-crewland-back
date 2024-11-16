@@ -12,13 +12,13 @@ export class Publication {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'uuid' })
+  @Column('uuid')
   userId: string;
 
   @Column({ type: 'enum', enum: ['crew', 'transport', 'accommodation'] })
   type: string;
 
-  @Column({ type: 'uuid' })
+  @Column('uuid')
   festivalId: string;
 
   @Column({ type: 'text' })
