@@ -2,7 +2,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { Chat } from '../modules/chat/entities/chat.entity';
 import { Publication } from '../modules/publications/entities/publication.entity';
 import User from '../modules/users/entities/user.entity';
-import { Festival } from 'src/modules/festival/entities/festival.entity';
+import Festival from '../modules/festival/entities/festival.entity';
 
 import dotEnvOptions from './dotenv.config';
 
@@ -21,12 +21,12 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: [],
 };
 
-const AppDataSource = new DataSource(dataSourceOptions);
+export const AppDataSource = new DataSource(dataSourceOptions);
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization', err);
-  });
+// AppDataSource.initialize()
+//   .then(() => {
+//     console.log('Data Source has been initialized!');
+//   })
+//   .catch((err) => {
+//     console.error('Error during Data Source initialization', err);
+//   });

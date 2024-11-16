@@ -10,8 +10,10 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, ObjectId } from 'typeorm';
 
-@Entity()
-export class Festival {
+@Entity({
+  name: 'festival',
+})
+export default class Festival {
   @PrimaryGeneratedColumn()
   id: ObjectId;
 
@@ -22,7 +24,7 @@ export class Festival {
   location: string;
 
   @Column()
-  date: Date;
+  date: string;
 
   @Column()
   description: string;

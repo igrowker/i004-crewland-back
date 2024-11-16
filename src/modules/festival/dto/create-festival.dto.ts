@@ -4,7 +4,7 @@ export class CreateFestivalDto {
   _id: ObjectId;
   name: string;
   location: string;
-  date: Date;
+  date: string;
   description: string;
 }
 

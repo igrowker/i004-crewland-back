@@ -34,7 +34,7 @@ import { CreateFestivalDto } from './dto/create-festival.dto';
 import { UpdateFestivalDto } from './dto/update-festival.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ObjectId, Repository } from 'typeorm';
-import { Festival } from './entities/festival.entity';
+import Festival from './entities/festival.entity';
 
 @Injectable()
 export class FestivalService {
