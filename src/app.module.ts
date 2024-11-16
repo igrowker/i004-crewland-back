@@ -1,33 +1,14 @@
-// import { Module } from '@nestjs/common';
-// import { AppController } from './app.controller';
-// import { AppService } from './app.service';
-
-// @Module({
-//   imports: [],
-//   controllers: [AppController],
-//   providers: [AppService],
-// })
-// export class AppModule {}
-
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { WinstonLoggerService } from './middleware/logger/logger.middleware';
+import { UsersModule } from './modules/users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceOptions } from './config/ormconfig';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '12345',
-      database: 'crewlanddtb',
-      entities: [],
-      synchronize: true,
-    }),
-  ],
+  imports: [UsersModule, TypeOrmModule.forRoot(dataSourceOptions)],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, WinstonLoggerService],
 })
 export class AppModule {}
