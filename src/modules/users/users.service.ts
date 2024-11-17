@@ -2,43 +2,43 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import User from './entities/user.entity';
-import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      const { name, email, password } = createUserDto;
+      const existingEmail = await this.userRepository.findOne({
+        where: [{ email: createUserDto.email }],
+      });
+
+      if (existingEmail) {
+        throw new ConflictException('Email en uso ');
+      }
+
       const existingUser = await this.userRepository.findOne({
-        where: [{ name }],
+        where: [{ username: createUserDto.username }],
       });
 
       if (existingUser) {
-        throw new ConflictException(
-          'El usuario con este nombre de usuario o correo ya existe',
-        );
+        throw new ConflictException('Usuario en uso ');
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
       const user = this.userRepository.create({
-        name,
-        email,
+        ...createUserDto,
         password: hashedPassword,
-        age: parseInt(createUserDto.age.toString()) || 30,
-        favorites: createUserDto.favorites,
-        gender: createUserDto.gender || 'abc',
-        role: createUserDto.role,
-        preferences: createUserDto.preferences,
-        travelHistory: createUserDto.travelHistory,
       });
-      return this.userRepository.save(user);
+
+      return await this.userRepository.save(user);
     } catch (error) {
-      throw new Error('Error al crear el usuario: ' + error.message);
+      throw new Error('Error while creating the user: ' + error.message);
     }
   }
 

@@ -1,7 +1,9 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { Chat } from '../modules/chat/entities/chat.entity';
 import { Publication } from '../modules/publications/entities/publication.entity';
-import User from '../modules/users/entities/user.entity';
+import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
+import { User } from '../modules/users/entities/user.entity';
+import { Festival } from '../modules/festival/entities/festival.entity';
 
 import dotEnvOptions from './dotenv.config';
 
@@ -15,7 +17,7 @@ export const dataSourceOptions: DataSourceOptions = {
   dropSchema: true,
   synchronize: true,
   logging: false,
-  entities: [Publication, Chat, User],
+  entities: [Festival, Publication, Chat, User, Reservations],
   subscribers: [],
   migrations: [],
 };
