@@ -13,7 +13,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ObjectId } from 'typeorm';
 @Entity({
   name: 'festival',
 })
-export default class Festival {
+export class Festival {
   @PrimaryGeneratedColumn()
   id: ObjectId;
 
