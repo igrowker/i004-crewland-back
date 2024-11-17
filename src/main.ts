@@ -9,7 +9,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = app.get(WinstonLoggerService);
 
-  // Registrar WinstonLoggerService como middleware global
   app.enableCors();
   app.use(logger.use.bind(logger));
   app.use(bodyParser.json());

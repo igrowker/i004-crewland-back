@@ -1,6 +1,5 @@
 import {
   IsArray,
-  IsDateString,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -22,7 +21,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Nombre es obligatorio' })
   @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
   @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
-  @Matches(/^[A-Za-z\s]+$/, {
+  @Matches(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, {
     message: 'El nombre debe contener sólo letras y espacios',
   })
   name: string;
@@ -35,7 +34,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Usuario es obligatorio' })
   @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
   @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
-  @Matches(/^[a-zA-Z0-9_-]$/, {
+  @Matches(/^[a-zA-Z0-9_-]+$/, {
     message: 'El nombre debe contener sólo letras y espacios',
   })
   username: string;
@@ -90,7 +89,7 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty({ message: 'El número de teléfono es obligatorio.' })
   @Matches(
-    /^(?:\+?\d{1,2}\s?)?(\()?(\d{1,4})(:(1)\))([.\s\-]?)\d{1,4}([.\s\-]?)\d{1,4}$/,
+    /^(?:\+?\d{1,3}[-.\s]?)?(\(?\d{1,4}\)?[-.\s]?)?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/,
     {
       message: 'El número de teléfono no tiene un formato válido.',
     },
@@ -102,14 +101,7 @@ export class CreateUserDto {
     example: '2000-01-01',
   })
   @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria.' })
-  @IsDateString(
-    {},
-    {
-      message:
-        'La fecha debe ser una fecha válida en formato ISO (YYYY-MM-DD).',
-    },
-  )
-  age: Date;
+  age: string;
 
   @ApiProperty({
     description: 'Género del usuario',

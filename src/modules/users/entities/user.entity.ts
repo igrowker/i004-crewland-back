@@ -18,8 +18,8 @@ export class User {
   @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'date', nullable: false })
-  age: Date;
+  @Column({ type: 'varchar', nullable: false })
+  age: string;
 
   @Column({ type: 'varchar', unique: true, nullable: false })
   tel: string;
