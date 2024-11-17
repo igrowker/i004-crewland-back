@@ -1,5 +1,6 @@
-import { IsString, IsNotEmpty, IsEnum, IsUUID, IsDate, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsUUID, IsDate, MaxLength, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'src/shared/utils/enum';
 
 export class CreatePublicationDto {
     @ApiProperty({
@@ -24,8 +25,8 @@ export class CreatePublicationDto {
     })
     @IsString()
     @IsNotEmpty()
-    @IsEnum(['crew', 'transport', 'accommodation'], { message: 'El tipo de publicación debe ser uno de estos: crew, transport, accommodation' })
-    type: 'crew' | 'transport' | 'accommodation'
+    @IsEnum(Type, { message: 'El tipo de publicación debe ser uno de estos: crew, transport, accommodation' })
+    type: Type
 
     @ApiProperty({
         description: 'ID del festival al que pertenece la publicación',
@@ -49,7 +50,13 @@ export class CreatePublicationDto {
         example: '9am - 5pm',
     })
     @IsNotEmpty()
-    @IsString()
+    @IsDateString(
+        {},
+        {
+            message:
+                'La fecha debe ser una fecha válida en formato ISO (YYYY-MM-DD).',
+        },
+    )
     availability: string
 
     @ApiProperty({

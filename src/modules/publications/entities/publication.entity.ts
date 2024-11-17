@@ -38,7 +38,5 @@ export class Publication {
 
   // @Column({ type: 'boolean', default: true })
   // isActive: boolean;
-
 }
 
-export default Publication;

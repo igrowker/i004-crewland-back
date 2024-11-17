@@ -36,7 +36,7 @@ export class CreateUserDto {
   @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
   @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
   @Matches(/^[a-zA-Z0-9_-]+$/, {
-    message: 'El nombre debe contener sólo letras y espacios',
+    message: 'El nombre de usuario debe contener sólo letras y espacios',
   })
   username: string;
 

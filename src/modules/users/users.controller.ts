@@ -9,7 +9,6 @@ export class UsersController {
   // POST /users
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    console.log('Valor de name recibido en el controlador:', createUserDto.name)
     return this.usersService.create(createUserDto);
   }
 
