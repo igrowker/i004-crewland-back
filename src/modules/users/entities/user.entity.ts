@@ -1,61 +1,48 @@
-import { IsOptional } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Role, Gender } from 'src/shared/utils/enum';
 
-@Entity({
-  name: 'user',
-})
-export default class User {
-  @PrimaryGeneratedColumn('uuid') //depende de como se origine la id se usa PrimaryColumn
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @PrimaryColumn()
-  // id: string
-
-  @Column()
-  name: string;
-
-  @Column()
-  @IsOptional()
-  age: number;
-
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: false })
   password: string;
 
-  @Column()
+  @Column({ type: 'varchar', nullable: false })
+  name: string;
+
+  @Column({ type: 'varchar', unique: true, nullable: false })
+  username: string;
+
+  @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  @Column()
-  @IsOptional()
+  @Column({ type: 'date', nullable: false })
+  age: Date;
+
+  @Column({ type: 'varchar', unique: true, nullable: false })
+  tel: string;
+
+  @Column({
+    type: 'enum',
+    enum: Gender,
+  })
   gender: string;
 
   @Column({
     type: 'enum',
-    enum: ['searching', 'offering'],
-    default: 'offering',
+    enum: Role,
+    default: Role.User,
   })
   role: string;
 
-  @Column({
-    type: 'text',
-    array: true,
-    nullable: true,
-  })
-  @IsOptional()
+  @Column({ type: 'simple-array', nullable: true })
   preferences: string[];
 
-  @Column({
-    type: 'text',
-    array: true,
-    nullable: true,
-  })
-  @IsOptional()
+  @Column({ type: 'simple-array', nullable: true })
   travelHistory: string[];
 
-  @Column({
-    type: 'text',
-    array: true,
-    nullable: true,
-  })
-  @IsOptional()
+  @Column({ type: 'simple-array', nullable: true })
   favorites: string[];
 }
