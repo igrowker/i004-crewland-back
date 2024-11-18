@@ -1,6 +1,5 @@
 import {
   IsArray,
-  IsDateString,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -9,6 +8,7 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  IsDateString
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, Role } from 'src/shared/utils/enum';
