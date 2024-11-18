@@ -11,7 +11,7 @@ import {
 import { FestivalService } from './festival.service';
 import { CreateFestivalDto } from './dto/create-festival.dto';
 import { UpdateFestivalDto } from './dto/update-festival.dto';
-import { ObjectId } from 'typeorm';
+// import { ObjectId } from 'typeorm';
 // import { LoggerGuard } from 'src/guards/logger.guard';
 
 @Controller('festival')
@@ -32,14 +32,14 @@ export class FestivalController {
 
   @UseGuards()
   @Get(':id')
-  findOne(@Param('id') id: ObjectId) {
+  findOne(@Param('id') id: string) {
     return this.festivalService.findOne(id);
   }
 
   @UseGuards()
   @Patch(':id')
   update(
-    @Param('id') id: ObjectId,
+    @Param('id') id: string,
     @Body() updateFestivalDto: UpdateFestivalDto,
   ) {
     return this.festivalService.update(id, updateFestivalDto);
@@ -47,7 +47,7 @@ export class FestivalController {
 
   @UseGuards()
   @Delete(':id')
-  remove(@Param('id') id: ObjectId) {
+  remove(@Param('id') id: string) {
     return this.festivalService.remove(id);
   }
 }
