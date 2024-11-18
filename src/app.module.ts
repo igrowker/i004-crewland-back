@@ -14,7 +14,7 @@ import { FestivalModule } from './modules/festival/festival.module';
     TypeOrmModule.forRoot(dataSourceOptions),
   ],
   controllers: [AppController],
-  providers: [AppService, WinstonLoggerService, WinstonLoggerService],
+  providers: [AppService, WinstonLoggerService],
   exports: [WinstonLoggerService],
 })
 export class AppModule {}
