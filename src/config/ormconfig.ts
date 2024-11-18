@@ -3,7 +3,7 @@ import { Chat } from '../modules/chat/entities/chat.entity';
 import { Publication } from '../modules/publications/entities/publication.entity';
 import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
 import { User } from '../modules/users/entities/user.entity';
-import { Festival } from '../modules/festival/entities/festival.entity';
+import { Festival } from '../modules/festivals/entities/festival.entity';
 
 import dotEnvOptions from './dotenv.config';
 

@@ -5,7 +5,7 @@ import { WinstonLoggerService } from './middleware/logger/logger.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './config/ormconfig';
-import { FestivalModule } from './modules/festival/festival.module';
+import { FestivalModule } from './modules/festivals/festival.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { PublicationsModule } from './modules/publications/publications.module';
