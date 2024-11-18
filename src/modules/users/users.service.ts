@@ -30,16 +30,12 @@ export class UsersService {
         throw new ConflictException('Usuario en uso ');
       }
 
-      console.log(createUserDto);
-
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
       const user = this.userRepository.create({
         ...createUserDto,
         password: hashedPassword,
       });
-
-      console.log(user);
 
       return await this.userRepository.save(user);
     } catch (error) {
