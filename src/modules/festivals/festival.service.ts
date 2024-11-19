@@ -1,30 +1,3 @@
-// import { Injectable } from '@nestjs/common';
-// import { CreateFestivalDto } from './dto/create-festival.dto';
-// import { UpdateFestivalDto } from './dto/update-festival.dto';
-
-// @Injectable()
-// export class FestivalService {
-//   create(createFestivalDto: CreateFestivalDto) {
-//     return 'This action adds a new festival';
-//   }
-
-//   findAll() {
-//     return `This action returns all festival`;
-//   }
-
-//   findOne(id: number) {
-//     return `This action returns a #${id} festival`;
-//   }
-
-//   update(id: number, updateFestivalDto: UpdateFestivalDto) {
-//     return `This action updates a #${id} festival`;
-//   }
-
-//   remove(id: number) {
-//     return `This action removes a #${id} festival`;
-//   }
-// }
-
 import {
   Injectable,
   NotFoundException,
@@ -33,7 +6,7 @@ import {
 import { CreateFestivalDto } from './dto/create-festival.dto';
 import { UpdateFestivalDto } from './dto/update-festival.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ObjectId, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Festival } from './entities/festival.entity';
 
 @Injectable()
@@ -66,7 +39,7 @@ export class FestivalService {
     }
   }
 
-  async findOne(id: ObjectId): Promise<Festival> {
+  async findOne(id: string): Promise<Festival> {
     try {
       const festival = await this.festivalRepository.findOne({
         where: { id },
@@ -87,7 +60,7 @@ export class FestivalService {
   }
 
   async update(
-    id: ObjectId,
+    id: string,
     updateFestivalDto: UpdateFestivalDto,
   ): Promise<Festival> {
     try {
@@ -110,7 +83,7 @@ export class FestivalService {
     }
   }
 
-  async remove(id: ObjectId): Promise<void> {
+  async remove(id: string): Promise<void> {
     try {
       const result = await this.festivalRepository.delete(id);
       if (result.affected === 0) {
