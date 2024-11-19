@@ -1,45 +1,18 @@
+// src/chat/chat.gateway.ts
 import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
-  WebSocketServer,
   WebSocketGateway,
-  //   SubscribeMessage,
+  SubscribeMessage,
+  MessageBody,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-// import { MessageDto } from './dto/message.dto';
-// import dotEnvOptions from 'src/config/dotenv.config';
+import { SendMessageDto } from './dto/send-message.dto';
 
-@WebSocketGateway({ cors: true })
-export class ChatGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
-  @WebSocketServer() server: Server;
-
+@WebSocketGateway({ cors: { origin: '*' } })
+export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
-  afterInit(server: Server): void {
-    console.log('WebSocket server initialized');
+  @SubscribeMessage('send_message')
+  async handleSendMessage(@MessageBody() sendMessageDto: SendMessageDto) {
+    return this.chatService.SendMessageDto(sendMessageDto);
   }
-
-  handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
-  }
-
-  handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
-  }
-
-  //   @SubscribeMessage('sendMessage')
-  //   async handleSendMessage(
-  //     client: Socket,
-  //     payload: { chatId: string; message: MessageDto },
-  //   ) {
-  //     const updatedChat = await this.chatService.addMessage(
-  //       payload.chatId,
-  //       payload.message,
-  //     );
-  //     this.server.emit(`chat-${payload.chatId}`, updatedChat);
-  //   }
 }
