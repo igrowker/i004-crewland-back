@@ -19,19 +19,6 @@ export class AuthLoginDto {
     @MaxLength(70, { message: 'El numero máximo de caracteres ha sido excedido.' })
     email: string
 
-    // @ApiProperty({ 
-    //     description: 'Nombre de usuario',
-    //     example: 'juanperez'
-    // })
-    // @IsString()
-    // @IsNotEmpty({ message: 'El nombre de usuario no puede estar vacío.' })
-    // @MinLength(1, { message: 'El nombre de usuario debe tener al menos 1 caracter' })
-    // @MaxLength(50, { message: 'El número máximo de caracteres ha sido excedido' })
-    // @Matches(/^[a-zA-Z0-9_-]+$/, {
-    //     message: 'El nombre debe contener sólo letras y espacios'
-    // })
-    // username: string
-
     @ApiProperty({
         description: 'Contraseña del usuario',
         example: 'MyStrongP@ssword',

@@ -2,7 +2,6 @@ import { ConflictException, Injectable, InternalServerErrorException, Unauthoriz
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AuthRegisterDto } from './dto/auth.register.dto';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import * as bcrypt from 'bcryptjs'
 import { User } from '../users/entities/user.entity';
@@ -14,44 +13,6 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) { }
-
-  async register(authRegisterDto: AuthRegisterDto): Promise<any> {
-    const { name, username, email, password, confirmPassword, tel } = authRegisterDto
-
-    try {
-
-      if (password !== confirmPassword) {
-        throw new ConflictException('Contraseña y confirmar contraseña no coinciden')
-      }
-
-      const existingUser = await this.userRepository.findOne({
-        where: [{ email }, { username }]
-      })
-
-      if (existingUser) {
-        throw new ConflictException(
-          'El correo o el nombre de usuario ya han sido usados.'
-        )
-      }
-
-      const hashPassword: string = await bcrypt.hash(password, 10)
-
-      const user = this.userRepository.create({
-        name,
-        username,
-        email,
-        password: hashPassword,
-        tel,
-      })
-
-      await this.userRepository.save(user)
-
-      return { message: 'Usuario registrado correctamente' }
-
-    } catch (error) {
-      throw new InternalServerErrorException('Ha surgido un error inesperado en el registro',)
-    }
-  }
 
   async login(authLoginDto: AuthLoginDto): Promise<any> {
     const { email, password } = authLoginDto
