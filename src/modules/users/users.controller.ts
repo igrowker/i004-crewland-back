@@ -21,11 +21,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-<<<<<<< HEAD
 
   // POST /users
-=======
->>>>>>> 838d845 (feat / roles.decorators.ts -- feat / update-user-dto feat/ service updateUser)
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
