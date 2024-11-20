@@ -1,8 +1,13 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -12,7 +17,7 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
       const existingEmail = await this.userRepository.findOne({
         where: [{ email: createUserDto.email }],
@@ -42,7 +47,41 @@ export class UsersService {
     }
   }
 
-  async findAll() {
-    return await this.userRepository.find();
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+
+      if (updateUserDto.email && updateUserDto.email !== user.email) {
+        const existingEmail = await this.userRepository.findOne({
+          where: { email: updateUserDto.email },
+        });
+        if (existingEmail) {
+          throw new ConflictException('Email en uso');
+        }
+      }
+
+      if (updateUserDto.username && updateUserDto.username !== user.username) {
+        const existingUsername = await this.userRepository.findOne({
+          where: { username: updateUserDto.username },
+        });
+        if (existingUsername) {
+          throw new ConflictException('Usuario en uso');
+        }
+      }
+
+      if (updateUserDto.password) {
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      }
+
+      const updatedUser = this.userRepository.merge(user, updateUserDto);
+
+      return await this.userRepository.save(updatedUser);
+    } catch (error) {
+      throw new Error('Error while updating the user: ' + error.message);
+    }
   }
 }
