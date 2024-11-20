@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { WinstonLoggerService } from './middleware/logger/logger.middleware';
-import * as bodyParser from 'body-parser';
-import dotenvOptions from './config/dotenv.config';
 import { ValidationPipe } from '@nestjs/common';
+import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
+import dotenvOptions from './config/dotenv.config';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,7 @@ async function bootstrap() {
   app.enableCors();
   app.use(logger.use.bind(logger));
   app.use(bodyParser.json());
+  app.useGlobalInterceptors(new ResponseFormatInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
