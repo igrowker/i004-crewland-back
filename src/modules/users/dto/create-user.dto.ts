@@ -1,26 +1,48 @@
-import { MaxLength } from 'class-validator';
-import { Matches } from 'class-validator';
-import { MinLength } from 'class-validator';
 import {
   IsArray,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Gender, Role } from 'src/shared/utils/enum';
 
 export class CreateUserDto {
-  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Nombre del usuario',
+    example: 'Juan',
+  })
   @IsString()
   @IsNotEmpty({ message: 'Nombre es obligatorio' })
   @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
   @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
-  @Matches(/^[A-Za-z\s]+$/, {
+  @Matches(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, {
     message: 'El nombre debe contener sólo letras y espacios',
   })
   name: string;
 
+  @ApiProperty({
+    description: 'Nombre de Usuario',
+    example: 'Juan',
+  })
   @IsString()
+  @IsNotEmpty({ message: 'Usuario es obligatorio' })
+  @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
+  @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
+  @Matches(/^[a-zA-Z0-9_-]+$/, {
+    message: 'El nombre debe contener sólo letras y espacios',
+  })
+  username: string;
+
+  @ApiProperty({
+    description: 'Correo electrónico del usuario',
+    example: 'juan.perez@example.com',
+  })
   @IsNotEmpty({ message: 'Correo electrónico es obligatorio' })
   @IsEmail(
     {},
@@ -29,21 +51,20 @@ export class CreateUserDto {
         'El correo electrónico debe ser una dirección de correo válida y tener un dominio permitido.',
     },
   )
-  @MinLength(1, { message: 'El email tiene que tener como minimo de 1.' })
+  @MinLength(1, { message: 'La apellido debe tener al menos 1 caracteres.' })
   @MaxLength(70, {
     message: 'El número máximo de caracteres ha sido excedido.',
   })
-  @Matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
-    message:
-      'El correo debe tener un formato válido (sin espacios y con un dominio correcto).',
-  })
   email: string;
 
-  //DATO: puse q la contraseña tenga q tener una letra mayuscula, una minuscula, un numero y un caracter especial como obligatorio pero se puede cambiar
+  @ApiProperty({
+    description: 'Contraseña del usuario',
+    example: 'MyStrongP@ssw0rd',
+  })
   @IsString()
   @IsNotEmpty({ message: 'Contraseña es obligatorio' })
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
-  @MaxLength(30, { message: 'El número máximo de caracteres fue excedido.' })
+  @MaxLength(30, { message: 'El número máximo de dígitos ha sido excedido.' })
   @Matches(
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,30}$/,
     {
@@ -53,15 +74,43 @@ export class CreateUserDto {
   )
   password: string;
 
-  @IsOptional()
-  age?: number = 18;
+  @ApiProperty({
+    description: 'Rol del usuario (opcional)',
+    example: 'User',
+    required: false,
+  })
+  @IsEnum(Role, { message: "El rol debe ser 'Admin' o 'User'" })
+  role: Role = Role.User;
 
-  @IsNotEmpty() //el genero si bien nos viene desde el front asignarle algun valor por defecto como
+  @ApiProperty({
+    description: 'Número de teléfono del usuario',
+    example: '+1 (555) 123-4567',
+  })
   @IsString()
-  gender: string = 'No especificado'; //valor por defecto
+  @IsNotEmpty({ message: 'El número de teléfono es obligatorio.' })
+  @Matches(
+    /^(?:\+?\d{1,3}[-.\s]?)?(\(?\d{1,4}\)?[-.\s]?)?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/,
+    {
+      message: 'El número de teléfono no tiene un formato válido.',
+    },
+  )
+  tel: string;
 
-  @IsString()
-  role: string = 'user';
+  @ApiProperty({
+    description: 'Fecha de nacimiento del usuario',
+    example: '2000-01-01',
+  })
+  @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria.' })
+  age: string;
+
+  @ApiProperty({
+    description: 'Género del usuario',
+    example: 'no especifica',
+    enum: Gender,
+  })
+  @IsEnum(Gender)
+  @IsNotEmpty()
+  gender: string;
 
   @IsArray()
   @IsOptional()

@@ -2,8 +2,8 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { Chat } from '../modules/chat/entities/chat.entity';
 import { Publication } from '../modules/publications/entities/publication.entity';
 import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
-import User from '../modules/users/entities/user.entity';
-import Festival from '../modules/festival/entities/festival.entity';
+import { User } from '../modules/users/entities/user.entity';
+import { Festival } from '../modules/festivals/entities/festival.entity';
 
 import dotEnvOptions from './dotenv.config';
 
@@ -21,7 +21,7 @@ export const dataSourceOptions: DataSourceOptions = {
   //npx typeorm migration:run --> Esto ejecutará todas las migraciones pendientes y creará las tablas necesarias en la base de datos.
   synchronize: true, //esto para q se sinconice auto y no tener q correr el comando de migracion
   logging: false,
-  entities: [Publication, Chat, User, Reservations, Festival],
+  entities: [Festival, Publication, Chat, User, Reservations],
   subscribers: [],
   migrations: [],
 };

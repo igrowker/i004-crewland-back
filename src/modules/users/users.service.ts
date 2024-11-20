@@ -2,7 +2,7 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import User from './entities/user.entity';
+import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -14,41 +14,34 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
-      const { name, email, password, age } = createUserDto;
+      const existingEmail = await this.userRepository.findOne({
+        where: [{ email: createUserDto.email }],
+      });
 
-      console.log(createUserDto);
-      console.log(createUserDto.email);
+      if (existingEmail) {
+        throw new ConflictException('Email en uso ');
+      }
 
-      //aca mejor buscar por email
       const existingUser = await this.userRepository.findOne({
-        // where: [{ name }],
-        where: { email },
+        where: [{ username: createUserDto.username }],
       });
 
       console.log(existingUser);
 
       if (existingUser) {
-        console.log('entro');
-        throw new ConflictException( //OJO: si bien en el terminal de back este mensaje funciona perfecto, en el front tira un error 500 mirar para q tire un error personalizado
-          'El usuario con este nombre de usuario o correo ya existe',
-        );
+        throw new ConflictException('Usuario en uso ');
       }
-      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
       const user = this.userRepository.create({
         ...createUserDto,
-        // name,
-        // email,
         password: hashedPassword,
-        // age: age ? parseInt(createUserDto.age.toString()) : 18,
-        // favorites: createUserDto.favorites,
-        // gender: createUserDto.gender || 'No especificado',
-        // role: createUserDto.role,
-        // preferences: createUserDto.preferences,
-        // travelHistory: createUserDto.travelHistory,
       });
-      return this.userRepository.save(user);
+
+      return await this.userRepository.save(user);
     } catch (error) {
-      throw new Error('Error al crear el usuario: ' + error.message);
+      throw new Error('Error while creating the user: ' + error.message);
     }
   }
 

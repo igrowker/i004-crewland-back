@@ -1,72 +1,48 @@
-import { IsOptional } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Role, Gender } from 'src/shared/utils/enum';
 
-@Entity({
-  name: 'user',
-})
-export default class User {
-  @PrimaryGeneratedColumn('uuid') //depende de como se origine la id se usa PrimaryColumn
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @PrimaryGeneratedColumn()
-  // id: ObjectId; --> OJO: no seria correcto usar ObjectID ya q este es un valor para MONGODB y nosotros estamos usando Postgresql
-
-  // @Column() --> aca agrego q el campo sea obligatorio
-  @Column({ type: 'text', nullable: false })
-  name: string;
-
-  @Column({ default: 18 }) //agrego valor por defecto ya q si en el body no se pasa nada, pasa el dto pero aca rompe ya q llega un valor null
-  @IsOptional()
-  age: number;
-
-  // @Column({ type: 'text', nullable: true }) //OJO: aca al poner nullable : true va a permitir q la password quede vacia
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   password: string;
 
-  // @Column()
-  @Column({ type: 'text', nullable: false }) // Campo obligatorio,
-  //EXTRA: hacer validaciones con los DTO tambien
+  @Column({ type: 'varchar', nullable: false })
+  name: string;
+
+  @Column({ type: 'varchar', unique: true, nullable: false })
+  username: string;
+
+  @Column({ type: 'varchar', unique: true, nullable: false })
   email: string;
 
-  //desde el front van a llegar una de 4 opciones: Hombre, Mujer, Otro, no seleccionado (q es el por defecto)
-  @Column({ type: 'text', default: 'No especificado' })
-  @IsOptional()
+  @Column({ type: 'varchar', nullable: false })
+  age: string;
+
+  @Column({ type: 'varchar', unique: true, nullable: false })
+  tel: string;
+
+  @Column({
+    type: 'enum',
+    enum: Gender,
+  })
   gender: string;
 
-  //DATO: recuerden q ya no se usa seraching o offering como posibles roles, hay un solo usuario con rol de admin y el resto son user
-  // @Column({
-  //   type: 'enum',
-  //   enum: ['searching', 'offering'],
-  //   default: 'offering',
-  // })
-  // role: string;
-  @Column({ default: 'user' })
+  @Column({
+    type: 'enum',
+    enum: Role,
+    default: Role.User,
+  })
   role: string;
 
-  @Column({
-    type: 'text',
-    array: true,
-    nullable: true, //mirar esto xq no estoy seguro si seria buena idea aceptar valores nulos, creo q lo mejor seria poner en caso de q el usuario no ingrese nada algun valor por defecto
-    default: [], //algo como esto (dato : poner '{}' = [])
-  })
-  @IsOptional()
+  @Column({ type: 'simple-array', nullable: true })
   preferences: string[];
 
-  @Column({
-    type: 'text',
-    array: true,
-    nullable: true, //idem aqui ojo con permitir valores null
-    default: [],
-  })
-  @IsOptional()
+  @Column({ type: 'simple-array', nullable: true })
   travelHistory: string[];
 
-  @Column({
-    type: 'text',
-    array: true,
-    nullable: true, //idem aqui con valores null
-    default: [],
-  })
-  @IsOptional()
+  @Column({ type: 'simple-array', nullable: true })
   favorites: string[];
 }
