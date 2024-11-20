@@ -11,9 +11,8 @@ export class WinstonLoggerService implements LoggerService, NestMiddleware {
       format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.printf(({ timestamp, level, message, context }) => {
-          return `${timestamp} [${level.toUpperCase()}]: ${message} ${
-            context ? `(${context})` : ''
-          }`;
+          return `${timestamp} [${level.toUpperCase()}]: ${message} ${context ? `(${context})` : ''
+            }`;
         }),
       ),
       transports: [

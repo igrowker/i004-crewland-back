@@ -10,7 +10,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
@@ -31,7 +31,6 @@ export class UsersService {
       }
 
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
       const user = this.userRepository.create({
         ...createUserDto,
         password: hashedPassword,

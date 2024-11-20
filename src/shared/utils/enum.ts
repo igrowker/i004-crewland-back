@@ -9,3 +9,9 @@ export enum Gender {
   Others = 'otros',
   NotSpecified = 'no especifica',
 }
+
+export enum Type {
+  Crew = 'crew',
+  Transport = 'transport',
+  Accommodation = 'accommodation',
+}
