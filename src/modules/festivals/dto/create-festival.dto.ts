@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsNotEmpty,
@@ -5,8 +6,6 @@ import {
   MaxLength,
   Matches,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-// import { ObjectId } from 'typeorm';
 
 export class CreateFestivalDto {
   @ApiProperty({
