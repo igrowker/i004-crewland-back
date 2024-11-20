@@ -8,10 +8,6 @@ import {
   Matches,
   MaxLength,
   MinLength,
-<<<<<<< HEAD
-=======
-  IsDateString,
->>>>>>> 838d845 (feat / roles.decorators.ts -- feat / update-user-dto feat/ service updateUser)
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, Role } from 'src/shared/utils/enum';
