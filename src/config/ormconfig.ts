@@ -3,6 +3,7 @@ import { Chat } from '../modules/chat/entities/chat.entity';
 import { Publication } from '../modules/publications/entities/publication.entity';
 import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
 import { User } from '../modules/users/entities/user.entity';
+import { Auth } from 'src/modules/auth/entities/auth.entity';
 import { Festival } from '../modules/festivals/entities/festival.entity';
 
 import dotEnvOptions from './dotenv.config';
@@ -17,7 +18,7 @@ export const dataSourceOptions: DataSourceOptions = {
   dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'true',
   synchronize: true,
   logging: false,
-  entities: [Festival, Publication, Chat, User, Reservations],
+  entities: [Festival, Publication, Chat, User, Reservations, Auth],
   subscribers: [],
   migrations: [],
 };

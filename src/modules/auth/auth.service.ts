@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -8,9 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthLoginDto } from './dto/auth.login.dto';
-import * as bcrypt from 'bcryptjs';
-import { UsersModule } from '../users/users.module';
 import { User } from '../users/entities/user.entity';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -42,8 +40,14 @@ export class AuthService {
         );
       }
 
-      const payload = { username: user.username, sub: user.id };
+      const payload = {
+        email: user.email,
+        sub: user.id,
+        role: user.role,
+      };
+      console.log(payload);
       const token = this.jwtService.sign(payload);
+      console.log(token);
 
       return {
         userData: {
@@ -62,9 +66,12 @@ export class AuthService {
         token,
       };
     } catch (error) {
+      console.error('Error al generar el token:', error.message);
       throw new InternalServerErrorException(
         'Un error ha surgido en el inicio de sesión',
       );
     }
   }
 }
+
+// POSIBLE SOLUCION TEMPORAL (CARGAR LAS VARIABLES DE JWT ACA)
