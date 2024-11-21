@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Res, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Res,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
@@ -7,7 +15,7 @@ import { LoginGuard } from 'src/shared/guards/login/login.guard';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   @ApiBody({
@@ -17,6 +25,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(LoginGuard)
   async login(@Body() authLoginDto: AuthLoginDto) {
-    return await this.authService.login(authLoginDto)
+    return await this.authService.login(authLoginDto);
   }
 }
