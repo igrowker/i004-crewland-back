@@ -10,9 +10,11 @@ import { ReservationsModule } from './modules/reservations/reservations.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { PublicationsModule } from './modules/publications/publications.module';
 import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     UsersModule,
     ReservationsModule,
     ChatModule,
@@ -31,4 +33,4 @@ import { ResponseFormatInterceptor } from './shared/interceptors/response-format
   ],
   exports: [WinstonLoggerService],
 })
-export class AppModule {}
+export class AppModule { }
