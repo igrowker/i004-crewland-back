@@ -33,4 +33,4 @@ import { AuthModule } from './modules/auth/auth.module';
   ],
   exports: [WinstonLoggerService],
 })
-export class AppModule { }
+export class AppModule {}
