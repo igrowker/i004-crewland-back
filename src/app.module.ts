@@ -10,14 +10,25 @@ import { ReservationsModule } from './modules/reservations/reservations.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { PublicationsModule } from './modules/publications/publications.module';
 import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
+import { AuthModule } from './modules/auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import dotEnvOptions from './config/dotenv.config';
+
+console.log(dotEnvOptions.JWT_SECRET, dotEnvOptions.JWT_TOKEN_EXPIRED);
 
 @Module({
   imports: [
+    AuthModule,
     UsersModule,
     ReservationsModule,
     ChatModule,
     PublicationsModule,
     FestivalModule,
+    JwtModule.register({
+      global: true,
+      signOptions: { expiresIn: dotEnvOptions.JWT_TOKEN_EXPIRED },
+      secret: dotEnvOptions.JWT_SECRET,
+    }),
     TypeOrmModule.forRoot(dataSourceOptions),
   ],
   controllers: [AppController],
