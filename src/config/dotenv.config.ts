@@ -11,6 +11,7 @@ const DB_HOST = process.env.DB_HOST;
 const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME;
+const DB_MIGRATE_DATA = process.env.DB_MIGRATE_DATA;
 
 const dotEnvOptions = {
   // DATABASE_URL,
@@ -22,6 +23,7 @@ const dotEnvOptions = {
   DB_USERNAME,
   DB_PASSWORD,
   DB_NAME,
+  DB_MIGRATE_DATA,
 };
 
 export default dotEnvOptions;

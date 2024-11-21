@@ -14,12 +14,8 @@ export const dataSourceOptions: DataSourceOptions = {
   username: dotEnvOptions.DB_USERNAME,
   password: dotEnvOptions.DB_PASSWORD,
   database: dotEnvOptions.DB_NAME,
-  //OJO aca: el dropSchema = true es probable q te elimine las tablas cada ves q se inicia el server
-  dropSchema: false,
-  //otra opcion es synchonize true q borre las tablas, para desarrollo esta perfecto pero para produccion no es recomendable ya q puede alterar la db sin control
-  //npx typeorm migration:generate -n CreateInitialTables --> Este comando generará una migración en la carpeta de migraciones (usualmente en src/migrations o en una ruta que hayas configurado).
-  //npx typeorm migration:run --> Esto ejecutará todas las migraciones pendientes y creará las tablas necesarias en la base de datos.
-  synchronize: true, //esto para q se sinconice auto y no tener q correr el comando de migracion
+  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'true',
+  synchronize: true,
   logging: false,
   entities: [Festival, Publication, Chat, User, Reservations],
   subscribers: [],
