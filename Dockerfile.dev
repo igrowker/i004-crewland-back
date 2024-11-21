@@ -1,0 +1,26 @@
+# Dockerfile.dev
+
+FROM node:18-alpine AS dev
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+
+# Copiar el resto del código fuente al contenedor
+COPY . .
+
+# Instalar todas las dependencias (incluyendo devDependencies)
+RUN npm install
+
+# Exponer el puerto de la aplicación
+EXPOSE 3000
+
+# Ejecutar nodemon para desarrollo
+CMD ["npm", "run", "start:dev"]
+
+
+#####################
+# docker build -t crewland-backend-dev -f Dockerfile.dev .
+# docker run -p 3000:3000 --name crewland-backend-dev crewland-backend-dev
