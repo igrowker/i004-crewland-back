@@ -28,3 +28,5 @@ export class AuthGuard implements CanActivate {
     }
   }
 }
+
+// validar que el token sea valido
