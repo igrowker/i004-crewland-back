@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsOptional,
-  IsDateString,
+  MinLength,
   MaxLength,
   Matches,
 } from 'class-validator';
@@ -40,14 +40,14 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   location?: string;
 
   @ApiProperty({
-    description: 'La fecha del festival en formato ISO',
-    example: '2024-11-15T00:00:00Z',
+    description: 'La fecha del festival en formato YYYY-MM-DD | HH:mm',
+    example: '2024-11-15 | 15:30',
     required: false,
   })
   @IsOptional()
-  @IsDateString({}, { message: 'La fecha debe ser una cadena en formato ISO' })
-  @Matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/, {
-    message: 'La fecha debe ser una cadena en formato ISO',
+  @IsString({ message: 'La fecha debe ser una cadena' })
+  @Matches(/^\d{4}-\d{2}-\d{2} \| \d{2}:\d{2}$/, {
+    message: 'La fecha debe ser una cadena en formato YYYY-MM-DD | HH:mm.',
   })
   date?: string;
 
@@ -59,8 +59,11 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   })
   @IsOptional()
   @IsString()
-  @MaxLength(500, {
-    message: 'La descripción no puede exceder los 500 caracteres.',
+  @MaxLength(200, {
+    message: 'La descripción no puede exceder los 200 caracteres.',
+  })
+  @MinLength(10, {
+    message: 'La descripción debe tener al menos 10 caracteres.',
   })
   @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s.,;:'"()¿?¡!-]+$/, {
     message:
