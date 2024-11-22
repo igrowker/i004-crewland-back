@@ -21,7 +21,6 @@ export class RoleGuard implements CanActivate {
     if (!requiredRoles) {
       return true;
     }
-
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
@@ -29,7 +28,7 @@ export class RoleGuard implements CanActivate {
       throw new UnauthorizedException('Usuario no autenticado.');
     }
 
-    if (!requiredRoles.includes(user.rol as Role)) {
+    if (!requiredRoles.includes(user.role as Role)) {
       throw new ForbiddenException(
         'No tienes los permisos necesarios para acceder a este recurso.',
       );

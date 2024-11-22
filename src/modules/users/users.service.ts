@@ -84,4 +84,7 @@ export class UsersService {
       throw new Error('Error while updating the user: ' + error.message);
     }
   }
+  async getUsers() {
+    return await this.userRepository.find();
+  }
 }

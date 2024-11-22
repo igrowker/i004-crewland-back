@@ -12,15 +12,8 @@ import { PublicationsModule } from './modules/publications/publications.module';
 import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
-import dotEnvOptions from '../src/config/dotenv.config';
-
-console.log(
-  JwtModule.register({
-    global: true,
-    signOptions: { expiresIn: dotEnvOptions.JWT_TOKEN_EXPIRED },
-    secret: dotEnvOptions.JWT_SECRET,
-  }),
-);
+import { ConfigModule } from '@nestjs/config';
+import dotEnvOptions from './config/dotenv.config';
 
 @Module({
   imports: [
@@ -30,12 +23,12 @@ console.log(
     ChatModule,
     PublicationsModule,
     FestivalModule,
+    ConfigModule,
     JwtModule.register({
       global: true,
       signOptions: { expiresIn: dotEnvOptions.JWT_TOKEN_EXPIRED },
       secret: dotEnvOptions.JWT_SECRET,
     }),
-    // NOSE ESTAN CARGANDO CORRECTAMETE LAS VARIABLES
     TypeOrmModule.forRoot(dataSourceOptions),
   ],
   controllers: [AppController],

@@ -40,14 +40,8 @@ export class AuthService {
         );
       }
 
-      const payload = {
-        email: user.email,
-        sub: user.id,
-        role: user.role,
-      };
-      console.log(payload);
+      const payload = { email: user.email, sub: user.id, role: user.role };
       const token = this.jwtService.sign(payload);
-      console.log(token);
 
       return {
         userData: {
@@ -65,13 +59,11 @@ export class AuthService {
         },
         token,
       };
-    } catch (error) {
-      console.error('Error al generar el token:', error.message);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: any) {
       throw new InternalServerErrorException(
         'Un error ha surgido en el inicio de sesión',
       );
     }
   }
 }
-
-// POSIBLE SOLUCION TEMPORAL (CARGAR LAS VARIABLES DE JWT ACA)
