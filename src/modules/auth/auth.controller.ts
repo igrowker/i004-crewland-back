@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Controller,
   Post,
   Body,
+  Res,
   HttpCode,
   HttpStatus,
   UseGuards,

@@ -1,5 +1,6 @@
 import {
   Injectable,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';

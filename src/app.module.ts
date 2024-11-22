@@ -14,8 +14,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import dotEnvOptions from './config/dotenv.config';
 
-console.log(dotEnvOptions.JWT_SECRET, dotEnvOptions.JWT_TOKEN_EXPIRED);
-
 @Module({
   imports: [
     AuthModule,

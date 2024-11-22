@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Injectable,
   ConflictException,
@@ -16,6 +17,10 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  async getUsers(){
+    return await this.userRepository.find();
+  }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {

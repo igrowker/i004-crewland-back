@@ -16,6 +16,8 @@ export class Festival {
   @Column({ type: 'varchar', nullable: false })
   date: string;
 
+  //separar date en hora y dia
+
   @Column({ type: 'varchar', nullable: false })
   description: string;
 }

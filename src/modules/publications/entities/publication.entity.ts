@@ -19,8 +19,8 @@ export class Publication {
   @Column({ type: 'uuid', nullable: false })
   userId: string;
 
-  // @Column({ type: 'enum', enum: ['search', 'offer'] })
-  // title: string;
+  @Column({ type: 'enum', enum: ['search', 'offer'] })
+  title: string;
 
   @Column({
     type: 'enum',
@@ -41,6 +41,6 @@ export class Publication {
   @CreateDateColumn({ nullable: false })
   dateCreation: Date;
 
-  // @Column({ type: 'boolean', default: true })
-  // isActive: boolean;
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 }
