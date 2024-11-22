@@ -73,4 +73,16 @@ export class PublicationsService {
 
     await this.publicationRepository.delete(id);
   }
+
+  async toggleActive(id: string): Promise<Publication> {
+    const publication = await this.publicationRepository.findOne({ where: { id } });
+
+    if (!publication) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+
+    publication.isActive = !publication.isActive;
+
+    return await this.publicationRepository.save(publication);
+  }
 }
