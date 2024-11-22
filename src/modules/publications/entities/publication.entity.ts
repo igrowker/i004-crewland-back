@@ -41,7 +41,7 @@ export class Publication {
   @CreateDateColumn({ nullable: false })
   dateCreation: Date;
 
-  // @Column({ type: 'boolean', default: true })
-  // isActive: boolean;
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 }
 
