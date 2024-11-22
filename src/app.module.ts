@@ -12,6 +12,7 @@ import { PublicationsModule } from './modules/publications/publications.module';
 import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 import dotEnvOptions from './config/dotenv.config';
 
 @Module({
@@ -22,6 +23,7 @@ import dotEnvOptions from './config/dotenv.config';
     ChatModule,
     PublicationsModule,
     FestivalModule,
+    ConfigModule,
     JwtModule.register({
       global: true,
       signOptions: { expiresIn: dotEnvOptions.JWT_TOKEN_EXPIRED },

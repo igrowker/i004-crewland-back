@@ -7,6 +7,7 @@ import {
   // UseGuards,
   Param,
   Get,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,15 +20,12 @@ import {
 import { Roles } from 'src/shared/decorators/role.decorator';
 import { Role } from 'src/shared/utils/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/shared/guards/jwt-auth/jwt-auth.guard';
+import { RoleGuard } from 'src/shared/guards/roles/roles.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Get()
-  async getUsers(){
-    return this.usersService.getUsers();
-  }
 
   // POST /users
   @Post()
@@ -75,5 +73,12 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.updateUser(id, updateUserDto);
+  }
+
+  @Get()
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async getUsers() {
+    return this.usersService.getUsers();
   }
 }

@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -10,9 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthLoginDto } from './dto/auth.login.dto';
-import * as bcrypt from 'bcryptjs';
-import { UsersModule } from '../users/users.module';
 import { User } from '../users/entities/user.entity';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -46,8 +44,7 @@ export class AuthService {
         );
       }
 
-      const payload = { username: user.username, sub: user.id, email: user.email };
-      console.log(payload);
+      const payload = { email: user.email, sub: user.id, role: user.role };
       const token = this.jwtService.sign(payload);
       console.log(token);
       const aux = {
@@ -66,9 +63,8 @@ export class AuthService {
         },
         token,
       };
-console.log(aux);
-      return aux;
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: any) {
       throw new InternalServerErrorException(
         'Un error ha surgido en el inicio de sesión',
       );

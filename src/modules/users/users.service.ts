@@ -18,10 +18,6 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getUsers(){
-    return await this.userRepository.find();
-  }
-
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
       const existingEmail = await this.userRepository.findOne({
@@ -90,5 +86,8 @@ export class UsersService {
     } catch (error) {
       throw new Error('Error while updating the user: ' + error.message);
     }
+  }
+  async getUsers() {
+    return await this.userRepository.find();
   }
 }
