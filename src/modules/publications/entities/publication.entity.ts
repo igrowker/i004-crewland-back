@@ -39,8 +39,12 @@ export class Publication {
   availability: string;
 
   @CreateDateColumn({ nullable: false })
-  dateCreation: Date;
+  dateCreation: Date; // que sea automatico. con timestap
 
   // @Column({ type: 'boolean', default: true })
   // isActive: boolean;
 }
+
+// posiblemente tengamos que crear un que estas buscando
+
+// a modificar la entitie.

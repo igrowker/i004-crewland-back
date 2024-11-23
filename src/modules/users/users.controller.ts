@@ -26,8 +26,7 @@ import { RoleGuard } from 'src/shared/guards/roles/roles.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // POST /users
-  @Post()
+  @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
