@@ -46,3 +46,7 @@ export class User {
   @Column({ type: 'simple-array', nullable: true })
   favorites: string[];
 }
+
+// agregar imagen con cloudinary
+// descripcion
+// location ( string )

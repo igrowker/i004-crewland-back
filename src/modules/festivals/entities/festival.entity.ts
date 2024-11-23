@@ -13,11 +13,8 @@ export class Festival {
   @Column({ type: 'varchar', nullable: false })
   location: string;
 
-  @Column({ type: 'date', nullable: false })
+  @Column({ type: 'varchar', nullable: false })
   date: string;
-
-  @Column({ type: 'time', nullable: false })
-  time: string;
 
   @Column({ type: 'varchar', nullable: false })
   description: string;
@@ -27,6 +24,6 @@ export class Festival {
 // solo los admins pueden crear festivales.
 
 // hace falta agregar una imagen (APLICAR CLOUDINARY SI LLEGAMOS)
-// columna imagen
+// columna imagen manejado con cloudinary
 // agregar la url (string)
 // agregar cantidad de personas ( string ) y pensar que otra cosa se puede agregar

@@ -19,8 +19,8 @@ export class Publication {
   @Column({ type: 'uuid', nullable: false })
   userId: string;
 
-  // @Column({ type: 'enum', enum: ['search', 'offer'] })
-  // title: string;
+  @Column({ type: 'enum', enum: ['search', 'offer'] })
+  title: string;
 
   @Column({
     type: 'enum',
@@ -39,7 +39,7 @@ export class Publication {
   availability: string;
 
   @CreateDateColumn({ nullable: false })
-  dateCreation: Date; // que sea automatico. con timestap
+  dateCreation: Date;
 
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
@@ -48,3 +48,7 @@ export class Publication {
 // posiblemente tengamos que crear un que estas buscando
 
 // a modificar la entitie.
+
+// tenemos que hacer las filtraciones de las publicaciones
+
+// agreguen la entitie para manejar imagens con cloudinary  (URL) mirar figma la vista de search

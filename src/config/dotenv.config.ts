@@ -12,8 +12,14 @@ const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME;
 const DB_MIGRATE_DATA = process.env.DB_MIGRATE_DATA;
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+const TWILIO_WHATSAPP_NUMBER = process.env.TWILIO_WHATSAPP_NUMBER;
 
 const dotEnvOptions = {
+  TWILIO_WHATSAPP_NUMBER,
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
   DATABASE_URL,
   PORT,
   JWT_SECRET,
