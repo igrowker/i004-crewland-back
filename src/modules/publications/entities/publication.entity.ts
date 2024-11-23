@@ -19,8 +19,8 @@ export class Publication {
   @Column({ type: 'uuid', nullable: false })
   userId: string;
 
-  // @Column({ type: 'enum', enum: ['search', 'offer'] })
-  // title: string;
+  @Column({ type: 'enum', enum: ['search', 'offer'] })
+  title: string;
 
   @Column({
     type: 'enum',
@@ -44,3 +44,11 @@ export class Publication {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 }
+
+// posiblemente tengamos que crear un que estas buscando
+
+// a modificar la entitie.
+
+// tenemos que hacer las filtraciones de las publicaciones
+
+// agreguen la entitie para manejar imagens con cloudinary  (URL) mirar figma la vista de search
