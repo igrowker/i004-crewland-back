@@ -2,9 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsNotEmpty,
-  IsDateString,
   MaxLength,
   Matches,
+  MinLength,
 } from 'class-validator';
 
 export class CreateFestivalDto {
@@ -36,14 +36,26 @@ export class CreateFestivalDto {
   location: string;
 
   @ApiProperty({
-    description: 'La fecha del festival en formato ISO',
-    example: '2024-11-15T00:00:00Z',
+    description: 'La fecha del festival en formato YYYY-MM-DD',
+    example: '2024-11-15',
   })
-  @IsDateString({}, { message: 'La fecha debe ser una cadena en formato ISO' })
-  @Matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/, {
-    message: 'La fecha debe ser una cadena en formato ISO',
+  @IsString({ message: 'La fecha debe ser una cadena' })
+  @IsNotEmpty({ message: 'La fecha es obligatoria' })
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'La fecha debe ser una cadena en formato YYYY-MM-DD.',
   })
   date: string;
+
+  @ApiProperty({
+    description: 'La hora del festival en formato HH:mm',
+    example: '20:00',
+  })
+  @IsString({ message: 'La hora debe ser una cadena' })
+  @IsNotEmpty({ message: 'La hora es obligatoria' })
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, {
+    message: 'La hora debe estar en formato HH:mm (24 horas).',
+  })
+  time: string;
 
   @ApiProperty({
     description: 'Una descripción breve del festival',
@@ -52,8 +64,12 @@ export class CreateFestivalDto {
     required: true,
   })
   @IsString()
-  @MaxLength(500, {
+  @IsNotEmpty({ message: 'La descripción es obligatoria' })
+  @MaxLength(200, {
     message: 'La descripción no puede exceder los 500 caracteres.',
+  })
+  @MinLength(10, {
+    message: 'La descripción debe tener al menos 10 caracteres.',
   })
   @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s.,;:'"()¿?¡!-]+$/, {
     message:
