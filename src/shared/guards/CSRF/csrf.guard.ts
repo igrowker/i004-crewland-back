@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   ForbiddenException,
 } from '@nestjs/common';
-import { Tokens } from 'csrf';
+import Tokens from 'csrf';
 
 @Injectable()
 export class CsrfGuard implements CanActivate {

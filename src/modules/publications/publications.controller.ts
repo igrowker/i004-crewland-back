@@ -9,15 +9,19 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { PublicationValidationUser } from '../../shared/guards/publications/publications-validation-user.guard';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth/jwt-auth.guard';
 import { PublicationsService } from './publications.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('publications')
 export class PublicationsController {
-  constructor(private readonly publicationsService: PublicationsService) {}
+  constructor(private readonly publicationsService: PublicationsService) { }
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   create(@Body() createPublicationDto: CreatePublicationDto) {
     return this.publicationsService.create(createPublicationDto);
   }
@@ -33,7 +37,7 @@ export class PublicationsController {
   }
 
   @Patch(':id')
-  // @UseGuards(PublicationValidationUser)
+  @UseGuards(PublicationValidationUser)
   update(
     @Param('id') id: string,
     @Body() updatePublicationDto: UpdatePublicationDto,
@@ -42,13 +46,13 @@ export class PublicationsController {
   }
 
   @Patch(':id/toggle-active')
-  // @UseGuards(PublicationValidationUser)
+  @UseGuards(PublicationValidationUser)
   async toggleActive(@Param('id') id: string) {
     return this.publicationsService.toggleActive(id);
   }
 
   @Delete(':id')
-  // @UseGuards(PublicationValidationUser)
+  @UseGuards(PublicationValidationUser)
   remove(@Param('id') id: string) {
     return this.publicationsService.remove(id);
   }

@@ -6,16 +6,15 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
-import { ConfigService } from '@nestjs/config';
-import dotEnvOptions from 'src/config/dotenv.config';
 import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -35,14 +34,14 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const token = tokenBearer[1];
-    const secret = this.configService.get<string>(dotEnvOptions.JWT_SECRET);
+    const secret = this.configService.get<string>('JWT_SECRET');
 
     try {
       const decodedToken = this.jwtService.verify(token, { secret });
 
       if (
         !decodedToken ||
-        !decodedToken.sub || // sub
+        !decodedToken.id ||
         !decodedToken.email ||
         !decodedToken.role
       ) {
