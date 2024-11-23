@@ -1,34 +1,46 @@
+import { Type } from 'src/shared/utils/enum';
 import {
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  Index,
 } from 'typeorm';
 
 @Entity({
   name: 'publications',
 })
+@Index('idx_userId', ['userId'])
+@Index('idx_festivalId', ['festivalId'])
 export class Publication {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', nullable: false })
   userId: string;
 
-  @Column({ type: 'enum', enum: ['crew', 'transport', 'accommodation'] })
-  type: string;
+  // @Column({ type: 'enum', enum: ['search', 'offer'] })
+  // title: string;
 
-  @Column({ type: 'uuid' })
+  @Column({
+    type: 'enum',
+    enum: Type,
+    nullable: false,
+  })
+  type: Type;
+
+  @Column({ type: 'uuid', nullable: false })
   festivalId: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', nullable: false })
   details: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', nullable: false })
   availability: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ nullable: false })
   dateCreation: Date;
-}
 
-export default Publication;
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
+}
