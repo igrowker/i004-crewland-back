@@ -41,8 +41,8 @@ export class Publication {
   @CreateDateColumn({ nullable: false })
   dateCreation: Date; // que sea automatico. con timestap
 
-  // @Column({ type: 'boolean', default: true })
-  // isActive: boolean;
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
 }
 
 // posiblemente tengamos que crear un que estas buscando
