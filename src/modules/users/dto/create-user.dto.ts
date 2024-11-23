@@ -8,7 +8,6 @@ import {
   Matches,
   MaxLength,
   MinLength,
-  IsDateString
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, Role } from 'src/shared/utils/enum';
@@ -36,7 +35,7 @@ export class CreateUserDto {
   @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
   @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
   @Matches(/^[a-zA-Z0-9_-]+$/, {
-    message: 'El nombre de usuario debe contener sólo letras y espacios',
+    message: 'El nombre debe contener sólo letras y espacios',
   })
   username: string;
 
@@ -102,13 +101,6 @@ export class CreateUserDto {
     example: '2000-01-01',
   })
   @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria.' })
-  @IsDateString(
-    {},
-    {
-      message:
-        'La fecha debe ser una fecha válida en formato ISO (YYYY-MM-DD).',
-    },
-  )
   age: string;
 
   @ApiProperty({

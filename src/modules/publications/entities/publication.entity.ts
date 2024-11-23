@@ -25,7 +25,7 @@ export class Publication {
   @Column({
     type: 'enum',
     enum: Type,
-    nullable: false
+    nullable: false,
   })
   type: Type;
 
@@ -44,4 +44,3 @@ export class Publication {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 }
-

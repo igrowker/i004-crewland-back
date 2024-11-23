@@ -15,7 +15,7 @@ import { UpdatePublicationDto } from './dto/update-publication.dto';
 
 @Controller('publications')
 export class PublicationsController {
-  constructor(private readonly publicationsService: PublicationsService) { }
+  constructor(private readonly publicationsService: PublicationsService) {}
 
   @Post()
   create(@Body() createPublicationDto: CreatePublicationDto) {

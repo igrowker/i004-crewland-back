@@ -18,4 +18,4 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [PublicationsController],
   providers: [PublicationsService],
 })
-export class PublicationsModule { }
+export class PublicationsModule {}
