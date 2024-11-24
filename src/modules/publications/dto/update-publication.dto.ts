@@ -15,16 +15,6 @@ import { Type } from 'src/shared/utils/enum';
 
 export class UpdatePublicationDto extends PartialType(CreatePublicationDto) {
   @ApiProperty({
-    description: 'ID del usuario que crea la publicación (opcional)',
-    example: '4ca24b91-70c2-43ca-aee9-4f54b8f8erc5',
-    required: false,
-  })
-  @IsString({ message: 'El userId debe ser una cadena de texto.' })
-  @IsOptional()
-  @IsUUID(undefined, { message: 'El ID del usuario debe ser un UUID válido.' })
-  userId?: string;
-
-  @ApiProperty({
     description:
       'Tipo de publicación: Crew, Transport, o Accommodation (opcional)',
     example: 'crew',
@@ -70,13 +60,4 @@ export class UpdatePublicationDto extends PartialType(CreatePublicationDto) {
     message: 'La disponibilidad debe ser una fecha válida en formato 9am - 5pm',
   }) //chequear como va a ser el formato de availability
   availability?: string;
-
-  @ApiProperty({
-    description: 'Fecha de creación de la publicación (opcional)',
-    example: '2024-11-18T12:30:00Z',
-    required: false,
-  })
-  @IsOptional()
-  @IsDate({ message: 'La fecha de creación debe ser una fecha válida.' })
-  dateCreation?: Date;
 }

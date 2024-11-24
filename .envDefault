@@ -10,3 +10,8 @@ DB_HOST=                   # Especifica el host donde está alojada la base de d
 DB_USERNAME=               # Nombre de usuario de PostgreSQL (por defecto es postgre)
 DB_PASSWORD=               # Constraseña cuando hayan creado su DB en PostgreSQL
 DB_NAME=                   # Nombre de la DB (crewland en nuestro caso)
+
+###TypeOrm
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+TWILIO_WHATSAPP_NUMBER=

@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Publication } from './entities/publication.entity';
@@ -14,7 +10,7 @@ export class PublicationsService {
   constructor(
     @InjectRepository(Publication)
     private readonly publicationRepository: Repository<Publication>,
-  ) {}
+  ) { }
 
   async create(
     createPublicationDto: CreatePublicationDto,
@@ -54,11 +50,11 @@ export class PublicationsService {
     });
 
     if (!publication) {
-      throw new NotFoundException('Publicación no encontrada');
+      throw new NotFoundException('Publicación no encontrada')
     }
 
-    const updatedPublication = Object.assign(publication, updatePublicationDto);
-    return await this.publicationRepository.save(updatedPublication);
+    const updatedPublication = Object.assign(publication, updatePublicationDto)
+    return await this.publicationRepository.save(updatedPublication)
   }
 
   async remove(id: string): Promise<void> {
@@ -67,14 +63,16 @@ export class PublicationsService {
     });
 
     if (!publication) {
-      throw new NotFoundException('Publicación no encontrada');
+      throw new NotFoundException('Publicación no encontrada')
     }
 
     await this.publicationRepository.delete(id);
   }
 
   async toggleActive(id: string): Promise<Publication> {
-    const publication = await this.publicationRepository.findOne({ where: { id } });
+    const publication = await this.publicationRepository.findOne({
+      where: { id },
+    });
 
     if (!publication) {
       throw new NotFoundException('Publicación no encontrada');

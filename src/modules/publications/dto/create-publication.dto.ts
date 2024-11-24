@@ -5,7 +5,6 @@ import {
   IsUUID,
   IsDate,
   MaxLength,
-  IsDateString,
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -21,15 +20,15 @@ export class CreatePublicationDto {
   @IsUUID(undefined, { message: 'El ID del usuario debe ser un UUID válido.' })
   userId: string;
 
-  // @ApiProperty({
-  //     description: 'Título de la publicación, puede ser cualquier texto descriptivo.',
-  //     example: 'Oferta de transporte',
-  //   })
-  //   @IsString({ message: 'El título debe ser una cadena de texto.' })
-  //   @IsNotEmpty({ message: 'El título de la publicación es obligatorio.' })
-  //   @MinLength(1, { message: 'El título debe tener al menos 1 carácter.' })
-  //   @MaxLength(60, { message: 'El título no puede tener más de 60 caracteres.' })
-  //   title: string;
+  @ApiProperty({
+    description: 'Título de la publicación, puede ser cualquier texto descriptivo.',
+    example: 'Oferta de transporte',
+  })
+  @IsString({ message: 'El título debe ser una cadena de texto.' })
+  @IsNotEmpty({ message: 'El título de la publicación es obligatorio.' })
+  @MinLength(1, { message: 'El título debe tener al menos 1 carácter.' })
+  @MaxLength(60, { message: 'El título no puede tener más de 60 caracteres.' })
+  title: string;
 
   @ApiProperty({
     description: 'Tipo de publicación: Crew, Transport, o Accommodation',

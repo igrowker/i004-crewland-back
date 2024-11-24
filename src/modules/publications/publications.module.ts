@@ -13,7 +13,7 @@ import { ConfigModule } from '@nestjs/config';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRED },
     }),
-    ConfigModule
+    ConfigModule,
   ],
   controllers: [PublicationsController],
   providers: [PublicationsService],

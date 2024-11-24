@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { PublicationValidationUser } from '../../shared/guards/publications/publications-validation-user.guard';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth/jwt-auth.guard';
@@ -27,17 +27,19 @@ export class PublicationsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.publicationsService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.publicationsService.findOne(id);
   }
 
   @Patch(':id')
-  @UseGuards(PublicationValidationUser)
+  @UseGuards(JwtAuthGuard, PublicationValidationUser)
   update(
     @Param('id') id: string,
     @Body() updatePublicationDto: UpdatePublicationDto,
@@ -46,13 +48,14 @@ export class PublicationsController {
   }
 
   @Patch(':id/toggle-active')
+  @UseGuards(JwtAuthGuard, PublicationValidationUser)
   @UseGuards(PublicationValidationUser)
   async toggleActive(@Param('id') id: string) {
     return this.publicationsService.toggleActive(id);
   }
 
   @Delete(':id')
-  @UseGuards(PublicationValidationUser)
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.publicationsService.remove(id);
   }
