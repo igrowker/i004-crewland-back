@@ -33,7 +33,7 @@ export class UsersController {
 
   @ApiBearerAuth()
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, RoleGuard) // Guards para autenticación y autorización
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.Admin, Role.User)
   @ApiOperation({
     summary: 'Actualizar parcialmente la información de un usuario',
