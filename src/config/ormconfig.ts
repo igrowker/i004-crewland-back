@@ -4,7 +4,7 @@ import { Publication } from '../modules/publications/entities/publication.entity
 import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
 import { User } from '../modules/users/entities/user.entity';
 import { Auth } from 'src/modules/auth/entities/auth.entity';
-import { Festival } from '../modules/festivals/entities/festival.entity';
+import { Festivals } from '../modules/festivals/entities/festival.entity';
 import { VerificationCode } from '../shared/sms/twilio/entities/twilio.entity';
 import { VerificationCodeEmail } from '../modules/verification/entities/verification.entity';
 
@@ -21,7 +21,7 @@ export const dataSourceOptions: DataSourceOptions = {
   synchronize: true,
   logging: false,
   entities: [
-    Festival,
+    Festivals,
     Publication,
     Chat,
     User,

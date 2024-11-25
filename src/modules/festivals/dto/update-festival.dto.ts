@@ -95,7 +95,6 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   @IsUrl({}, { message: 'Debe ser una URL válida' })
   url?: string;
 
-  // Campo número de asistentes opcional
   @ApiProperty({
     description: 'Número de personas que asistirán al festival',
     example: 5000,
