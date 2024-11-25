@@ -11,6 +11,9 @@ import { Repository } from 'typeorm';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { User } from '../users/entities/user.entity';
 import * as bcrypt from 'bcryptjs';
+import { ForgotPasswordDto } from './dto/forgotPasswor.dto';
+import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
+import {resetPassTemplate} from 'src/shared/utils/resetPassTemplate';
 
 @Injectable()
 export class AuthService {
@@ -18,9 +21,10 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly sendGridService: SendGridService,
+  ) { }
 
-  
+
   async login(authLoginDto: AuthLoginDto): Promise<any> {
     console.log('JWT Secret desde el controlador:', (this.jwtService as any).options.secret);
     const { email, password } = authLoginDto;
@@ -46,7 +50,7 @@ export class AuthService {
 
       const payload = { email: user.email, sub: user.id, role: user.role };
       const token = this.jwtService.sign(payload);
-      console.log(token);
+
       const aux = {
         userData: {
           id: user.id,
@@ -70,4 +74,42 @@ export class AuthService {
       );
     }
   }
+
+  async requestPasswordReset(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email },
+      });
+
+      if (!user) {
+        return new UnauthorizedException(`No se logro encontrar al usuario con el email: ${email}`);
+      }
+
+      const token = this.jwtService.sign({ userId: user.id }, { expiresIn: '2h' });
+
+      //genera el codigo de 4 digitos y reemplazalo en el template
+      const tbodyRegex = /<strong id="code">(.*?)<\/strong>/s;
+      const emailTemplate = resetPassTemplate.replace(tbodyRegex, `<strong id="code">1234</strong>`);
+
+      const aux = await this.sendGridService.sendEmail(email,
+        "Recuperar contraseña",
+        `Dale a este link para recuperar tu contraseña`,
+        `
+        <h1>Link</h1>
+        <p>http://localhost:3000/restore-password/reset-password?token=${token}</p>
+        <div>
+          ${emailTemplate}
+        </div>
+        `);
+
+      return { message: 'Correo de recuperación enviado' };
+
+    } catch (error) {
+      throw new UnauthorizedException('Token inválido o expirado.');
+    }
+  }
+
+  //actualizar y restaura contraseña aca
 }

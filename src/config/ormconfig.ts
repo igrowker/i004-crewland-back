@@ -5,6 +5,8 @@ import { Reservations } from 'src/modules/reservations/entities/reservation.enti
 import { User } from '../modules/users/entities/user.entity';
 import { Auth } from 'src/modules/auth/entities/auth.entity';
 import { Festival } from '../modules/festivals/entities/festival.entity';
+import { VerificationCode } from '../shared/sms/twilio/entities/twilio.entity';
+import { VerificationCodeEmail } from '../modules/verification/entities/verification.entity';
 
 import dotEnvOptions from './dotenv.config';
 
@@ -15,10 +17,19 @@ export const dataSourceOptions: DataSourceOptions = {
   username: dotEnvOptions.DB_USERNAME,
   password: dotEnvOptions.DB_PASSWORD,
   database: dotEnvOptions.DB_NAME,
-  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
-  synchronize: true,
+  dropSchema: false,
+  synchronize: false,
   logging: false,
-  entities: [Festival, Publication, Chat, User, Reservations, Auth],
+  entities: [
+    Festival,
+    Publication,
+    Chat,
+    User,
+    Reservations,
+    Auth,
+    VerificationCode,
+    VerificationCodeEmail,
+  ],
   subscribers: [],
   migrations: [],
 };

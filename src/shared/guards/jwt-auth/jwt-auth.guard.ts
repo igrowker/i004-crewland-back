@@ -42,7 +42,7 @@ export class JwtAuthGuard implements CanActivate {
 
       if (
         !decodedToken ||
-        !decodedToken.sub || // sub
+        !decodedToken.sub ||
         !decodedToken.email ||
         !decodedToken.role
       ) {

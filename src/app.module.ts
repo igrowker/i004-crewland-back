@@ -13,6 +13,9 @@ import { ResponseFormatInterceptor } from './shared/interceptors/response-format
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
+import { TwilioModule } from './shared/sms/twilio/twilio.module';
+import { SendgridModule } from './shared/mail/sendgrid/sendgrid.module';
+import { VerificationModule } from './modules/verification/verification.module';
 import dotEnvOptions from './config/dotenv.config';
 
 @Module({
@@ -24,6 +27,9 @@ import dotEnvOptions from './config/dotenv.config';
     PublicationsModule,
     FestivalModule,
     ConfigModule,
+    TwilioModule,
+    VerificationModule,
+    SendgridModule,
     JwtModule.register({
       global: true,
       signOptions: { expiresIn: dotEnvOptions.JWT_TOKEN_EXPIRED },

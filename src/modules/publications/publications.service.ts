@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Publication } from './entities/publication.entity';
@@ -75,7 +70,9 @@ export class PublicationsService {
   }
 
   async toggleActive(id: string): Promise<Publication> {
-    const publication = await this.publicationRepository.findOne({ where: { id } });
+    const publication = await this.publicationRepository.findOne({
+      where: { id },
+    });
 
     if (!publication) {
       throw new NotFoundException('Publicación no encontrada');
