@@ -5,7 +5,7 @@ import { WinstonLoggerService } from './middleware/logger/logger.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './config/ormconfig';
-import { FestivalModule } from './modules/festivals/festival.module';
+import { FestivalsModule } from './modules/festivals/festivals.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { PublicationsModule } from './modules/publications/publications.module';
@@ -25,7 +25,7 @@ import dotEnvOptions from './config/dotenv.config';
     ReservationsModule,
     ChatModule,
     PublicationsModule,
-    FestivalModule,
+    FestivalsModule,
     ConfigModule,
     TwilioModule,
     VerificationModule,

@@ -7,6 +7,9 @@ import {
   MinLength,
   MaxLength,
   Matches,
+  IsUrl,
+  IsInt,
+  Min,
 } from 'class-validator';
 
 export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
@@ -82,4 +85,23 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
       'La descripción solo puede contener letras, números, espacios y signos de puntuación comunes.',
   })
   description?: string;
+
+  @ApiProperty({
+    description: 'URL del sitio web del festival',
+    example: 'https://www.festivalexample.com',
+    required: false,
+  })
+  @IsOptional()
+  @IsUrl({}, { message: 'Debe ser una URL válida' })
+  url?: string;
+
+  @ApiProperty({
+    description: 'Número de personas que asistirán al festival',
+    example: 5000,
+    required: false,
+  })
+  @IsOptional()
+  @IsInt({ message: 'Debe ser un número entero' })
+  @Min(1, { message: 'Debe haber al menos una persona asistiendo' })
+  attendeesCount?: number;
 }
