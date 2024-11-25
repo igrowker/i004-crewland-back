@@ -50,3 +50,7 @@ export class User {
   @ManyToMany(() => Chat, (chat) => chat.usuarios)
   chats: Chat[];
 }
+
+// agregar imagen con cloudinary
+// descripcion
+// location ( string )

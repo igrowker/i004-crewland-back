@@ -8,36 +8,37 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { FestivalService } from './festival.service';
+import { FestivalsService } from './festivals.service';
 import { CreateFestivalDto } from './dto/create-festival.dto';
 import { UpdateFestivalDto } from './dto/update-festival.dto';
-// import { ObjectId } from 'typeorm';
-// import { LoggerGuard } from 'src/guards/logger.guard';
+import { JwtAuthGuard } from 'src/shared/guards/jwt-auth/jwt-auth.guard';
+import { Role } from 'src/shared/utils/enum';
+import { Roles } from 'src/shared/decorators/role.decorator';
+import { RoleGuard } from 'src/shared/guards/roles/roles.guard';
 
-@Controller('festival')
-export class FestivalController {
-  constructor(private readonly festivalService: FestivalService) {}
+@Controller('festivals')
+@UseGuards(JwtAuthGuard, RoleGuard)
+export class FestivalsController {
+  constructor(private readonly festivalService: FestivalsService) {}
 
-  @UseGuards()
   @Post()
+  @Roles(Role.Admin)
   create(@Body() createFestivalDto: CreateFestivalDto) {
     return this.festivalService.create(createFestivalDto);
   }
 
-  @UseGuards()
   @Get()
   findAll() {
     return this.festivalService.findAll();
   }
 
-  @UseGuards()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.festivalService.findOne(id);
   }
 
-  @UseGuards()
   @Patch(':id')
+  @Roles(Role.Admin)
   update(
     @Param('id') id: string,
     @Body() updateFestivalDto: UpdateFestivalDto,
@@ -45,8 +46,8 @@ export class FestivalController {
     return this.festivalService.update(id, updateFestivalDto);
   }
 
-  @UseGuards()
   @Delete(':id')
+  @Roles(Role.Admin)
   remove(@Param('id') id: string) {
     return this.festivalService.remove(id);
   }

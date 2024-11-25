@@ -26,15 +26,14 @@ import { RoleGuard } from 'src/shared/guards/roles/roles.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // POST /users
-  @Post()
+  @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
 
   @ApiBearerAuth()
   @Patch(':id')
-  // @UseGuards(JwtAuthGuard, RoleGuard) // Guards para autenticación y autorización
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.Admin, Role.User)
   @ApiOperation({
     summary: 'Actualizar parcialmente la información de un usuario',

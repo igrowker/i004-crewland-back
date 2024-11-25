@@ -7,16 +7,16 @@ import { CreateFestivalDto } from './dto/create-festival.dto';
 import { UpdateFestivalDto } from './dto/update-festival.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Festival } from './entities/festival.entity';
+import { Festivals } from './entities/festival.entity';
 
 @Injectable()
-export class FestivalService {
+export class FestivalsService {
   constructor(
-    @InjectRepository(Festival)
-    private readonly festivalRepository: Repository<Festival>,
+    @InjectRepository(Festivals)
+    private readonly festivalRepository: Repository<Festivals>,
   ) {}
 
-  async create(createFestivalDto: CreateFestivalDto): Promise<Festival> {
+  async create(createFestivalDto: CreateFestivalDto): Promise<Festivals> {
     try {
       const newFestival = this.festivalRepository.create(createFestivalDto);
       return await this.festivalRepository.save(newFestival);
@@ -28,7 +28,7 @@ export class FestivalService {
     }
   }
 
-  async findAll(): Promise<Festival[]> {
+  async findAll(): Promise<Festivals[]> {
     try {
       return await this.festivalRepository.find();
     } catch (error) {
@@ -39,7 +39,7 @@ export class FestivalService {
     }
   }
 
-  async findOne(id: string): Promise<Festival> {
+  async findOne(id: string): Promise<Festivals> {
     try {
       const festival = await this.festivalRepository.findOne({
         where: { id },
@@ -62,7 +62,7 @@ export class FestivalService {
   async update(
     id: string,
     updateFestivalDto: UpdateFestivalDto,
-  ): Promise<Festival> {
+  ): Promise<Festivals> {
     try {
       const result = await this.festivalRepository.update(
         { id },

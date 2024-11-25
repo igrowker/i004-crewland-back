@@ -6,9 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards
 } from '@nestjs/common';
-import { PublicationValidationUser } from '../../shared/guards/publications/publications-validation-user.guard';
 import { PublicationsService } from './publications.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';

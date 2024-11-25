@@ -5,6 +5,9 @@ import {
   MaxLength,
   Matches,
   MinLength,
+  IsUrl,
+  IsInt,
+  Min,
 } from 'class-validator';
 
 export class CreateFestivalDto {
@@ -36,15 +39,26 @@ export class CreateFestivalDto {
   location: string;
 
   @ApiProperty({
-    description: 'La fecha del festival en formato YYYY-MM-DD | HH:mm',
-    example: '2024-11-15 | 15:30',
+    description: 'La fecha del festival en formato YYYY-MM-DD',
+    example: '2024-11-15',
   })
   @IsString({ message: 'La fecha debe ser una cadena' })
   @IsNotEmpty({ message: 'La fecha es obligatoria' })
-  @Matches(/^\d{4}-\d{2}-\d{2} \| \d{2}:\d{2}$/, {
-    message: 'La fecha debe ser una cadena en formato YYYY-MM-DD | HH:mm.',
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'La fecha debe ser una cadena en formato YYYY-MM-DD.',
   })
   date: string;
+
+  @ApiProperty({
+    description: 'La hora del festival en formato HH:mm',
+    example: '20:00',
+  })
+  @IsString({ message: 'La hora debe ser una cadena' })
+  @IsNotEmpty({ message: 'La hora es obligatoria' })
+  @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, {
+    message: 'La hora debe estar en formato HH:mm (24 horas).',
+  })
+  time: string;
 
   @ApiProperty({
     description: 'Una descripción breve del festival',
@@ -65,4 +79,19 @@ export class CreateFestivalDto {
       'La descripción solo puede contener letras, números, espacios y signos de puntuación comunes.',
   })
   description: string;
+
+  @ApiProperty({
+    description: 'URL del sitio web del festival',
+    example: 'https://www.festivalexample.com',
+  })
+  @IsUrl({}, { message: 'Debe ser una URL válida' })
+  url: string;
+
+  @ApiProperty({
+    description: 'Número de personas que asistirán al festival',
+    example: 5000,
+  })
+  @IsInt({ message: 'Debe ser un número entero' })
+  @Min(1, { message: 'Debe haber al menos una persona asistiendo' })
+  attendeesCount: number;
 }
