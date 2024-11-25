@@ -17,8 +17,8 @@ export const dataSourceOptions: DataSourceOptions = {
   username: dotEnvOptions.DB_USERNAME,
   password: dotEnvOptions.DB_PASSWORD,
   database: dotEnvOptions.DB_NAME,
-  dropSchema: false,
-  synchronize: false,
+  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
+  synchronize: true,
   logging: false,
   entities: [
     Festival,

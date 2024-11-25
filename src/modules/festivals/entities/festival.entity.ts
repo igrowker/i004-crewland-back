@@ -13,11 +13,20 @@ export class Festival {
   @Column({ type: 'varchar', nullable: false })
   location: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  date: string;
+  @Column({ type: 'date', nullable: false })
+  date: Date;
+
+  @Column({ type: 'time', nullable: false })
+  time: string;
 
   @Column({ type: 'varchar', nullable: false })
   description: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  url?: string;
+
+  @Column({ type: 'int', nullable: false })
+  attendeesCount?: number;
 }
 
 // sacar date y agregar hora y dia por sepado.
