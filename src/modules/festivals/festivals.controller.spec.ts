@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FestivalController } from './festival.controller';
-import { FestivalService } from './festival.service';
+import { FestivalController } from './festivals.controller';
+import { FestivalService } from './festivals.service';
 
 describe('FestivalController', () => {
   let controller: FestivalController;
