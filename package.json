@@ -44,11 +44,7 @@
     "redis": "^4.7.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-<<<<<<< HEAD
     "socket.io": "^4.8.1",
-=======
-    "swagger-ui-express": "^5.0.1",
->>>>>>> f3dbfdba055970d1bce3561bf032fedc388fe419
     "typeorm": "^0.3.20",
     "winston": "^3.17.0"
   },
