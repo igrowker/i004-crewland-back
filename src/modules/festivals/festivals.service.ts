@@ -16,6 +16,18 @@ export class FestivalsService {
     private readonly festivalRepository: Repository<Festivals>,
   ) {}
 
+  // async updateImages(id: string, imageUrls: string[]): Promise<Festivals> {
+  //   const festival = await this.festivalRepository.findOne({ where: { id } });
+  //   if (!festival) {
+  //     throw new NotFoundException(`Festival with ID ${id} not found`);
+  //   }
+
+  //   // Actualiza el campo images con las nuevas URLs
+  //   festival.image = imageUrls;
+
+  //   return this.festivalRepository.save(festival);
+  // }
+
   async create(createFestivalDto: CreateFestivalDto): Promise<Festivals> {
     try {
       const newFestival = this.festivalRepository.create(createFestivalDto);

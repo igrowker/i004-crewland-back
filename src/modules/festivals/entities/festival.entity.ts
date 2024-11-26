@@ -29,6 +29,9 @@ export class Festivals {
 
   @Column({ type: 'int', nullable: false })
   attendeesCount?: number;
+
+  @Column({ type: 'simple-array', nullable: false })
+  image: string[];
 }
 
 // sacar date y agregar hora y dia por sepado.
