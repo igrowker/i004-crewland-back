@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -14,6 +16,7 @@ import * as bcrypt from 'bcryptjs';
 import { ForgotPasswordDto } from './dto/forgotPasswor.dto';
 import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
 import {resetPassTemplate} from 'src/shared/utils/resetPassTemplate';
+import { ResetPasswordDto } from './dto/resetPassword.dot';
 
 @Injectable()
 export class AuthService {
@@ -83,26 +86,35 @@ export class AuthService {
         where: { email },
       });
 
+      console.log(user);
+
       if (!user) {
         return new UnauthorizedException(`No se logro encontrar al usuario con el email: ${email}`);
       }
 
-      const token = this.jwtService.sign({ userId: user.id }, { expiresIn: '2h' });
+      const token = this.jwtService.sign({ id: user.id }, { expiresIn: '2h' });
 
       //genera el codigo de 4 digitos y reemplazalo en el template
-      const tbodyRegex = /<strong id="code">(.*?)<\/strong>/s;
-      const emailTemplate = resetPassTemplate.replace(tbodyRegex, `<strong id="code">1234</strong>`);
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
+
+      //FALTA GUARDAR CODIGO EN DB Y VALIDARLO EN RESETPASS
+
+      //remplazo de el code en el template
+      const strongRegex = /<strong id="code">(.*?)<\/strong>/s;
+      const emailTemplate = resetPassTemplate.replace(strongRegex, `<strong id="code">${code}</strong>`);
 
       const aux = await this.sendGridService.sendEmail(email,
         "Recuperar contraseña",
         `Dale a este link para recuperar tu contraseña`,
         `
-        <h1>Link</h1>
-        <p>http://localhost:3000/restore-password/reset-password?token=${token}</p>
         <div>
-          ${emailTemplate}
+        ${emailTemplate}
         </div>
-        `);
+        <div>
+          <h1>Link de recuperacion de contraseña</h1>
+          <p>http://localhost:3000/restore-password/reset-password?token=${token}</p>
+        </div>
+        `); //OJO: hay q cambiar este link por una varible de entorno y por la url del front
 
       return { message: 'Correo de recuperación enviado' };
 
@@ -111,5 +123,47 @@ export class AuthService {
     }
   }
 
-  //actualizar y restaura contraseña aca
+  async resetPassword(token: string, resetPasswordDto: ResetPasswordDto) {
+    try {
+
+      const decodedToken = this.jwtService.verify(token);
+      const user = await this.userRepository.findOne({ where: { id: decodedToken.id } });
+
+      //FALTA GUARDAR CODIGO DE 4 DIGS EN DB EN LA FUN REQUESTPASSREST Y VALIDARLO ACA
+      
+      if (!user) {
+        return new NotFoundException('Usuario no encontrado');
+      }
+
+      if (resetPasswordDto.newPassword !== resetPasswordDto.repeatPassword) {
+        return new BadRequestException('Las contraseñas no coinciden.');
+      }
+
+      const hashedPassword = await bcrypt.hash(resetPasswordDto.newPassword, 10);
+      user.password = hashedPassword;
+
+      const aux =await this.userRepository.save(user);
+
+      console.log(aux);
+
+      return { message: 'Contraseña actualizada correctamente.' };
+    } catch (error) {
+      throw new InternalServerErrorException('Ocurrió un error al procesar la solicitud de restablecimiento de contraseña.');
+    }
+  }
 }
+
+// User {
+//   id: 'f9883bf2-df83-4f4b-9dda-d29cc62e0415',
+//   password: '$2a$10$ex1AtT9GTXUYkLaQIBqFRe5YF0qWitehZbH8vZnFjbrU77Q2gLgv.',
+//   name: 'Ulises Rodriguez',
+//   username: 'uli5',
+//   email: 'ulirodriguez5@gmail.com',
+//   age: '1997-05-27',
+//   tel: '+542302411290',
+//   gender: 'hombre',
+//   role: 'user',
+//   preferences: [ 'movies', 'sports' ],
+//   travelHistory: [ 'Paris', 'Tokyo' ],
+//   favorites: [ 'Pizza', 'Reading' ]
+// }

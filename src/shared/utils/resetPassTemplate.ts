@@ -125,6 +125,7 @@ a[x-apple-data-detectors],
                      <tr>
                       <td align="center" style="Margin:0;padding-top:10px;padding-right:20px;padding-left:20px;padding-bottom:20px"><h1 class="es-m-txt-c" style="Margin:0;font-family:arial, 'helvetica neue', helvetica, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:46px;font-style:normal;font-weight:bold;line-height:55.2px;color:#5c68e2"><strong id="code">{{code}}</strong></h1></td>
                      </tr>
+                     
                    </table></td>
                  </tr>
                </table></td>
