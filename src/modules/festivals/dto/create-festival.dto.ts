@@ -94,4 +94,12 @@ export class CreateFestivalDto {
   @IsInt({ message: 'Debe ser un número entero' })
   @Min(1, { message: 'Debe haber al menos una persona asistiendo' })
   attendeesCount: number;
+
+  @ApiProperty({
+    description: 'imagen del festival',
+    example: 'https://example.com/festival-image.jpg',
+  })
+  @IsString({ each: true })
+  @IsNotEmpty({ message: 'Debe tener al menos una imagen' })
+  image: string[];
 }

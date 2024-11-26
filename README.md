@@ -58,6 +58,13 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Variables de Cloudinary
+
+1.  CLOUDINARY_UR
+2.  CLOUDINARY_API_KEY
+3.  CLOUDINARY_API_KEY_SECRET
+4.  CLOUDINARY_API_KEY_NAME
+
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
