@@ -1,22 +1,21 @@
-// src/chat/entities/chat.entity.ts
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
-  JoinTable,
+  CreateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
 
-@Entity('chats')
-export class Chat {
+@Entity()
+export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToMany(() => User, (user) => user.chats)
-  @JoinTable()
-  usuarios: User[];
+  @Column()
+  senderId: string;
 
-  @Column({ type: 'jsonb', default: [] })
-  messages: { message: string; userId: string; date: Date }[];
+  @Column()
+  content: string;
+
+  @CreateDateColumn()
+  timestamp: Date;
 }

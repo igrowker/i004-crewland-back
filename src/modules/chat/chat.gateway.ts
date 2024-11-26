@@ -1,18 +1,52 @@
-// src/chat/chat.gateway.ts
 import {
   WebSocketGateway,
+  WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
-  MessageBody,
 } from '@nestjs/websockets';
-import { ChatService } from './chat.service';
-import { SendMessageDto } from './dto/send-message.dto';
+import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway({ cors: { origin: '*' } })
-export class ChatGateway {
-  constructor(private readonly chatService: ChatService) {}
+@WebSocketGateway({ cors: true })
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer()
+  server: Server;
 
-  @SubscribeMessage('send_message')
-  async handleSendMessage(@MessageBody() sendMessageDto: SendMessageDto) {
-    return this.chatService.SendMessageDto(sendMessageDto);
+  private messages: string[] = [
+    'Hola, ¿cómo estás?',
+    '¿Qué tal, todo bien?',
+    '¡Un mensaje aleatorio!',
+    'Recuerda, la vida es corta. Sonríe más.',
+    '¿Tienes alguna pregunta? Estoy aquí para ayudarte.',
+  ];
+
+  private sendRandomMessage() {
+    const randomMessage =
+      this.messages[Math.floor(Math.random() * this.messages.length)];
+    this.server.to('room_general').emit('receiveMessage', randomMessage);
+    console.log('Random message sent:', randomMessage);
+  }
+
+  constructor() {
+    setInterval(() => this.sendRandomMessage(), 6000);
+  }
+
+  async handleConnection(client: Socket) {
+    console.log(`Client connected: ${client.id}`);
+    client.join('room_general');
+  }
+
+  async handleDisconnect(client: Socket) {
+    console.log(`Client disconnected: ${client.id}`);
+  }
+
+  @SubscribeMessage('sendMessage')
+  async handleMessage(
+    client: Socket,
+    payload: { senderId: string; message: string },
+  ) {
+    console.log('Message received:', payload);
+
+    this.server.to('room_general').emit('receiveMessage', payload.message);
   }
 }
