@@ -24,9 +24,9 @@ jobs:
       # Paso 3: Construir la imagen Docker usando Dockerfile.dev
       - name: Build Docker Image
         run: |
-          docker build -f Dockerfile.dev -t igrowker/i004-crewland-back-dev:latest .
+          docker build -f Dockerfile.dev -t igrowker/i004-crewland-back-dev-image:latest .
 
       # Paso 4: Publicar la imagen en Docker Hub
       - name: Push Docker Image
         run: |
-          docker push igrowker/i004-crewland-back-dev:latest
+          docker push igrowker/i004-crewland-back-dev-image:latest
