@@ -1,13 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
-@Entity({ name: 'chat' })
-export class Chat {
+@Entity()
+export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid', { array: true })
-  users: string[];
+  @Column()
+  senderId: string;
 
-  @Column('jsonb')
-  messages: Array<{ message: string; userId: string; date: Date }>;
+  @Column()
+  content: string;
+
+  @CreateDateColumn()
+  timestamp: Date;
 }

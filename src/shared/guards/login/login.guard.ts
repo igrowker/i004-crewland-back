@@ -18,8 +18,6 @@ export class LoginGuard implements CanActivate {
       throw new UnauthorizedException('Correo y contraseña requeridos');
     }
 
-    // se podria crear un servicio que chequease si el usuario existe en la db
-
     return true;
   }
 }
