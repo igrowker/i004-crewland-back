@@ -5,8 +5,8 @@ import { Reservations } from 'src/modules/reservations/entities/reservation.enti
 import { User } from '../modules/users/entities/user.entity';
 import { Auth } from 'src/modules/auth/entities/auth.entity';
 import { Festival } from '../modules/festivals/entities/festival.entity';
-import { VerificationCode } from '../shared/sms/twilio/entities/twilio.entity';
-import { VerificationCodeEmail } from '../modules/verification/entities/verification.entity';
+import { VerificationCodeSms } from '../modules/verification/entities/sms-verification.entity';
+import { VerificationCodeEmail } from '../modules/verification/entities/email-verification.entity';
 
 import dotEnvOptions from './dotenv.config';
 
@@ -27,7 +27,7 @@ export const dataSourceOptions: DataSourceOptions = {
     User,
     Reservations,
     Auth,
-    VerificationCode,
+    VerificationCodeSms,
     VerificationCodeEmail,
   ],
   subscribers: [],

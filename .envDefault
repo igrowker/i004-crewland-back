@@ -15,3 +15,10 @@ DB_NAME=                   # Nombre de la DB (crewland en nuestro caso)
 TWILIO_ACCOUNT_SID=
 TWILIO_AUTH_TOKEN=
 TWILIO_WHATSAPP_NUMBER=
+
+CLOUDINARY_URL= "cloudinary://258238333846147:BOEl_Ch8yHwre2lnPH7nrUmJSck@dtbbcg1k2"
+CLOUDINARY_API_KEY = 258238333846147
+CLOUDINARY_API_KEY_SECRET = "BOEl_Ch8yHwre2lnPH7nrUmJSck"
+CLOUDINARY_API_KEY_NAME = "dtbbcg1k2"
+MAX_SIZE_IMAGE = 300
+DEFAULT_IMG_EVENT_CLOUDINARY = "https://res.cloudinary.com/dtbbcg1k2/image/upload/v1728308755/gilf9c7fotvs2io03lc9.png"
