@@ -63,7 +63,7 @@ export class VerificationService {
 
   async validateCode(code: string): Promise<boolean> {
     const verificationCode = await this.verificationCodeRepository.findOne({
-      where: { code },
+      where: { code, verified: false },
     });
 
     if (!verificationCode) {

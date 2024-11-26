@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity({
   name: 'festivals',
 })
-export class Festival {
+export class Festivals {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -13,11 +13,23 @@ export class Festival {
   @Column({ type: 'varchar', nullable: false })
   location: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  date: string;
+  @Column({ type: 'date', nullable: false })
+  date: Date;
+
+  @Column({ type: 'time', nullable: false })
+  time: string;
 
   @Column({ type: 'varchar', nullable: false })
   description: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  url?: string;
+
+  @Column({ type: 'int', nullable: false })
+  attendeesCount?: number;
+
+  @Column({ type: 'simple-array', nullable: false })
+  image: string[];
 }
 
 // sacar date y agregar hora y dia por sepado.

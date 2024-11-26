@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('verification_codes')
+@Entity('verification_codes_sms')
 export class VerificationCodeSms {
   @PrimaryGeneratedColumn()
   id: number;

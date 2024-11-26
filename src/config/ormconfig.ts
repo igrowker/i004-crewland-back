@@ -4,9 +4,9 @@ import { Publication } from '../modules/publications/entities/publication.entity
 import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
 import { User } from '../modules/users/entities/user.entity';
 import { Auth } from 'src/modules/auth/entities/auth.entity';
-import { Festival } from '../modules/festivals/entities/festival.entity';
-import { VerificationCodeSms } from '../modules/verification/entities/sms-verification.entity';
-import { VerificationCodeEmail } from '../modules/verification/entities/email-verification.entity';
+import { Festivals } from '../modules/festivals/entities/festival.entity';
+import { VerificationCode } from '../shared/sms/twilio/entities/twilio.entity';
+import { VerificationCodeEmail } from '../modules/verification/entities/verification.entity';
 
 import dotEnvOptions from './dotenv.config';
 
@@ -17,11 +17,11 @@ export const dataSourceOptions: DataSourceOptions = {
   username: dotEnvOptions.DB_USERNAME,
   password: dotEnvOptions.DB_PASSWORD,
   database: dotEnvOptions.DB_NAME,
-  dropSchema: false,
-  synchronize: false,
+  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
+  synchronize: true,
   logging: false,
   entities: [
-    Festival,
+    Festivals,
     Publication,
     Chat,
     User,

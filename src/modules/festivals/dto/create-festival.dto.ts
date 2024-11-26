@@ -5,6 +5,9 @@ import {
   MaxLength,
   Matches,
   MinLength,
+  IsUrl,
+  IsInt,
+  Min,
 } from 'class-validator';
 
 export class CreateFestivalDto {
@@ -76,4 +79,27 @@ export class CreateFestivalDto {
       'La descripción solo puede contener letras, números, espacios y signos de puntuación comunes.',
   })
   description: string;
+
+  @ApiProperty({
+    description: 'URL del sitio web del festival',
+    example: 'https://www.festivalexample.com',
+  })
+  @IsUrl({}, { message: 'Debe ser una URL válida' })
+  url: string;
+
+  @ApiProperty({
+    description: 'Número de personas que asistirán al festival',
+    example: 5000,
+  })
+  @IsInt({ message: 'Debe ser un número entero' })
+  @Min(1, { message: 'Debe haber al menos una persona asistiendo' })
+  attendeesCount: number;
+
+  @ApiProperty({
+    description: 'imagen del festival',
+    example: 'https://example.com/festival-image.jpg',
+  })
+  @IsString({ each: true })
+  @IsNotEmpty({ message: 'Debe tener al menos una imagen' })
+  image: string[];
 }
