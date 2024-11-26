@@ -27,18 +27,11 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "^2.0.6",
     "@nestjs/platform-express": "^10.0.0",
-<<<<<<< HEAD
     "@nestjs/platform-socket.io": "^10.4.9",
     "@nestjs/schedule": "^4.1.1",
     "@nestjs/swagger": "^8.0.7",
     "@nestjs/typeorm": "^10.0.2",
     "@nestjs/websockets": "^10.4.9",
-=======
-    "@nestjs/platform-socket.io": "^10.4.8",
-    "@nestjs/swagger": "^8.0.7",
-    "@nestjs/typeorm": "^10.0.2",
-    "@nestjs/websockets": "^10.4.8",
->>>>>>> c33694029edd41a57d61862119c6a98da8e1adef
     "@sendgrid/mail": "^8.1.4",
     "axios": "^1.7.8",
     "bcryptjs": "2.4.3",
