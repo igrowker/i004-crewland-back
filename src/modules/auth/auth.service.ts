@@ -85,17 +85,25 @@ export class AuthService {
         throw new NotFoundException(`Usuario no encontrado con el email: ${email}`)
       }
 
+      const recoveryCode = Math.floor(1000 + Math.random() * 9000).toString()
+
       const token = this.jwtService.sign(
-        { id: user.id },
-        { expiresIn: '1h' }
+        { id: user.id, recoveryCode },
+        { expiresIn: '10m' }
       )
+
+      const emailBody = `Your recovery code is: ${recoveryCode}`
+
+      // usar el emailTemplate en utils si eso
+      // const strongRegex = /<strong id="code">(.*?)<\/strong>/s
+      // const emailTemplate = resetPasswordTemplate.replace(strongRegex, `<strong id="code">${code}</strong>`)
 
       const resetLink = `${process.env.FRONTEND_URL}/restore-password/reset-password?token=${token}`
 
       await this.sendGripService.sendEmail(
         email,
         'Restaurar contraseña',
-        `Dale click al link para restaurar tu contraseña: ${resetLink}`,
+        emailBody,
       )
 
     } catch (error) {
@@ -107,7 +115,27 @@ export class AuthService {
     }
   }
 
-  async resetPassword(token: string, resetPasswordDto: ResetPasswordDto) {
+  async verifyRecoveryCode(token: string, inputRecoveryCode: string): Promise<void> {
+    try {
+      const { id, recoveryCode } = this.jwtService.verify(token)
+
+      if (recoveryCode !== inputRecoveryCode) {
+        throw new UnauthorizedException(
+          'Código de recuperación inválido'
+        )
+      }
+
+      console.log(`Código de recuperación verificado para usuario con el ID: ${id}`)
+
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Codigo de recuperación expirado')
+      }
+      throw new UnauthorizedException('Token inválido')
+    }
+  }
+
+  async resetPassword(token: string, resetPasswordDto: ResetPasswordDto): Promise<any> {
     const { newPassword, repeatPassword } = resetPasswordDto
 
     if (newPassword !== repeatPassword) {
@@ -132,8 +160,8 @@ export class AuthService {
 
   async verifyToken(token: string): Promise<User> {
     try {
-      const decoded = this.jwtService.verify(token)
-      const user = await this.userRepository.findOne({ where: { id: decoded.id } })
+      const { id } = this.jwtService.verify(token)
+      const user = await this.userRepository.findOne({ where: { id } })
 
       if (!user) {
         throw new NotFoundException('Usuario no encontrado')

@@ -46,6 +46,37 @@ export class AuthController {
     return await this.authService.restorePasswordEmail(restorePasswordEmailDto)
   }
 
+  // validate CODE
+  @Post('verify-recovery-code')
+  @ApiQuery({
+    name: 'token',
+    description: 'Token recibido en el correo electrónico de recuperación',
+    required: true,
+  })
+  @ApiBody({
+    description: 'Código de recuperación proporcionado por el usuario',
+    schema: {
+      type: 'object',
+      properties: {
+        recoveryCode: {
+          type: 'string',
+          example: '1234',
+          description: 'Código de 4 cifras enviado al correo del usuario.',
+        }
+      },
+      required: ['recoveryCode']
+    }
+  })
+  @ApiResponse({ status: 200, description: 'Código de recuperación verificado correctamente.' })
+  @ApiResponse({ status: 400, description: 'Solicitud inválida. El código de recuperación o el token es incorrecto.' })
+  @ApiResponse({ status: 401, description: 'Token inválido o expirado.' })
+  async verifyRecoveryCode(
+    @Query('token') token: string,
+    @Body('recoveryCode') recoveryCode: string,
+  ): Promise<void> {
+    return await this.authService.verifyRecoveryCode(token, recoveryCode)
+  }
+
   @Post('reset-password')
   @ApiQuery({
     name: 'token',
