@@ -1,42 +1,48 @@
-import {
-  Injectable,
-  NotFoundException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateFestivalDto } from './dto/create-festival.dto';
 import { UpdateFestivalDto } from './dto/update-festival.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Festivals } from './entities/festival.entity';
+import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+import dotEnvOptions from 'src/config/dotenv.config';
 
 @Injectable()
 export class FestivalsService {
   constructor(
     @InjectRepository(Festivals)
     private readonly festivalRepository: Repository<Festivals>,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  // async updateImages(id: string, imageUrls: string[]): Promise<Festivals> {
-  //   const festival = await this.festivalRepository.findOne({ where: { id } });
-  //   if (!festival) {
-  //     throw new NotFoundException(`Festival with ID ${id} not found`);
-  //   }
+  private handleError(error: any, message: string): never {
+    console.error(error);
+    if (error instanceof HttpException) {
+      throw error;
+    }
+    throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 
-  //   // Actualiza el campo images con las nuevas URLs
-  //   festival.image = imageUrls;
-
-  //   return this.festivalRepository.save(festival);
-  // }
-
-  async create(createFestivalDto: CreateFestivalDto): Promise<Festivals> {
+  async create(
+    createFestivalDto: CreateFestivalDto,
+    images: Express.Multer.File[],
+  ): Promise<Festivals> {
     try {
-      const newFestival = this.festivalRepository.create(createFestivalDto);
+      let imageUrls: string[];
+      if (images && images.length > 0) {
+        imageUrls =
+          await this.cloudinaryService.uploadImagesToCloudinary(images);
+      } else {
+        imageUrls = [dotEnvOptions.DEFAULT_IMG_EVENT_CLOUDINARY];
+      }
+
+      const newFestival = this.festivalRepository.create({
+        ...createFestivalDto,
+        image: imageUrls,
+      });
       return await this.festivalRepository.save(newFestival);
     } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to create festival',
-        error.message,
-      );
+      this.handleError(error, 'Failed to create festival');
     }
   }
 
@@ -44,71 +50,52 @@ export class FestivalsService {
     try {
       return await this.festivalRepository.find();
     } catch (error) {
-      throw new InternalServerErrorException(
-        'Failed to retrieve festivals',
-        error.message,
-      );
+      this.handleError(error, 'Failed to retrieve festivals');
     }
   }
 
   async findOne(id: string): Promise<Festivals> {
     try {
-      const festival = await this.festivalRepository.findOne({
-        where: { id },
-      });
+      const festival = await this.festivalRepository.findOne({ where: { id } });
       if (!festival) {
-        throw new NotFoundException(`Festival with ID ${id} not found`);
+        throw new HttpException(
+          `Festival with ID ${id} not found`,
+          HttpStatus.NOT_FOUND,
+        );
       }
       return festival;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'Failed to retrieve festival',
-        error.message,
-      );
+      this.handleError(error, `Failed to retrieve festival with ID ${id}`);
     }
   }
 
   async update(
     id: string,
     updateFestivalDto: UpdateFestivalDto,
+    images: Express.Multer.File[],
   ): Promise<Festivals> {
     try {
-      const result = await this.festivalRepository.update(
-        { id },
-        updateFestivalDto,
-      );
-      if (result.affected === 0) {
-        throw new NotFoundException(`Festival with ID ${id} not found`);
+      const festival = await this.findOne(id);
+      if (images && images.length > 0) {
+        await this.cloudinaryService.deleteImgFromCloudinary(festival.image);
+        const newImageUrls =
+          await this.cloudinaryService.uploadImagesToCloudinary(images);
+        updateFestivalDto.image = newImageUrls;
       }
+      await this.festivalRepository.update({ id }, updateFestivalDto);
       return await this.findOne(id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'Failed to update festival',
-        error.message,
-      );
+      this.handleError(error, `Failed to update festival with ID ${id}`);
     }
   }
 
   async remove(id: string): Promise<void> {
     try {
-      const result = await this.festivalRepository.delete(id);
-      if (result.affected === 0) {
-        throw new NotFoundException(`Festival with ID ${id} not found`);
-      }
+      const festival = await this.findOne(id);
+      await this.cloudinaryService.deleteImgFromCloudinary(festival.image);
+      await this.festivalRepository.delete(id);
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-      throw new InternalServerErrorException(
-        'Failed to remove festival',
-        error.message,
-      );
+      this.handleError(error, `Failed to remove festival with ID ${id}`);
     }
   }
 }

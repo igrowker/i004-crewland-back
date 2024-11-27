@@ -104,4 +104,17 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   @IsInt({ message: 'Debe ser un número entero' })
   @Min(1, { message: 'Debe haber al menos una persona asistiendo' })
   attendeesCount?: number;
+
+  @ApiProperty({
+    description: 'Imagenes del festival',
+    example: [
+      'https://example.com/festival-image1.jpg',
+      'https://example.com/festival-image2.jpg',
+    ],
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
+    required: false,
+  })
+  @IsOptional()
+  image?: string[];
 }

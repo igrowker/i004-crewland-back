@@ -31,11 +31,3 @@ export class Festivals {
   @Column({ type: 'simple-array', nullable: false })
   image: string[];
 }
-
-// sacar date y agregar hora y dia por sepado.
-// solo los admins pueden crear festivales.
-
-// hace falta agregar una imagen (APLICAR CLOUDINARY SI LLEGAMOS)
-// columna imagen manejado con cloudinary
-// agregar la url (string)
-// agregar cantidad de personas ( string ) y pensar que otra cosa se puede agregar

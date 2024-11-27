@@ -96,10 +96,13 @@ export class CreateFestivalDto {
   attendeesCount: number;
 
   @ApiProperty({
-    description: 'imagen del festival',
-    example: 'https://example.com/festival-image.jpg',
+    description: 'Imagenes del festival',
+    example: [
+      'https://example.com/festival-image1.jpg',
+      'https://example.com/festival-image2.jpg',
+    ],
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
   })
-  @IsString({ each: true })
-  @IsNotEmpty({ message: 'Debe tener al menos una imagen' })
-  image: string[];
+  images?: Array<Express.Multer.File>;
 }

@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { FestivalsService } from './festivals.service';
 import { CreateFestivalDto } from './dto/create-festival.dto';
@@ -15,6 +17,7 @@ import { JwtAuthGuard } from 'src/shared/guards/jwt-auth/jwt-auth.guard';
 import { Role } from 'src/shared/utils/enum';
 import { Roles } from 'src/shared/decorators/role.decorator';
 import { RoleGuard } from 'src/shared/guards/roles/roles.guard';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('festivals')
 @UseGuards(JwtAuthGuard, RoleGuard)
@@ -23,8 +26,12 @@ export class FestivalsController {
 
   @Post()
   @Roles(Role.Admin)
-  create(@Body() createFestivalDto: CreateFestivalDto) {
-    return this.festivalService.create(createFestivalDto);
+  @UseInterceptors(FilesInterceptor('images'))
+  create(
+    @Body() createFestivalDto: CreateFestivalDto,
+    @UploadedFiles() images: Express.Multer.File[],
+  ) {
+    return this.festivalService.create(createFestivalDto, images);
   }
 
   @Get()
@@ -39,11 +46,13 @@ export class FestivalsController {
 
   @Patch(':id')
   @Roles(Role.Admin)
+  @UseInterceptors(FilesInterceptor('images'))
   update(
     @Param('id') id: string,
     @Body() updateFestivalDto: UpdateFestivalDto,
+    @UploadedFiles() images: Express.Multer.File[],
   ) {
-    return this.festivalService.update(id, updateFestivalDto);
+    return this.festivalService.update(id, updateFestivalDto, images);
   }
 
   @Delete(':id')
