@@ -42,7 +42,7 @@ export class CloudinaryController {
   // Endpoint to delete images
   @Delete(':id')
   async remove(@Body() deleteCloudinaryDto: DeleteCloudinaryDto) {
-    return await this.cloudinaryService.deleteImgCloudinary(
+    return await this.cloudinaryService.deleteImgFromCloudinary(
       deleteCloudinaryDto.images,
     );
   }
