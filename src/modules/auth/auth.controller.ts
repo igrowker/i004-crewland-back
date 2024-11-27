@@ -18,6 +18,7 @@ import { AuthLoginDto } from './dto/auth.login.dto';
 import { LoginGuard } from 'src/shared/guards/login/login.guard';
 import { RestorePasswordEmailDto } from './dto/auth.restore-password-email.dto';
 import { ResetPasswordDto } from './dto/auth.reset-password.dto';
+import { VerifyRecoveryCodeDto } from './dto/auth.verify-recovery-code.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -55,26 +56,16 @@ export class AuthController {
   })
   @ApiBody({
     description: 'Código de recuperación proporcionado por el usuario',
-    schema: {
-      type: 'object',
-      properties: {
-        recoveryCode: {
-          type: 'string',
-          example: '1234',
-          description: 'Código de 4 cifras enviado al correo del usuario.',
-        }
-      },
-      required: ['recoveryCode']
-    }
+    type: VerifyRecoveryCodeDto,
   })
   @ApiResponse({ status: 200, description: 'Código de recuperación verificado correctamente.' })
   @ApiResponse({ status: 400, description: 'Solicitud inválida. El código de recuperación o el token es incorrecto.' })
   @ApiResponse({ status: 401, description: 'Token inválido o expirado.' })
   async verifyRecoveryCode(
     @Query('token') token: string,
-    @Body('recoveryCode') recoveryCode: string,
+    @Body() verifyRecoveryCodeDto: VerifyRecoveryCodeDto,
   ): Promise<void> {
-    return await this.authService.verifyRecoveryCode(token, recoveryCode)
+    return await this.authService.verifyRecoveryCode(token, verifyRecoveryCodeDto.recoveryCode)
   }
 
   @Post('reset-password')
@@ -95,5 +86,4 @@ export class AuthController {
   ) {
     return await this.authService.resetPassword(token, resetPasswordDto)
   }
-
 }
