@@ -8,5 +8,6 @@ import { Festival } from './entities/festival.entity';
   imports: [TypeOrmModule.forFeature([Festival])],
   controllers: [FestivalController],
   providers: [FestivalService],
+  exports: [FestivalService],
 })
-export class FestivalModule {}
+export class FestivalModule { }

@@ -1,12 +1,10 @@
 import {
   IsString,
-  IsNotEmpty,
   IsEnum,
   IsUUID,
-  IsDate,
   MaxLength,
-  IsDateString,
   IsOptional,
+  IsDate,
 } from 'class-validator';
 import { CreatePublicationDto } from './create-publication.dto';
 import { PartialType } from '@nestjs/mapped-types';
@@ -51,13 +49,40 @@ export class UpdatePublicationDto extends PartialType(CreatePublicationDto) {
   details?: string;
 
   @ApiProperty({
-    description: 'Disponibilidad para la publicación (opcional)',
-    example: '9am - 5pm',
-    required: false,
+    description: 'Número máximo de participantes permitidos para la publicación',
+    example: 10,
+  })
+  @IsOptional({ message: 'El número máximo de participantes es obligatorio.' })
+  maxParticipants?: number;
+
+  @ApiProperty({
+    description: 'Lista de usernames de los participantes',
+    example: ['usuario1', 'usuario2'],
   })
   @IsOptional()
-  @IsString({
-    message: 'La disponibilidad debe ser una fecha válida en formato 9am - 5pm',
-  }) //chequear como va a ser el formato de availability
-  availability?: string;
+  participants?: string[];
+
+  @ApiProperty({
+    description: 'Fecha de la oferta asociada a la publicación',
+    example: '2024-12-01',
+  })
+  @IsDate({ message: 'La fecha de oferta debe ser una fecha válida.' })
+  @IsOptional()
+  offerDate?: Date;
+
+  @ApiProperty({
+    description: 'Hora de la oferta asociada a la publicación',
+    example: '14:00',
+  })
+  @IsString({ message: 'La hora de oferta debe ser una cadena de texto.' })
+  @IsOptional()
+  offerTime?: string;
+
+  @ApiProperty({
+    description: 'URL de la imagen asociada a la publicación',
+    example: 'https://mi-servidor.com/imagenes/imagen.jpg',
+  })
+  @IsString({ message: 'La URL de la imagen debe ser una cadena de texto.' })
+  @IsOptional()
+  imageUrl?: string;
 }

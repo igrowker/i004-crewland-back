@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { Publication } from './entities/publication.entity';
 import { ConfigModule } from '@nestjs/config';
+import { FestivalModule } from '../festivals/festival.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
       signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRED },
     }),
     ConfigModule,
+    FestivalModule
   ],
   controllers: [PublicationsController],
   providers: [PublicationsService],

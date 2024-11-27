@@ -7,29 +7,35 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  Request
 } from '@nestjs/common';
 import { PublicationValidationUser } from '../../shared/guards/publications/publications-validation-user.guard';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth/jwt-auth.guard';
 import { PublicationsService } from './publications.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
+import { FindPublicationsDto } from './dto/find-publications.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('publications')
 export class PublicationsController {
   constructor(private readonly publicationsService: PublicationsService) { }
 
-  @Post()
+  @Post(':festivalId')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createPublicationDto: CreatePublicationDto) {
-    return this.publicationsService.create(createPublicationDto);
+  create(
+    @Param('festivalId') festivalId: string,
+    @Body() createPublicationDto: CreatePublicationDto,
+  ) {
+    return this.publicationsService.create(festivalId, createPublicationDto);
   }
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.publicationsService.findAll();
+  async findAll(@Query() filters: FindPublicationsDto) {
+    return this.publicationsService.findAll(filters);
   }
 
   @Get(':id')
@@ -49,7 +55,6 @@ export class PublicationsController {
 
   @Patch(':id/toggle-active')
   @UseGuards(JwtAuthGuard, PublicationValidationUser)
-  @UseGuards(PublicationValidationUser)
   async toggleActive(@Param('id') id: string) {
     return this.publicationsService.toggleActive(id);
   }
@@ -59,4 +64,29 @@ export class PublicationsController {
   remove(@Param('id') id: string) {
     return this.publicationsService.remove(id);
   }
+
+  @Patch(':id/add-participant')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async addParticipant(
+    @Param('id') id: string,
+    @Request() req,
+  ) {
+    const userIdFromToken = req.user.sub;
+
+    return this.publicationsService.addParticipant(id, userIdFromToken);
+  }
+
+  @Patch(':id/remove-participant')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async removeParticipant(
+    @Param('id') id: string,
+    @Request() req,
+  ) {
+    const userIdFromToken = req.user.sub;
+
+    return this.publicationsService.removeParticipant(id, userIdFromToken);
+  }
+
 }

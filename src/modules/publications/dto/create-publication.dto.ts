@@ -6,6 +6,8 @@ import {
   IsDate,
   MaxLength,
   MinLength,
+  IsOptional,
+  Matches
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'src/shared/utils/enum';
@@ -63,25 +65,44 @@ export class CreatePublicationDto {
   details: string;
 
   @ApiProperty({
-    description: 'Disponibilidad para la publicación (por ejemplo, 9am - 5pm)',
-    example: '9am - 5pm',
+    description: 'Número máximo de participantes permitidos para la publicación',
+    example: 10,
   })
-  @IsNotEmpty({ message: 'La disponibilidad es obligatoria.' })
-  @IsString({ message: 'La disponibilidad debe ser una cadena de texto.' })
-  @MinLength(1, {
-    message: 'La disponibilidad debe tener al menos 1 carácter.',
-  })
-  @MaxLength(50, {
-    message: 'La disponibilidad no puede tener más de 50 caracteres.',
-  })
-  // @Matches(/^\d{1,2}(am|pm)\s?-\s?\d{1,2}(am|pm)$/i, { message: 'La disponibilidad debe seguir el formato: 9am - 5pm' })
-  availability: string;
+  @IsNotEmpty({ message: 'El número máximo de participantes es obligatorio.' })
+  maxParticipants: number;
 
   @ApiProperty({
-    description: 'Fecha de creación de la publicación',
-    example: '2024-11-18T12:30:00Z',
+    description: 'Lista de usernames de los participantes',
+    example: ['usuario1', 'usuario2'],
   })
-  @IsDate({ message: 'La fecha de creación debe ser una fecha válida.' })
-  @IsNotEmpty({ message: 'La fecha de creación es obligatoria.' })
-  dateCreation: Date;
+  @IsOptional()
+  participants?: string[];
+
+  @ApiProperty({
+    description: 'Fecha de creación de la publicación (solo día)',
+    example: '15-12-1998',
+    required: false,
+  })
+  @IsString({ message: 'La fecha de creación debe ser una cadena en formato DD-MM-YYYY.' })
+  @Matches(/^\d{2}-\d{2}-\d{4}$/, { message: 'La fecha debe ser en formato DD-MM-YYYY.' })
+  @IsOptional()  // Hacemos la fecha opcional
+  creationDate: string;  // Solo la parte de la fecha (día)
+
+  @ApiProperty({
+    description: 'Hora de creación de la publicación',
+    example: '14:42',
+    required: false,
+  })
+  @IsString({ message: 'La hora de creación debe ser una cadena en formato HH:mm.' })
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, { message: 'La hora debe estar en formato HH:mm.' })
+  @IsOptional()  // Hacemos la hora opcional
+  creationTime: string; // Solo la parte de la hora
+
+  @ApiProperty({
+    description: 'URL de la imagen asociada a la publicación',
+    example: 'https://mi-servidor.com/imagenes/imagen.jpg',
+  })
+  @IsString({ message: 'La URL de la imagen debe ser una cadena de texto.' })
+  @IsOptional()
+  imageUrl?: string;
 }
