@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VerificationCodeEmail } from './entities/verification.entity';
+import { VerificationCodeEmail } from './entities/email-verification.entity';
 import { SendGridService } from '../../shared/mail/sendgrid/sendgrid.service';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -63,7 +63,7 @@ export class VerificationService {
 
   async validateCode(code: string): Promise<boolean> {
     const verificationCode = await this.verificationCodeRepository.findOne({
-      where: { code },
+      where: { code, verified: false },
     });
 
     if (!verificationCode) {

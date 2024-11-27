@@ -27,7 +27,7 @@ export const dataSourceOptions: DataSourceOptions = {
     User,
     Reservations,
     Auth,
-    VerificationCode,
+    VerificationCodeSms,
     VerificationCodeEmail,
   ],
   subscribers: [],
