@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   Injectable,
@@ -10,10 +12,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { User } from '../users/entities/user.entity';
-import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
 import * as bcrypt from 'bcryptjs';
-import { ResetPasswordDto } from './dto/auth.reset-password.dto';
-import { RestorePasswordEmailDto } from './dto/auth.restore-password-email.dto';
+import { ForgotPasswordDto } from './dto/forgotPasswor.dto';
+import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
+import {resetPassTemplate} from 'src/shared/utils/resetPassTemplate';
+import { ResetPasswordDto } from './dto/resetPassword.dot';
 
 @Injectable()
 export class AuthService {
@@ -21,10 +24,12 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
-    private readonly sendGripService: SendGridService,
+    private readonly sendGridService: SendGridService,
   ) { }
 
+
   async login(authLoginDto: AuthLoginDto): Promise<any> {
+    console.log('JWT Secret desde el controlador:', (this.jwtService as any).options.secret);
     const { email, password } = authLoginDto;
 
     try {
@@ -49,7 +54,7 @@ export class AuthService {
       const payload = { email: user.email, sub: user.id, role: user.role };
       const token = this.jwtService.sign(payload);
 
-      return {
+      const aux = {
         userData: {
           id: user.id,
           name: user.name,
@@ -65,6 +70,8 @@ export class AuthService {
         },
         token,
       };
+
+      return aux;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
       throw new InternalServerErrorException(
@@ -73,107 +80,77 @@ export class AuthService {
     }
   }
 
-  async restorePasswordEmail(restorePasswordEmailDto: RestorePasswordEmailDto): Promise<void> {
-    const { email } = restorePasswordEmailDto
+  async requestPasswordReset(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
 
     try {
       const user = await this.userRepository.findOne({
-        where: { email }
-      })
+        where: { email },
+      });
+
+      console.log(user);
 
       if (!user) {
-        throw new NotFoundException(`Usuario no encontrado con el email: ${email}`)
+        return new UnauthorizedException(`No se logro encontrar al usuario con el email: ${email}`);
       }
 
-      const recoveryCode = Math.floor(1000 + Math.random() * 9000).toString()
+      const token = this.jwtService.sign({ id: user.id }, { expiresIn: '2h' });
 
-      const token = this.jwtService.sign(
-        { id: user.id, recoveryCode },
-        { expiresIn: '10m' }
-      )
+      //genera el codigo de 4 digitos y reemplazalo en el template
+      const code = Math.floor(1000 + Math.random() * 9000).toString();
 
-      const emailBody = `Your recovery code is: ${recoveryCode}`
+      //FALTA GUARDAR CODIGO EN DB Y VALIDARLO EN RESETPASS
 
-      // usar el emailTemplate en utils si eso
-      // const strongRegex = /<strong id="code">(.*?)<\/strong>/s
-      // const emailTemplate = resetPasswordTemplate.replace(strongRegex, `<strong id="code">${code}</strong>`)
+      //remplazo de el code en el template
+      const strongRegex = /<strong id="code">(.*?)<\/strong>/s;
+      const emailTemplate = resetPassTemplate.replace(strongRegex, `<strong id="code">${code}</strong>`);
 
-      const resetLink = `${process.env.FRONTEND_URL}/restore-password/reset-password?token=${token}`
+      const aux = await this.sendGridService.sendEmail(email,
+        "Recuperar contraseña",
+        `Dale a este link para recuperar tu contraseña`,
+        `
+        <div>
+        ${emailTemplate}
+        </div>
+        <div>
+          <h1>Link de recuperacion de contraseña</h1>
+          <p>http://localhost:3000/restore-password/reset-password?token=${token}</p>
+        </div>
+        `); //OJO: hay q cambiar este link por una varible de entorno y por la url del front
 
-      await this.sendGripService.sendEmail(
-        email,
-        'Restaurar contraseña',
-        emailBody,
-      )
+      return { message: 'Correo de recuperación enviado' };
 
     } catch (error) {
-      console.error('Error enviando el email de restaurar contraseña: ', error)
-
-      throw new InternalServerErrorException(
-        'No se ha podido enviar el email para restaurar la contraseña.'
-      )
+      throw new UnauthorizedException('Token inválido o expirado.');
     }
   }
 
-  async verifyRecoveryCode(token: string, inputRecoveryCode: string): Promise<void> {
+  async resetPassword(token: string, resetPasswordDto: ResetPasswordDto) {
     try {
-      const { id, recoveryCode } = this.jwtService.verify(token)
 
-      if (recoveryCode !== inputRecoveryCode) {
-        throw new UnauthorizedException(
-          'Código de recuperación inválido'
-        )
-      }
+      const decodedToken = this.jwtService.verify(token);
+      const user = await this.userRepository.findOne({ where: { id: decodedToken.id } });
 
-      console.log(`Código de recuperación verificado para usuario con el ID: ${id}`)
-
-    } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Codigo de recuperación expirado')
-      }
-      throw new UnauthorizedException('Token inválido')
-    }
-  }
-
-  async resetPassword(token: string, resetPasswordDto: ResetPasswordDto): Promise<any> {
-    const { newPassword, repeatPassword } = resetPasswordDto
-
-    if (newPassword !== repeatPassword) {
-      return new BadRequestException('Las contraseñas no coinciden.')
-    }
-
-    try {
-      const user = await this.verifyToken(token)
-
-      const hashedPassword = await bcrypt.hash(newPassword, 10)
-
-      user.password = hashedPassword
-
-      console.log(user)
-      await this.userRepository.save(user)
-
-      return { message: 'Contraseña actualizada.' }
-    } catch (error) {
-      throw new InternalServerErrorException('Surgió un error durante el reestablecimiento de la contraseña.')
-    }
-  }
-
-  async verifyToken(token: string): Promise<User> {
-    try {
-      const { id } = this.jwtService.verify(token)
-      const user = await this.userRepository.findOne({ where: { id } })
-
+      //FALTA GUARDAR CODIGO DE 4 DIGS EN DB EN LA FUN REQUESTPASSREST Y VALIDARLO ACA
+      
       if (!user) {
-        throw new NotFoundException('Usuario no encontrado')
+        return new NotFoundException('Usuario no encontrado');
       }
 
-      return user
+      if (resetPasswordDto.newPassword !== resetPasswordDto.repeatPassword) {
+        return new BadRequestException('Las contraseñas no coinciden.');
+      }
 
+      const hashedPassword = await bcrypt.hash(resetPasswordDto.newPassword, 10);
+      user.password = hashedPassword;
+
+      const aux =await this.userRepository.save(user);
+
+      console.log(aux);
+
+      return { message: 'Contraseña actualizada correctamente.' };
     } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('El token ha expirado.')
-      }
-      throw new UnauthorizedException('Token inválido.')
+      throw new InternalServerErrorException('Ocurrió un error al procesar la solicitud de restablecimiento de contraseña.');
     }
   }
 }

@@ -11,6 +11,6 @@ export class Reservations {
   @Column('uuid')
   postId: string;
 
-  @Column()
+  @Column({ type: 'text', default: 'OK' })
   estado: string;
 }

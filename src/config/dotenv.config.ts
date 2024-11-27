@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const DATABASE_URL = process.env.DATABASE_URL;
+// const DATABASE_URL = process.env.DATABASE_URL;
 const PORT = process.env.PORT;
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_TOKEN_EXPIRED = process.env.JWT_TOKEN_EXPIRED;
@@ -34,7 +34,6 @@ const dotEnvOptions = {
   TWILIO_WHATSAPP_NUMBER,
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
-  DATABASE_URL,
   PORT,
   JWT_SECRET,
   JWT_TOKEN_EXPIRED,

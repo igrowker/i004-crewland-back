@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Injectable,
   ConflictException,
@@ -30,6 +31,8 @@ export class UsersService {
       const existingUser = await this.userRepository.findOne({
         where: [{ username: createUserDto.username }],
       });
+
+      console.log(existingUser);
 
       if (existingUser) {
         throw new ConflictException('Usuario en uso ');

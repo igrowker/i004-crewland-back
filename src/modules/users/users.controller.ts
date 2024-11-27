@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Controller,
   Post,
@@ -74,7 +75,7 @@ export class UsersController {
   }
 
   @Get()
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getUsers() {
     return this.usersService.getUsers();
