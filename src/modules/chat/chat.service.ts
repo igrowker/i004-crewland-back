@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { CreateChatDto } from './dto/create-chat.dto';
-import { UpdateChatDto } from './dto/update-chat.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Message } from './entities/message.entity';
+import { Room } from './entities/room.entity';
+import { CreateMessageDto } from './dto/create.message.dto';
 
 @Injectable()
 export class ChatService {
-  create(createChatDto: CreateChatDto) {
-    return 'This action adds a new chat';
+  constructor(
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
+    @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
+  ) {}
+
+  //este cumple 2 funciones. crear el chat si no existe entre 2 users o devolver el chat existente entre 2 users
+  async createRoom(roomName: string): Promise<Room> {
+    console.log(roomName);
+    let room = await this.roomRepository.findOne({ where: { name: roomName } });
+    console.log(room);
+    if (!room) {
+      room = this.roomRepository.create({ name: roomName });
+      console.log(room);
+      await this.roomRepository.save(room);
+    }
+    return room;
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  async saveMessage(createMessageDto: CreateMessageDto): Promise<Message> {
+    const room = await this.roomRepository.findOne({
+      where: { id: createMessageDto.roomId },
+    });
+    const message = this.messageRepository.create({
+      ...createMessageDto,
+      room,
+    });
+    return await this.messageRepository.save(message);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
-  }
-
-  update(id: number, updateChatDto: UpdateChatDto) {
-    return `This action updates a #${id} chat`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+  async getMessagesByRoom(roomId: string): Promise<Message[]> {
+    return this.messageRepository.find({
+      where: { room: { id: roomId } },
+      relations: ['room'],
+      order: { createdAt: 'ASC' },
+    });
   }
 }

@@ -70,6 +70,8 @@ export class AuthService {
         },
         token,
       };
+
+      return aux;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
       throw new InternalServerErrorException(
