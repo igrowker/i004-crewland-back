@@ -1,5 +1,6 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { Message } from '../modules/chat/entities/chat.entity';
+import { Room } from 'src/modules/chat/entities/room.entity';
 import { Publication } from '../modules/publications/entities/publication.entity';
 import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
 import { User } from '../modules/users/entities/user.entity';
@@ -27,6 +28,7 @@ export const dataSourceOptions: DataSourceOptions = {
     User,
     Reservations,
     Auth,
+    Room,
     VerificationCodeSms,
     VerificationCodeEmail,
   ],

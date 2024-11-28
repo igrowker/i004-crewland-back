@@ -48,5 +48,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Message received:', payload);
 
     this.server.to('room_general').emit('receiveMessage', payload.message);
+    console.log(payload);
   }
 }

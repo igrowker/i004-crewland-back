@@ -131,6 +131,5 @@ export class UpdateUserDto {
   @IsArray()
   @IsOptional()
   @IsString({ each: true })
-  favorites?: string[];
   password: any;
 }
