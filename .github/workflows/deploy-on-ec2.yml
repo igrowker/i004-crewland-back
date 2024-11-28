@@ -25,6 +25,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << EOF
             docker pull igrowker/i004-crewland-back-dev-image:latest
             cd /path/to/your/project
-            docker-compose -f docker-compose-local-postgres-remote-images.yml down
-            docker-compose -f docker-compose-local-postgres-remote-images up -d
+            docker-compose -f docker-compose-for-ec2.yml down
+            docker-compose -f docker-compose-for-ec2.yml up -d
           EOF
