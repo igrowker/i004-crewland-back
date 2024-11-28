@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../../../shared/utils/enum';
+import { IsPastDate } from 'src/shared/decorators/age.decorators';
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -91,6 +92,7 @@ export class UpdateUserDto {
         'La fecha debe ser una fecha válida en formato ISO (YYYY-MM-DD).',
     },
   )
+  @IsPastDate({ message: 'La fecha debe ser del pasado.' })
   age?: string;
 
   @ApiProperty({
