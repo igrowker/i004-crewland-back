@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Role, Gender } from 'src/shared/utils/enum';
+import { Message } from 'src/modules/chat/entities/chat.entity';
 
 @Entity('users')
 export class User {
@@ -45,6 +46,9 @@ export class User {
 
   @Column({ type: 'simple-array', nullable: true })
   favorites: string[];
+
+  @ManyToMany(() => Message, (chat) => chat.senderId)
+  chats: Message[];
 }
 
 // agregar imagen con cloudinary

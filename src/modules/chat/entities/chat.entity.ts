@@ -1,13 +1,26 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
+import { Room } from './room.entity';
 
-@Entity({ name: 'chat' })
-export class Chat {
+@Entity('messages')
+export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid', { array: true })
-  users: string[];
+  @Column('uuid')
+  senderId: string;
 
-  @Column('jsonb')
-  messages: Array<{ message: string; userId: string; date: Date }>;
+  @Column()
+  content: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @ManyToOne(() => Room, (room) => room.messages)
+  room: Room;
 }
