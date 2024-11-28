@@ -23,11 +23,14 @@ export class Festivals {
   description: string;
 
   @Column({ type: 'varchar', nullable: false })
-  url?: string;
+  url: string;
 
   @Column({ type: 'int', nullable: false })
-  attendeesCount?: number;
+  attendeesCount: number;
 
   @Column({ type: 'simple-array', nullable: false })
-  image: string[];
+  images: string[];
+
+  @Column({ type: 'simple-array', nullable: true })
+  imageUrls?: string[];
 }

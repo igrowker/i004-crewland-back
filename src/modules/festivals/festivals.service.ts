@@ -38,7 +38,7 @@ export class FestivalsService {
 
       const newFestival = this.festivalRepository.create({
         ...createFestivalDto,
-        image: imageUrls,
+        images: imageUrls,
       });
       return await this.festivalRepository.save(newFestival);
     } catch (error) {
@@ -76,23 +76,46 @@ export class FestivalsService {
   ): Promise<Festivals> {
     try {
       const festival = await this.findOne(id);
+      let updatedImageUrls: string[] = [];
+
+      // Manejar nuevos archivos de imagen
       if (images && images.length > 0) {
-        await this.cloudinaryService.deleteImgFromCloudinary(festival.image);
-        const newImageUrls =
+        await this.cloudinaryService.deleteImgFromCloudinary(festival.images);
+        updatedImageUrls =
           await this.cloudinaryService.uploadImagesToCloudinary(images);
-        updateFestivalDto.image = newImageUrls;
       }
-      await this.festivalRepository.update({ id }, updateFestivalDto);
+
+      // Manejar URLs de imágenes proporcionadas
+      if (
+        updateFestivalDto.imageUrls &&
+        updateFestivalDto.imageUrls.length > 0
+      ) {
+        updatedImageUrls = updateFestivalDto.imageUrls;
+      }
+
+      // Si no se proporcionaron nuevas imágenes ni URLs, mantener las imágenes existentes
+      if (updatedImageUrls.length === 0) {
+        updatedImageUrls = festival.images;
+      }
+
+      // Actualizar el festival
+      await this.festivalRepository.update(
+        { id },
+        {
+          ...updateFestivalDto,
+          images: updatedImageUrls,
+        },
+      );
+
       return await this.findOne(id);
     } catch (error) {
       this.handleError(error, `Failed to update festival with ID ${id}`);
     }
   }
-
   async remove(id: string): Promise<void> {
     try {
       const festival = await this.findOne(id);
-      await this.cloudinaryService.deleteImgFromCloudinary(festival.image);
+      await this.cloudinaryService.deleteImgFromCloudinary(festival.images);
       await this.festivalRepository.delete(id);
     } catch (error) {
       this.handleError(error, `Failed to remove festival with ID ${id}`);
