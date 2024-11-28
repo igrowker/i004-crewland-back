@@ -24,7 +24,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << EOF
             # Detenemos los contenedores
-            docker-compose -f docker-compose-back-deploy-ec2.yml down
+            sudo docker-compose -f docker-compose-back-deploy-ec2.yml down
 
             # Actualizamos la imagen del backedn a su ultima version.
             docker pull igrowker/i004-crewland-back-dev-image:latest
@@ -36,6 +36,7 @@ jobs:
             git reset --hard  # Asegurarse de eliminar cambios locales no deseados
             git pull origin main  # Actualiza desde la rama main
 
+            cd /home/ubuntu/crewland/i004-devops/crewland
                        
-            docker-compose -f docker-compose-back-deploy-ec2.yml up -d
+            sudo docker-compose -f docker-compose-back-deploy-ec2.yml up --build -d
           EOF
