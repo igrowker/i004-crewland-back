@@ -26,16 +26,20 @@ jobs:
             # Detenemos los contenedores
             sudo docker-compose -f docker-compose-back-deploy-ec2.yml down
 
+
             # Actualizamos la imagen del backedn a su ultima version.
             docker pull igrowker/i004-crewland-back-dev-image:latest
 
+
             # Ir al directorio del proyecto
             cd /home/ubuntu/crewland/i004-devops
+
 
             # Actualizar el contenido del repositorio
             git reset --hard  # Asegurarse de eliminar cambios locales no deseados
             git pull origin main  # Actualiza desde la rama main
 
+            # Ir al directorio del docker-compose
             cd /home/ubuntu/crewland/i004-devops/crewland
                        
             sudo docker-compose -f docker-compose-back-deploy-ec2.yml up --build -d
