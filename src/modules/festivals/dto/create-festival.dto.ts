@@ -8,6 +8,7 @@ import {
   IsUrl,
   IsInt,
   Min,
+  IsArray,
 } from 'class-validator';
 
 export class CreateFestivalDto {
@@ -96,10 +97,24 @@ export class CreateFestivalDto {
   attendeesCount: number;
 
   @ApiProperty({
-    description: 'imagen del festival',
-    example: 'https://example.com/festival-image.jpg',
+    description: 'Archivos de imagines del festival para upload (opcional)',
+    example: ['image1.jpg', 'image2.jpg'],
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
   })
+  images?: Array<Express.Multer.File>;
+
+  @ApiProperty({
+    description: 'URLs de las imagenes del festival',
+    example: [
+      'https://example.com/image1.jpg',
+      'https://example.com/image2.jpg',
+    ],
+    type: 'array',
+    items: { type: 'string' },
+  })
+  @IsArray()
   @IsString({ each: true })
-  @IsNotEmpty({ message: 'Debe tener al menos una imagen' })
-  image: string[];
+  @IsUrl({}, { each: true })
+  imageUrls?: string[];
 }

@@ -22,7 +22,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly sendGripService: SendGridService,
-  ) { }
+  ) {}
 
   async login(authLoginDto: AuthLoginDto): Promise<any> {
     const { email, password } = authLoginDto;
@@ -78,107 +78,116 @@ export class AuthService {
     }
   }
 
-  async restorePasswordEmail(restorePasswordEmailDto: RestorePasswordEmailDto): Promise<void> {
-    const { email } = restorePasswordEmailDto
+  async restorePasswordEmail(
+    restorePasswordEmailDto: RestorePasswordEmailDto,
+  ): Promise<void> {
+    const { email } = restorePasswordEmailDto;
 
     try {
       const user = await this.userRepository.findOne({
-        where: { email }
-      })
+        where: { email },
+      });
 
       if (!user) {
-        throw new NotFoundException(`Usuario no encontrado con el email: ${email}`)
+        throw new NotFoundException(
+          `Usuario no encontrado con el email: ${email}`,
+        );
       }
 
-      const recoveryCode = Math.floor(1000 + Math.random() * 9000).toString()
+      const recoveryCode = Math.floor(1000 + Math.random() * 9000).toString();
 
       const token = this.jwtService.sign(
         { id: user.id, recoveryCode },
-        { expiresIn: '10m' }
-      )
+        { expiresIn: '10m' },
+      );
 
-      const emailBody = `Your recovery code is: ${recoveryCode}`
+      const emailBody = `Your recovery code is: ${recoveryCode}`;
 
       // usar el emailTemplate en utils si eso
       // const strongRegex = /<strong id="code">(.*?)<\/strong>/s
       // const emailTemplate = resetPasswordTemplate.replace(strongRegex, `<strong id="code">${code}</strong>`)
 
-      const resetLink = `${process.env.FRONTEND_URL}/restore-password/reset-password?token=${token}`
+      const resetLink = `${process.env.FRONTEND_URL}/restore-password/reset-password?token=${token}`;
 
       await this.sendGripService.sendEmail(
         email,
         'Restaurar contraseña',
         emailBody,
-      )
-
+      );
     } catch (error) {
-      console.error('Error enviando el email de restaurar contraseña: ', error)
+      console.error('Error enviando el email de restaurar contraseña: ', error);
 
       throw new InternalServerErrorException(
-        'No se ha podido enviar el email para restaurar la contraseña.'
-      )
+        'No se ha podido enviar el email para restaurar la contraseña.',
+      );
     }
   }
 
-  async verifyRecoveryCode(token: string, inputRecoveryCode: string): Promise<void> {
+  async verifyRecoveryCode(
+    token: string,
+    inputRecoveryCode: string,
+  ): Promise<void> {
     try {
-      const { id, recoveryCode } = this.jwtService.verify(token)
+      const { id, recoveryCode } = this.jwtService.verify(token);
 
       if (recoveryCode !== inputRecoveryCode) {
-        throw new UnauthorizedException(
-          'Código de recuperación inválido'
-        )
+        throw new UnauthorizedException('Código de recuperación inválido');
       }
 
-      console.log(`Código de recuperación verificado para usuario con el ID: ${id}`)
-
+      console.log(
+        `Código de recuperación verificado para usuario con el ID: ${id}`,
+      );
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Codigo de recuperación expirado')
+        throw new UnauthorizedException('Codigo de recuperación expirado');
       }
-      throw new UnauthorizedException('Token inválido')
+      throw new UnauthorizedException('Token inválido');
     }
   }
 
-  async resetPassword(token: string, resetPasswordDto: ResetPasswordDto): Promise<any> {
-    const { newPassword, repeatPassword } = resetPasswordDto
+  async resetPassword(
+    token: string,
+    resetPasswordDto: ResetPasswordDto,
+  ): Promise<any> {
+    const { newPassword, repeatPassword } = resetPasswordDto;
 
     if (newPassword !== repeatPassword) {
-      return new BadRequestException('Las contraseñas no coinciden.')
+      return new BadRequestException('Las contraseñas no coinciden.');
     }
 
     try {
-      const user = await this.verifyToken(token)
+      const user = await this.verifyToken(token);
 
-      const hashedPassword = await bcrypt.hash(newPassword, 10)
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      user.password = hashedPassword
+      user.password = hashedPassword;
 
-      console.log(user)
-      await this.userRepository.save(user)
+      console.log(user);
+      await this.userRepository.save(user);
 
-      return { message: 'Contraseña actualizada.' }
+      return { message: 'Contraseña actualizada.' };
     } catch (error) {
-      throw new InternalServerErrorException('Surgió un error durante el reestablecimiento de la contraseña.')
+      throw new InternalServerErrorException(
+        'Surgió un error durante el reestablecimiento de la contraseña.',
+      );
     }
   }
 
   async verifyToken(token: string): Promise<User> {
     try {
-      const { id } = this.jwtService.verify(token)
-      const user = await this.userRepository.findOne({ where: { id } })
+      const { id } = this.jwtService.verify(token);
+      const user = await this.userRepository.findOne({ where: { id } });
 
       if (!user) {
-        throw new NotFoundException('Usuario no encontrado')
+        throw new NotFoundException('Usuario no encontrado');
       }
 
-      return user
-
+      return user;
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('El token ha expirado.')
+        throw new UnauthorizedException('El token ha expirado.');
       }
-      throw new UnauthorizedException('Token inválido.')
+      throw new UnauthorizedException('Token inválido.');
     }
   }
 }

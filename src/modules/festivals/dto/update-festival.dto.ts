@@ -10,6 +10,7 @@ import {
   IsUrl,
   IsInt,
   Min,
+  IsArray,
 } from 'class-validator';
 
 export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
@@ -104,4 +105,30 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   @IsInt({ message: 'Debe ser un número entero' })
   @Min(1, { message: 'Debe haber al menos una persona asistiendo' })
   attendeesCount?: number;
+
+  @ApiProperty({
+    description: 'Archivos de imagines del festival para upload (opcional)',
+    example: ['image1.jpg', 'image2.jpg'],
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
+    required: false,
+  })
+  @IsOptional()
+  images?: Array<Express.Multer.File>;
+
+  @ApiProperty({
+    description: 'URLs de las imágenes del festival',
+    example: [
+      'https://example.com/festival-image1.jpg',
+      'https://example.com/festival-image2.jpg',
+    ],
+    type: 'array',
+    items: { type: 'string' },
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ each: true })
+  @IsArray()
+  @IsUrl({}, { each: true, message: 'Cada elemento debe ser una URL válida' })
+  imageUrls?: string[];
 }
