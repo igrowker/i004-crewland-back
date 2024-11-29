@@ -19,6 +19,6 @@ export enum Type {
 export enum ImgExtension {
   Jpg = 'jpg',
   Jpeg = 'jpeg',
-  Web = 'web',
+  Web = 'webp',
   Png = 'png',
 }
