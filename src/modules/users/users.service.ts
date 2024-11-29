@@ -84,6 +84,21 @@ export class UsersService {
       throw new Error('Error while updating the user: ' + error.message);
     }
   }
+
+  async getUserById(id: string): Promise<User> {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+
+      return user;
+    } catch (error) {
+      throw new Error('Error while fetching the user: ' + error.message);
+    }
+  }
+
   async getUsers() {
     return await this.userRepository.find();
   }

@@ -60,7 +60,6 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-import { CreateMessageDto } from './dto/create.message.dto';
 import { JoinRoomDto } from './dto/join.room.dto';
 
 @WebSocketGateway({ cors: true })
@@ -81,9 +80,13 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('sendMessage')
-  async sendMessage(@MessageBody() data: CreateMessageDto) {
-    const message = await this.chatService.saveMessage(data);
-    this.server.to(message.room.name).emit('receiveMessage', message);
-    return message;
+  async handleMessage(
+    client: Socket,
+    payload: { senderId: string; message: string },
+  ) {
+    console.log('Message received:', payload);
+
+    this.server.to('room_general').emit('receiveMessage', payload.message);
+    console.log(payload);
   }
 }

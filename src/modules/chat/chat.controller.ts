@@ -1,11 +1,11 @@
 import { Controller, Post, Get, Body, Param } from '@nestjs/common';
-import { ChatService } from './chat.service';
-import { CreateMessageDto } from '../chat/dto/create.message.dto';
-import { JoinRoomDto } from '../chat/dto/join.room.dto';
+import { JoinRoomDto } from './dto/create-chat.dto';
+import { CreateMessageDto } from './dto/send-message.dto';
+import { ChatService1 } from './chat.service1';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService1) {}
 
   @Post('rooms')
   async createRoom(@Body() joinRoomDto: JoinRoomDto) {

@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsDateString,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -11,6 +12,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, Role } from 'src/shared/utils/enum';
+import { IsPastDate } from 'src/shared/decorators/age.decorators';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -100,8 +102,16 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Fecha de nacimiento del usuario',
     example: '2000-01-01',
+    required: false,
   })
-  @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria.' })
+  @IsDateString(
+    {},
+    {
+      message:
+        'La fecha debe ser una fecha válida en formato ISO (YYYY-MM-DD).',
+    },
+  )
+  @IsPastDate({ message: 'La fecha debe ser del pasado.' })
   age: string;
 
   @ApiProperty({

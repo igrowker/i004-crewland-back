@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
 import dotenvOptions from './config/dotenv.config';
 import * as bodyParser from 'body-parser';
+import { ErrorHandlingCloudinary } from './middleware/cloudinary/error-handling.cloudinary';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,7 @@ async function bootstrap() {
   app.enableCors();
   app.use(logger.use.bind(logger));
   app.use(bodyParser.json());
+  app.use(new ErrorHandlingCloudinary().use);
   app.useGlobalInterceptors(new ResponseFormatInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({

@@ -1,13 +1,15 @@
-// src/chat/dto/send-message.dto.ts
-import { IsUUID, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class SendMessageDto {
-  @IsUUID()
-  chatId: string;
-
-  @IsUUID()
-  userId: string;
+export class CreateMessageDto {
+  @IsString()
+  @IsNotEmpty({ message: 'El id del user que envia el mensaje es requerido' })
+  senderId: string;
 
   @IsString()
-  message: string;
+  @IsNotEmpty({ message: 'El mensaje no puede ser vacio' })
+  content: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'El nombre la room de chat es requerido' })
+  roomId: string;
 }

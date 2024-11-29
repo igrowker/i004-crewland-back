@@ -1,7 +1,6 @@
-import { ArrayNotEmpty, IsString } from 'class-validator';
+import { ArrayNotEmpty } from 'class-validator';
 
 export class CreateCloudinaryDto {
   @ArrayNotEmpty()
-  @IsString({ each: true })
-  images: string[];
+  files: Express.Multer.File[];
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import dotEnvOptions from 'src/config/dotenv.config';
 import * as sgMail from '@sendgrid/mail';
 
@@ -28,7 +28,7 @@ export class SendGridService {
       console.log(`Correo enviado a ${to}`);
     } catch (error) {
       console.error('Error al enviar correo:', error.response?.body || error);
-      throw new Error('No se pudo enviar el correo.');
+      throw new InternalServerErrorException('No se pudo enviar el correo.');
     }
   }
 }
