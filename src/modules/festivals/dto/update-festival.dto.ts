@@ -117,18 +117,16 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   images?: Array<Express.Multer.File>;
 
   @ApiProperty({
-    description: 'URLs de las imágenes del festival',
-    example: [
-      'https://example.com/festival-image1.jpg',
-      'https://example.com/festival-image2.jpg',
-    ],
+    description: 'URL/s de las imágenes del festival',
+    example: 'https://example.com/festival-image2.jpg',
+
     type: 'array',
     items: { type: 'string' },
     required: false,
   })
   @IsOptional()
   @IsString({ each: true })
-  @IsArray()
+  // @IsArray()
   @IsUrl({}, { each: true, message: 'Cada elemento debe ser una URL válida' })
   imageUrls?: string[];
 }

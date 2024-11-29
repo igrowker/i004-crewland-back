@@ -9,6 +9,7 @@ import {
   IsInt,
   Min,
   IsArray,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateFestivalDto {
@@ -105,15 +106,14 @@ export class CreateFestivalDto {
   images?: Array<Express.Multer.File>;
 
   @ApiProperty({
-    description: 'URLs de las imagenes del festival',
-    example: [
-      'https://example.com/image1.jpg',
-      'https://example.com/image2.jpg',
-    ],
+    description: 'URL/s de las imagenes del festival',
+    example: 'https://example.com/image1.jpg',
+
     type: 'array',
     items: { type: 'string' },
   })
-  @IsArray()
+  @IsOptional()
+  // @IsArray()
   @IsString({ each: true })
   @IsUrl({}, { each: true })
   imageUrls?: string[];
