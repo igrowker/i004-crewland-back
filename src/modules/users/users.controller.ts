@@ -87,4 +87,6 @@ export class UsersController {
   async getUsers() {
     return this.usersService.getUsers();
   }
+
+  // agregar campo para eliminar usuarios
 }
