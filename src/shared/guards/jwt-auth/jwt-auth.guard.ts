@@ -6,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
-import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import dotEnvOptions from 'src/config/dotenv.config';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -15,6 +16,7 @@ export class JwtAuthGuard implements CanActivate {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) { }
+
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -34,21 +36,22 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     const token = tokenBearer[1];
-    const secret = this.configService.get<string>('JWT_SECRET');
+    const secret = this.configService.get<string>(dotEnvOptions.JWT_SECRET);
 
     try {
       const decodedToken = this.jwtService.verify(token, { secret });
 
-      if (
-        !decodedToken ||
-        !decodedToken.sub ||
-        !decodedToken.email ||
-        !decodedToken.role
-      ) {
+      // Validar que el token contenga los datos necesarios
+      if (!decodedToken || !decodedToken.sub || !decodedToken.userId) {
         throw new UnauthorizedException('Token inválido');
       }
 
-      request['user'] = decodedToken;
+      request['user'] = {
+        id: decodedToken.userId,
+        email: decodedToken.email,
+        role: decodedToken.role,
+      };
+
       return true;
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
