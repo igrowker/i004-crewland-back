@@ -14,7 +14,7 @@ export class ChatGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly chatService: ChatService) { }
+  constructor(private readonly chatService: ChatService) {}
 
   // Método para unirse a una sala
   @SubscribeMessage('joinRoom')
@@ -42,7 +42,7 @@ export class ChatGateway {
 
   @SubscribeMessage('sendMessage')
   async sendMessage(@MessageBody() data: CreateMessageDto) {
-    console.log("GATE WAY SEND MESSAGE", data);
+    console.log('GATE WAY SEND MESSAGE', data);
     const message = await this.chatService.saveMessage(data); // Guardamos el mensaje
     this.server.to(message.room.id).emit('receiveMessage', message); //con esto mandamos el mensjae a todos los de la sala
     return message;
