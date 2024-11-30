@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../../../shared/utils/enum';
+import { IsPastDate } from 'src/shared/decorators/age.decorators';
 
 export class UpdateUserDto {
   @ApiProperty({
@@ -70,13 +71,17 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
+  @MinLength(6, { message: 'El nombre debe tener al menos 6 carácter.' })
+  @MaxLength(25, {
+    message: 'El número máximo de caracteres ha sido excedido.',
+  })
   @Matches(
     /^(?:\+?\d{1,3}[-.\s]?)?(\(?\d{1,4}\)?[-.\s]?)?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/,
     {
       message: 'El número de teléfono no tiene un formato válido.',
     },
   )
-  tel?: string;
+  tel?: string; // validaciones para evitar espacios y evitar algunos caracteres.
 
   @ApiProperty({
     description: 'Fecha de nacimiento del usuario',
@@ -91,6 +96,7 @@ export class UpdateUserDto {
         'La fecha debe ser una fecha válida en formato ISO (YYYY-MM-DD).',
     },
   )
+  @IsPastDate({ message: 'La fecha debe ser del pasado.' })
   age?: string;
 
   @ApiProperty({
@@ -131,6 +137,5 @@ export class UpdateUserDto {
   @IsArray()
   @IsOptional()
   @IsString({ each: true })
-  favorites?: string[];
   password: any;
 }

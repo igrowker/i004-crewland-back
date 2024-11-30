@@ -10,7 +10,6 @@ import {
   Query,
   Request
 } from '@nestjs/common';
-import { PublicationValidationUserr } from '../../shared/guards/publications/publications-validation-user.guard';
 import { PublicationValidationUser } from 'src/shared/guards/user-validator/user-validator-publication.guard';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth/jwt-auth.guard';
 import { PublicationsService } from './publications.service';

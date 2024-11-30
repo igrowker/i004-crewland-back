@@ -5,9 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { Publication } from './entities/publication.entity';
 import { ConfigModule } from '@nestjs/config';
-import { FestivalModule } from '../festivals/festival.module';
+import { FestivalsModule } from '../festivals/festivals.module';
 import { GeneralEntityValidationGuard } from 'src/shared/guards/user-validator/general-validator.guard';
-import { FestivalService } from '../festivals/festival.service';
+import { FestivalsService } from '../festivals/festivals.service';
+import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Publication]),
@@ -16,10 +18,11 @@ import { FestivalService } from '../festivals/festival.service';
       signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRED },
     }),
     ConfigModule,
-    FestivalModule
+    FestivalsModule,
+    CloudinaryModule
   ],
 
   controllers: [PublicationsController],
-  providers: [PublicationsService, FestivalService, GeneralEntityValidationGuard],
+  providers: [PublicationsService, FestivalsService, GeneralEntityValidationGuard],
 })
 export class PublicationsModule { }

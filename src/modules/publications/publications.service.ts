@@ -5,14 +5,14 @@ import { Publication } from './entities/publication.entity';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { FindPublicationsDto } from './dto/find-publications.dto';
-import { FestivalService } from '../festivals/festival.service';
+import { FestivalsService } from '../festivals/festivals.service';
 
 @Injectable()
 export class PublicationsService {
   constructor(
     @InjectRepository(Publication)
     private readonly publicationRepository: Repository<Publication>,
-    private readonly festivalService: FestivalService,
+    private readonly festivalService: FestivalsService,
   ) { }
 
   async create(festivalId: string, createPublicationDto: CreatePublicationDto): Promise<Publication> {

@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 import { ReservationsService } from '../../../modules/reservations/reservations.service';
 import { PublicationsService } from '../../../modules/publications/publications.service';
-import { FestivalService } from 'src/modules/festivals/festival.service';
+import { FestivalsService } from 'src/modules/festivals/festivals.service';
 
 @Injectable()
 export class GeneralEntityValidationGuard implements CanActivate {
     constructor(
         // private readonly reservationsService: ReservationsService,
         private readonly publicationsService: PublicationsService,
-        private readonly festivalService: FestivalService,
+        private readonly festivalService: FestivalsService,
     ) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {

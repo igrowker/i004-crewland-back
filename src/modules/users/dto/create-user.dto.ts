@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsDateString,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -11,6 +12,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender, Role } from 'src/shared/utils/enum';
+import { IsPastDate } from 'src/shared/decorators/age.decorators';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -19,7 +21,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Nombre es obligatorio' })
-  @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
+  @MinLength(3, { message: 'La nombre debe tener al menos 3 caracteres.' })
   @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
   @Matches(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, {
     message: 'El nombre debe contener sólo letras y espacios',
@@ -32,7 +34,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Usuario es obligatorio' })
-  @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
+  @MinLength(4, { message: 'La nombre debe tener al menos 4 caracteres.' })
   @MaxLength(25, { message: 'El número máximo de dígitos ha sido excedido.' })
   @Matches(/^[a-zA-Z0-9_-]+$/, {
     message:
@@ -100,9 +102,17 @@ export class CreateUserDto {
   @ApiProperty({
     description: 'Fecha de nacimiento del usuario',
     example: '2000-01-01',
+    required: false,
   })
-  @IsNotEmpty({ message: 'La fecha de nacimiento es obligatoria.' })
-  age: string;
+  @IsDateString(
+    {},
+    {
+      message:
+        'La fecha debe ser una fecha válida en formato ISO (YYYY-MM-DD).',
+    },
+  )
+  @IsPastDate({ message: 'La fecha debe ser del pasado.' })
+  age: string; // agregar validaciones para que no sep uedan registrar personas menos de 18.
 
   @ApiProperty({
     description: 'Género del usuario',

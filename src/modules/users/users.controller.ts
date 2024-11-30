@@ -16,6 +16,8 @@ import {
   ApiOperation,
   ApiParam,
 } from '@nestjs/swagger';
+import { UserOwnershipGuard } from 'src/shared/guards/user-ownership-guard/user-ownership-guard.guard';
+import { User } from './entities/user.entity';
 import { Roles } from 'src/shared/decorators/role.decorator';
 import { Role } from 'src/shared/utils/enum';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -33,7 +35,7 @@ export class UsersController {
 
   @ApiBearerAuth()
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, RoleGuard) // Guards para autenticación y autorización
+  @UseGuards(JwtAuthGuard, RoleGuard, UserOwnershipGuard)
   @Roles(Role.Admin, Role.User)
   @ApiOperation({
     summary: 'Actualizar parcialmente la información de un usuario',
@@ -73,10 +75,18 @@ export class UsersController {
     return this.usersService.updateUser(id, updateUserDto);
   }
 
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async getUserById(@Param('id') id: string): Promise<User> {
+    return await this.usersService.getUserById(id);
+  }
+
   @Get()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RoleGuard)
   async getUsers() {
     return this.usersService.getUsers();
   }
+
+  // agregar campo para eliminar usuarios
 }
