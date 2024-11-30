@@ -10,13 +10,15 @@ import {
   Query,
   Request
 } from '@nestjs/common';
-import { PublicationValidationUser } from '../../shared/guards/publications/publications-validation-user.guard';
+import { PublicationValidationUserr } from '../../shared/guards/publications/publications-validation-user.guard';
+import { PublicationValidationUser } from 'src/shared/guards/user-validator/user-validator-publication.guard';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth/jwt-auth.guard';
 import { PublicationsService } from './publications.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { FindPublicationsDto } from './dto/find-publications.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { GeneralEntityValidationGuard } from 'src/shared/guards/user-validator/general-validator.guard';
 
 @Controller('publications')
 export class PublicationsController {
@@ -45,7 +47,7 @@ export class PublicationsController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, PublicationValidationUser)
+  @UseGuards(JwtAuthGuard, GeneralEntityValidationGuard)
   update(
     @Param('id') id: string,
     @Body() updatePublicationDto: UpdatePublicationDto,

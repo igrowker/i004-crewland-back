@@ -6,7 +6,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { Publication } from './entities/publication.entity';
 import { ConfigModule } from '@nestjs/config';
 import { FestivalModule } from '../festivals/festival.module';
-
+import { GeneralEntityValidationGuard } from 'src/shared/guards/user-validator/general-validator.guard';
+import { FestivalService } from '../festivals/festival.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Publication]),
@@ -18,6 +19,6 @@ import { FestivalModule } from '../festivals/festival.module';
     FestivalModule
   ],
   controllers: [PublicationsController],
-  providers: [PublicationsService],
+  providers: [PublicationsService, FestivalService, GeneralEntityValidationGuard],
 })
 export class PublicationsModule { }

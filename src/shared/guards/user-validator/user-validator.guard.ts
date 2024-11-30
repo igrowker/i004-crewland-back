@@ -15,7 +15,7 @@ export class UserValidation implements CanActivate {
         const user = request.user;
         const userId = request.params.id;
 
-        if (userId !== user.sub) {
+        if (!user || userId !== user.sub) {
             throw new ForbiddenException(
                 'No tienes permiso para acceder a esta información de usuario.',
             );
