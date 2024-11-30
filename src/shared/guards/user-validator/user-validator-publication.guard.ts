@@ -20,7 +20,8 @@ export class PublicationValidationUser implements CanActivate {
             throw new ForbiddenException('Publicación no encontrada');
         }
 
-        if (publication.userId !== user.sub) {
+        console.log(publication.userId, user.id)
+        if (publication.userId !== user.id) {
             throw new ForbiddenException(
                 'No tienes permiso para acceder a esta publicación.',
             );

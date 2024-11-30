@@ -12,15 +12,15 @@ export class ReservationValidationUser implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
-        const user = request.user; // Usuario del token
-        const reservationId = request.params.id; // ID de la reserva
+        const user = request.user;
+        const reservationId = request.params.id;
 
         const reservation = await this.reservationsService.findOne(reservationId);
         if (!reservation) {
             throw new ForbiddenException('Reserva no encontrada');
         }
 
-        // if (reservation.userId !== user.sub) {
+        // if (reservation.userId !== user.id) {
         //     throw new ForbiddenException(
         //         'No tienes permiso para acceder a esta reserva.',
         //     );

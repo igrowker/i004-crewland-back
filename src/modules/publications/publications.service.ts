@@ -15,7 +15,7 @@ export class PublicationsService {
     private readonly festivalService: FestivalsService,
   ) { }
 
-  async create(festivalId: string, createPublicationDto: CreatePublicationDto): Promise<Publication> {
+  async create(festivalId: string, createPublicationDto: CreatePublicationDto, userId: string): Promise<Publication> {
     try {
       const festival = await this.festivalService.findOne(festivalId);
 
@@ -30,6 +30,7 @@ export class PublicationsService {
 
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,
+        userId,
         festivalId,
         creationDate,
         creationTime
@@ -131,7 +132,6 @@ export class PublicationsService {
     if (publication.participants.includes(userId)) {
       throw new Error('El usuario ya es participante de esta publicación');
     }
-
     publication.participants.push(userId);
 
     return this.publicationRepository.save(publication);

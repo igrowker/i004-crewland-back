@@ -17,36 +17,38 @@ import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { FindPublicationsDto } from './dto/find-publications.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { GeneralEntityValidationGuard } from 'src/shared/guards/user-validator/general-validator.guard';
 
 @Controller('publications')
 export class PublicationsController {
   constructor(private readonly publicationsService: PublicationsService) { }
 
-  @Post(':festivalId')
+  @Post(':festivalId')//
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  create(
+  async create(
     @Param('festivalId') festivalId: string,
     @Body() createPublicationDto: CreatePublicationDto,
+    @Request() req,
   ) {
-    return this.publicationsService.create(festivalId, createPublicationDto);
+    const userId = req.user.id;
+
+    return this.publicationsService.create(festivalId, createPublicationDto, userId);
   }
 
-  @Get()
+  @Get()//
   @UseGuards(JwtAuthGuard)
   async findAll(@Query() filters: FindPublicationsDto) {
     return this.publicationsService.findAll(filters);
   }
 
-  @Get(':id')
+  @Get(':id')//
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.publicationsService.findOne(id);
   }
 
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard, GeneralEntityValidationGuard)
+  @Patch(':id')//
+  @UseGuards(JwtAuthGuard, PublicationValidationUser)
   update(
     @Param('id') id: string,
     @Body() updatePublicationDto: UpdatePublicationDto,
@@ -73,7 +75,7 @@ export class PublicationsController {
     @Param('id') id: string,
     @Request() req,
   ) {
-    const userIdFromToken = req.user.sub;
+    const userIdFromToken = req.user.id;
 
     return this.publicationsService.addParticipant(id, userIdFromToken);
   }
@@ -85,7 +87,7 @@ export class PublicationsController {
     @Param('id') id: string,
     @Request() req,
   ) {
-    const userIdFromToken = req.user.sub;
+    const userIdFromToken = req.user.id;
     return this.publicationsService.removeParticipant(id, userIdFromToken)
   }
 

@@ -13,14 +13,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'src/shared/utils/enum';
 
 export class CreatePublicationDto {
-  @ApiProperty({
-    description: 'ID del usuario que crea la publicación',
-    example: '4ca24b91-70c2-43ca-aee9-4f54b8f8erc5',
-  })
-  @IsString({ message: 'El userId debe ser una cadena de texto.' })
-  @IsNotEmpty({ message: 'El ID del usuario es obligatorio.' })
-  @IsUUID(undefined, { message: 'El ID del usuario debe ser un UUID válido.' })
-  userId: string
+  // @ApiProperty({
+  //   description: 'ID del usuario que crea la publicación',
+  //   example: '4ca24b91-70c2-43ca-aee9-4f54b8f8erc5',
+  // })
+  // @IsString({ message: 'El userId debe ser una cadena de texto.' })
+  // @IsNotEmpty({ message: 'El ID del usuario es obligatorio.' })
+  // @IsUUID(undefined, { message: 'El ID del usuario debe ser un UUID válido.' })
+  // userId: string
 
   @ApiProperty({
     description: 'Título de la publicación, puede ser cualquier texto descriptivo.',
