@@ -19,6 +19,9 @@ export class Message {
   content: string;
 
   @CreateDateColumn()
+  timestamp: Date;
+
+  @CreateDateColumn()
   createdAt: Date;
 
   @ManyToOne(() => Room, (room) => room.messages)

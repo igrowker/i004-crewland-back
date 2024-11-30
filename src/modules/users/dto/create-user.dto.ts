@@ -21,7 +21,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Nombre es obligatorio' })
-  @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
+  @MinLength(3, { message: 'La nombre debe tener al menos 3 caracteres.' })
   @MaxLength(50, { message: 'El número máximo de dígitos ha sido excedido.' })
   @Matches(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, {
     message: 'El nombre debe contener sólo letras y espacios',
@@ -34,7 +34,7 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'Usuario es obligatorio' })
-  @MinLength(1, { message: 'La nombre debe tener al menos 1 caracteres.' })
+  @MinLength(4, { message: 'La nombre debe tener al menos 4 caracteres.' })
   @MaxLength(25, { message: 'El número máximo de dígitos ha sido excedido.' })
   @Matches(/^[a-zA-Z0-9_-]+$/, {
     message:
@@ -112,7 +112,7 @@ export class CreateUserDto {
     },
   )
   @IsPastDate({ message: 'La fecha debe ser del pasado.' })
-  age: string;
+  age: string; // agregar validaciones para que no sep uedan registrar personas menos de 18.
 
   @ApiProperty({
     description: 'Género del usuario',
