@@ -20,7 +20,7 @@ export class CreatePublicationDto {
   @IsString({ message: 'El userId debe ser una cadena de texto.' })
   @IsNotEmpty({ message: 'El ID del usuario es obligatorio.' })
   @IsUUID(undefined, { message: 'El ID del usuario debe ser un UUID válido.' })
-  userId: string;
+  userId: string
 
   @ApiProperty({
     description: 'Título de la publicación, puede ser cualquier texto descriptivo.',

@@ -44,7 +44,7 @@ export class UpdatePublicationDto extends PartialType(CreatePublicationDto) {
   @IsOptional()
   @IsString({ message: 'Los detalles deben ser una cadena de texto.' })
   @MaxLength(250, {
-    message: 'La descripción no puede tener más de 250 caracteres',
+    message: 'La descripción no puede tener más de 250 caracteres'
   })
   details?: string;
 

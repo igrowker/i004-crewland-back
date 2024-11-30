@@ -18,6 +18,7 @@ import { FestivalService } from '../festivals/festival.service';
     ConfigModule,
     FestivalModule
   ],
+
   controllers: [PublicationsController],
   providers: [PublicationsService, FestivalService, GeneralEntityValidationGuard],
 })

@@ -153,6 +153,6 @@ export class PublicationsService {
 
     publication.participants.splice(index, 1);
 
-    return this.publicationRepository.save(publication);
+    return this.publicationRepository.save(publication)
   }
 }

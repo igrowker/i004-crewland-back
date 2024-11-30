@@ -87,8 +87,7 @@ export class PublicationsController {
     @Request() req,
   ) {
     const userIdFromToken = req.user.sub;
-
-    return this.publicationsService.removeParticipant(id, userIdFromToken);
+    return this.publicationsService.removeParticipant(id, userIdFromToken)
   }
 
 }

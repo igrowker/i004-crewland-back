@@ -54,6 +54,6 @@ export class Publication {
   isActive: boolean;
 
   @Column({ type: 'varchar', nullable: true })
-  imageUrl: string;
+  imageUrl: string
 }
 

@@ -12,7 +12,7 @@ export class FindPublicationsDto {
 
     @IsOptional()
     @IsDate()
-    fromDate?: Date;
+    fromDate?: Date
 
     @IsOptional()
     @IsDate()
