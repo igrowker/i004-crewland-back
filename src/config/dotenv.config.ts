@@ -26,6 +26,7 @@ const CLOUDINARY_API_KEY_NAME = process.env.CLOUDINARY_API_KEY_NAME;
 const MAX_SIZE_IMAGE = process.env.MAX_SIZE_IMAGE;
 const DEFAULT_IMG_EVENT_CLOUDINARY = process.env.DEFAULT_IMG_EVENT_CLOUDINARY;
 const DB_SSL = process.env.DB_SSL;
+const DB_SSL_REJECT_UNAUTHORIZED = process.env.DB_SSL_REJECT_UNAUTHORIZED;
 
 const dotEnvOptions = {
   SENDGRIP_AUTH_TOKEN,
@@ -52,6 +53,7 @@ const dotEnvOptions = {
   MAX_SIZE_IMAGE,
   DEFAULT_IMG_EVENT_CLOUDINARY,
   DB_SSL,
+  DB_SSL_REJECT_UNAUTHORIZED,
 };
 
 export default dotEnvOptions;
