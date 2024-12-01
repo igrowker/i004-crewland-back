@@ -9,7 +9,36 @@ import {
   IsInt,
   Min,
   IsOptional,
+  IsDateString,
+  IsArray,
 } from 'class-validator';
+
+// import {
+//   ValidationArguments,
+//   ValidatorConstraint,
+//   ValidatorConstraintInterface,
+//   Validate,
+// } from 'class-validator';
+
+// export
+// @ValidatorConstraint({ name: 'isValidFutureDate', async: false })
+// class isValidFutureDateConstraint implements ValidatorConstraintInterface {
+//   validate(value: string) {
+//     const date = new Date(value);
+//     const today = new Date();
+//     today.setHours(0, 0, 0, 0);
+
+//     // Verifica si la fecha es válida
+//     if (isNaN(date.getTime())) {
+//       return false;
+//     }
+//     return date > today;
+//   }
+
+//   defaultMessage(args: ValidationArguments) {
+//     return `${args.property} debe ser una fecha válida y existente en el futuro, no en el pasado`;
+//   }
+// }
 
 export class CreateFestivalDto {
   @ApiProperty({
@@ -35,25 +64,26 @@ export class CreateFestivalDto {
   @MaxLength(50, {
     message: 'La ubicación no puede exceder los 50 caracteres.',
   })
-  @Matches(/^[a-zA-Z0-9\s,-]+$/, {
+  @Matches(/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s,-]{3,}$/, {
     message:
-      'La ubicación solo puede contener letras, números, espacios, comas, y guiones',
+      'La ubicación debe contener al menos una letra, no puede ser solo números o espacios, y solo puede contener letras, números, espacios, comas, tildes y guiones',
   })
-  location: string; // agregar propiedad para evitar que se envien solo numeros evitar que se envien solo espacios tambien.
-  // tampoco esta acepatando tildes.
+  location: string;
 
   @ApiProperty({
     description: 'La fecha del festival en formato YYYY-MM-DD',
     example: '2024-11-15',
   })
-  @IsString({ message: 'La fecha debe ser una cadena' })
+  @IsDateString(
+    {},
+    { message: 'La fecha debe ser valida y en formato de cadena' },
+  )
   @IsNotEmpty({ message: 'La fecha es obligatoria' })
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'La fecha debe ser una cadena en formato YYYY-MM-DD.',
   })
+  // @Validate(isValidFutureDateConstraint)
   date: string;
-  // agregar validacion para que no se puedan mandar fechas pasadas.
-  // tambien verificar que se manden fechas existentes
 
   @ApiProperty({
     description: 'La hora del festival en formato HH:mm',
@@ -82,17 +112,19 @@ export class CreateFestivalDto {
   })
   @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s.,;:'"()¿?¡!-]+$/, {
     message:
-      'La descripción solo puede contener letras, números, espacios y signos de puntuación comunes.',
+      'La descripción solo puede contener letras, números, espacios, tildes, y signos de puntuación comunes.',
   })
-  description: string; // a revisar.
+  description: string;
 
   @ApiProperty({
     description: 'URL del sitio web del festival',
     example: 'https://www.festivalexample.com',
   })
-  @IsUrl({}, { message: 'Debe ser una URL válida' })
+  @IsUrl(
+    { protocols: ['http', 'https'], require_protocol: true },
+    { message: 'Debe ser una URL válida que comience con http:// o https://' },
+  )
   url: string;
-  // a chekear que urls permite. AGREGAR VALIDACIONES PARA LA URL
 
   @ApiProperty({
     description: 'Número de personas que asistirán al festival',
@@ -111,17 +143,25 @@ export class CreateFestivalDto {
   images?: Array<Express.Multer.File>;
 
   @ApiProperty({
-    description: 'URL/s de las imagenes del festival',
-    example: 'https://example.com/image1.jpg',
-
+    description: 'URL/s de las imágenes del festival',
+    example: [
+      'https://example.com/festival-image1.jpg',
+      'https://example.com/festival-image2.jpg',
+    ],
     type: 'array',
     items: { type: 'string' },
+    required: false,
   })
   @IsOptional()
   // @IsArray()
   @IsString({ each: true })
-  @IsUrl({}, { each: true })
+  @IsUrl(
+    { protocols: ['http', 'https'], require_protocol: true },
+    {
+      each: true,
+      message:
+        'Cada elemento debe ser una URL válida que comience con http:// o https://',
+    },
+  )
   imageUrls?: string[];
 }
-
-// me esta dejando crear por mas que exista el post. no permitir crear el mismo evento.

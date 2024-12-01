@@ -35,9 +35,17 @@ export const dataSourceOptions: DataSourceOptions = {
   ],
   subscribers: [],
   migrations: [],
-  ssl: dotEnvOptions.DB_SSL
-    ? { rejectUnauthorized: dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED }
-    : false,
+  ssl:
+    dotEnvOptions.DB_SSL === true
+      ? {
+          rejectUnauthorized:
+            dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED === false ? false : true,
+        }
+      : false,
+
+  // ssl: dotEnvOptions.DB_SSL
+  // ? { rejectUnauthorized: dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED }
+  // : false,
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);
