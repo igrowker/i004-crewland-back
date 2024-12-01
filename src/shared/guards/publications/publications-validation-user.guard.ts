@@ -8,7 +8,7 @@ import { PublicationsService } from '../../../modules/publications/publications.
 
 @Injectable()
 export class PublicationValidationUser implements CanActivate {
-  constructor(private readonly publicationService: PublicationsService) {}
+  constructor(private readonly publicationService: PublicationsService) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -20,7 +20,7 @@ export class PublicationValidationUser implements CanActivate {
       throw new ForbiddenException('Publication not found');
     }
 
-    if (publication.userId !== user.id) {
+    if (publication.userId !== user.sub) {
       throw new ForbiddenException(
         'You do not have permission to modify this publication',
       );

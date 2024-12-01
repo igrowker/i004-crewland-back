@@ -48,4 +48,4 @@ import dotEnvOptions from './config/dotenv.config';
   ],
   exports: [WinstonLoggerService],
 })
-export class AppModule {}
+export class AppModule { }
