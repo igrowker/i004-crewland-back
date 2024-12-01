@@ -10,8 +10,11 @@ import {
   IsUrl,
   IsInt,
   Min,
+  IsDateString,
+  // Validate,
   IsArray,
 } from 'class-validator';
+// import { isValidFutureDateConstraint } from './create-festival.dto';
 
 export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   @ApiProperty({
@@ -34,12 +37,12 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   })
   @IsOptional()
   @IsString()
-  @MaxLength(100, {
-    message: 'La ubicación no puede exceder los 100 caracteres.',
+  @MaxLength(50, {
+    message: 'La ubicación no puede exceder los 50 caracteres.',
   })
-  @Matches(/^[a-zA-Z0-9\s,-]+$/, {
+  @Matches(/^(?=.*[a-zA-ZáéíóúÁÉÍÓÚñÑ])[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s,-]{3,}$/, {
     message:
-      'La ubicación solo puede contener letras, números, espacios, comas, y guiones',
+      'La ubicación debe contener al menos una letra, no puede ser solo números o espacios, y solo puede contener letras, números, espacios, comas, tildes y guiones',
   })
   location?: string;
 
@@ -49,10 +52,14 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
     required: false,
   })
   @IsOptional()
-  @IsString({ message: 'La fecha debe ser una cadena' })
+  @IsDateString(
+    {},
+    { message: 'La fecha debe ser valida y en formato de cadena' },
+  )
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'La fecha debe ser una cadena en formato YYYY-MM-DD',
   })
+  // @Validate(isValidFutureDateConstraint)
   date?: string;
 
   @ApiProperty({
@@ -65,7 +72,7 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   @Matches(/^([01]\d|2[0-3]):[0-5]\d$/, {
     message: 'La hora debe estar en formato HH:mm (24 horas).',
   })
-  time: string;
+  time?: string;
 
   @ApiProperty({
     description: 'Una descripción breve del festival',
@@ -83,7 +90,7 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   })
   @Matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s.,;:'"()¿?¡!-]+$/, {
     message:
-      'La descripción solo puede contener letras, números, espacios y signos de puntuación comunes.',
+      'La descripción solo puede contener letras, números, espacios, tildes, y signos de puntuación comunes.',
   })
   description?: string;
 
@@ -93,7 +100,10 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
     required: false,
   })
   @IsOptional()
-  @IsUrl({}, { message: 'Debe ser una URL válida' })
+  @IsUrl(
+    { protocols: ['http', 'https'], require_protocol: true },
+    { message: 'Debe ser una URL válida que comience con http:// o https://' },
+  )
   url?: string;
 
   @ApiProperty({
@@ -118,15 +128,24 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
 
   @ApiProperty({
     description: 'URL/s de las imágenes del festival',
-    example: 'https://example.com/festival-image2.jpg',
-
+    example: [
+      'https://example.com/festival-image1.jpg',
+      'https://example.com/festival-image2.jpg',
+    ],
     type: 'array',
     items: { type: 'string' },
     required: false,
   })
   @IsOptional()
-  @IsString({ each: true })
   // @IsArray()
-  @IsUrl({}, { each: true, message: 'Cada elemento debe ser una URL válida' })
+  @IsString({ each: true })
+  @IsUrl(
+    { protocols: ['http', 'https'], require_protocol: true },
+    {
+      each: true,
+      message:
+        'Cada elemento debe ser una URL válida que comience con http:// o https://',
+    },
+  )
   imageUrls?: string[];
 }

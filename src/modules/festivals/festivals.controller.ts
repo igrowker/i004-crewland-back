@@ -31,17 +31,17 @@ export class FestivalsController {
     @Body() createFestivalDto: CreateFestivalDto,
     @UploadedFiles() images: Express.Multer.File[],
   ) {
-    return this.festivalService.create(createFestivalDto, images);
+    return this.festivalService.createOneFestival(createFestivalDto, images);
   }
 
   @Get()
   findAll() {
-    return this.festivalService.findAll();
+    return this.festivalService.findAllFestivals();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.festivalService.findOne(id);
+    return this.festivalService.findOneFestival(id);
   }
 
   @Patch(':id')
@@ -52,12 +52,16 @@ export class FestivalsController {
     @Body() updateFestivalDto: UpdateFestivalDto,
     @UploadedFiles() images: Express.Multer.File[],
   ) {
-    return this.festivalService.update(id, updateFestivalDto, images);
+    return this.festivalService.updateOneFestival(
+      id,
+      updateFestivalDto,
+      images,
+    );
   }
 
   @Delete(':id')
   @Roles(Role.Admin)
   remove(@Param('id') id: string) {
-    return this.festivalService.remove(id);
+    return this.festivalService.removeOneFestival(id);
   }
 }

@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
 @Entity({
   name: 'festivals',
 })
+@Index(['name', 'date'], { unique: true })
 export class Festivals {
   @PrimaryGeneratedColumn('uuid')
   id: string;
