@@ -4,30 +4,63 @@ import { Repository } from 'typeorm';
 import { Publication } from './entities/publication.entity';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
+import { FindPublicationsDto } from './dto/find-publications.dto';
+import { FestivalsService } from '../festivals/festivals.service';
 
 @Injectable()
 export class PublicationsService {
   constructor(
     @InjectRepository(Publication)
     private readonly publicationRepository: Repository<Publication>,
-  ) {}
+    private readonly festivalService: FestivalsService,
+  ) { }
 
-  async create(
-    createPublicationDto: CreatePublicationDto,
-  ): Promise<Publication> {
+  async create(festivalId: string, createPublicationDto: CreatePublicationDto, userId: string): Promise<Publication> {
     try {
-      const newPublication =
-        this.publicationRepository.create(createPublicationDto);
+      const festival = await this.festivalService.findOne(festivalId);
+
+      if (!festival) {
+        throw new NotFoundException(`Festival with ID ${festivalId} not found`);
+      }
+
+      const now = new Date();
+      const creationDate = now.toLocaleDateString('es-ES');
+      const creationTime = now.toLocaleTimeString('es-ES', { hour12: false }).slice(0, 5);
+
+
+      const newPublication = this.publicationRepository.create({
+        ...createPublicationDto,
+        userId,
+        festivalId,
+        creationDate,
+        creationTime
+      });
 
       return await this.publicationRepository.save(newPublication);
     } catch (error) {
-      throw new Error('Error al crear la publicación: ' + error.message);
+      throw new Error('Failed to create publication');
     }
   }
 
-  async findAll(): Promise<Publication[]> {
-    return await this.publicationRepository.find();
+  async findAll(filters: FindPublicationsDto): Promise<Publication[]> {
+    const queryBuilder = this.publicationRepository.createQueryBuilder('publication');
+
+    if (filters.type) {
+      queryBuilder.andWhere('publication.type = :type', { type: filters.type });
+    }
+
+    if (filters.title) {
+      queryBuilder.andWhere('publication.title LIKE :title', { title: `%${filters.title}%` });
+    }
+
+    queryBuilder
+      .orderBy('publication.creationDate', 'ASC')
+      .addOrderBy('publication.creationTime', 'ASC');
+
+
+    return queryBuilder.getMany();
   }
+
 
   async findOne(id: string): Promise<Publication> {
     const publication = await this.publicationRepository.findOne({
@@ -50,11 +83,11 @@ export class PublicationsService {
     });
 
     if (!publication) {
-      throw new NotFoundException('Publicación no encontrada');
+      throw new NotFoundException('Publicación no encontrada')
     }
 
-    const updatedPublication = Object.assign(publication, updatePublicationDto);
-    return await this.publicationRepository.save(updatedPublication);
+    const updatedPublication = Object.assign(publication, updatePublicationDto)
+    return await this.publicationRepository.save(updatedPublication)
   }
 
   async remove(id: string): Promise<void> {
@@ -63,7 +96,7 @@ export class PublicationsService {
     });
 
     if (!publication) {
-      throw new NotFoundException('Publicación no encontrada');
+      throw new NotFoundException('Publicación no encontrada')
     }
 
     await this.publicationRepository.delete(id);
@@ -81,5 +114,45 @@ export class PublicationsService {
     publication.isActive = !publication.isActive;
 
     return await this.publicationRepository.save(publication);
+  }
+
+  async addParticipant(publicationId: string, userId: string): Promise<Publication> {
+    const publication = await this.publicationRepository.findOne({
+      where: { id: publicationId },
+    });
+
+    if (!publication) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+
+    if (!publication.participants) {
+      publication.participants = [];
+    }
+
+    if (publication.participants.includes(userId)) {
+      throw new Error('El usuario ya es participante de esta publicación');
+    }
+    publication.participants.push(userId);
+
+    return this.publicationRepository.save(publication);
+  }
+
+  async removeParticipant(publicationId: string, userId: string): Promise<Publication> {
+    const publication = await this.publicationRepository.findOne({
+      where: { id: publicationId },
+    });
+
+    if (!publication) {
+      throw new NotFoundException('Publicación no encontrada');
+    }
+
+    const index = publication.participants.indexOf(userId);
+    if (index === -1) {
+      throw new Error('El usuario no es participante de esta publicación');
+    }
+
+    publication.participants.splice(index, 1);
+
+    return this.publicationRepository.save(publication)
   }
 }
