@@ -98,7 +98,10 @@ export class FestivalsService {
 
   async findOneFestival(id: string): Promise<Festivals> {
     try {
-      const festival = await this.festivalRepository.findOne({ where: { id } });
+      const festival = await this.festivalRepository.findOne({
+        where: { id },
+      });
+      // const festival = await this.festivalRepository.findOneBy({ id });
       if (!festival) {
         throw new HttpException(
           `Festival with ID ${id} not found`,
