@@ -28,7 +28,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   constructor() {
-    setInterval(() => this.sendRandomMessage(), 6000);
+    // setInterval(() => this.sendRandomMessage(), 6000);
   }
 
   async handleConnection(client: Socket) {
