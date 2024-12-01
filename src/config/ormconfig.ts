@@ -13,12 +13,13 @@ import dotEnvOptions from './dotenv.config';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  port: parseInt(dotEnvOptions.DB_PORT || '5432', 10),
-  host: dotEnvOptions.DB_HOST,
-  username: dotEnvOptions.DB_USERNAME,
-  password: dotEnvOptions.DB_PASSWORD,
-  database: dotEnvOptions.DB_NAME,
-  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
+  // port: parseInt(dotEnvOptions.DB_PORT || '5432', 10),
+  // host: dotEnvOptions.DB_HOST,
+  // username: dotEnvOptions.DB_USERNAME,
+  // password: dotEnvOptions.DB_PASSWORD,
+  // database: dotEnvOptions.DB_NAME,
+  // dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
+  url: dotEnvOptions.DATABASE_URL,
   synchronize: true,
   logging: false,
   entities: [
@@ -34,9 +35,17 @@ export const dataSourceOptions: DataSourceOptions = {
   ],
   subscribers: [],
   migrations: [],
-  ssl: dotEnvOptions.DB_SSL === 'true' ? {
-    rejectUnauthorized: dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED === 'false' ? false : true,
-  } : false,
+  ssl:
+    dotEnvOptions.DB_SSL === true
+      ? {
+          rejectUnauthorized:
+            dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED === false ? false : true,
+        }
+      : false,
+
+  // ssl: dotEnvOptions.DB_SSL
+  // ? { rejectUnauthorized: dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED }
+  // : false,
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);

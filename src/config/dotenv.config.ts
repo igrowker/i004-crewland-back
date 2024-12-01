@@ -25,8 +25,10 @@ const CLOUDINARY_API_KEY_SECRET = process.env.CLOUDINARY_API_KEY_SECRET;
 const CLOUDINARY_API_KEY_NAME = process.env.CLOUDINARY_API_KEY_NAME;
 const MAX_SIZE_IMAGE = process.env.MAX_SIZE_IMAGE;
 const DEFAULT_IMG_EVENT_CLOUDINARY = process.env.DEFAULT_IMG_EVENT_CLOUDINARY;
-const DB_SSL = process.env.DB_SSL;
-const DB_SSL_REJECT_UNAUTHORIZED = process.env.DB_SSL_REJECT_UNAUTHORIZED;
+const NODE_ENV = process.env.NODE_ENV;
+const DB_SSL = process.env.DB_SSL === 'true';
+const DB_SSL_REJECT_UNAUTHORIZED =
+  process.env.DB_SSL_REJECT_UNAUTHORIZED === 'false' ? false : true;
 
 const dotEnvOptions = {
   SENDGRIP_AUTH_TOKEN,
@@ -52,6 +54,7 @@ const dotEnvOptions = {
   CLOUDINARY_API_KEY_NAME,
   MAX_SIZE_IMAGE,
   DEFAULT_IMG_EVENT_CLOUDINARY,
+  NODE_ENV,
   DB_SSL,
   DB_SSL_REJECT_UNAUTHORIZED,
 };
