@@ -13,13 +13,13 @@ import dotEnvOptions from './dotenv.config';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
-  // port: parseInt(dotEnvOptions.DB_PORT || '5432', 10),
-  // host: dotEnvOptions.DB_HOST,
-  // username: dotEnvOptions.DB_USERNAME,
-  // password: dotEnvOptions.DB_PASSWORD,
-  // database: dotEnvOptions.DB_NAME,
-  // dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
-  url: dotEnvOptions.DATABASE_URL,
+  port: parseInt(dotEnvOptions.DB_PORT || '5432', 10),
+  host: dotEnvOptions.DB_HOST,
+  username: dotEnvOptions.DB_USERNAME,
+  password: dotEnvOptions.DB_PASSWORD,
+  database: dotEnvOptions.DB_NAME,
+  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
+  // url: dotEnvOptions.DATABASE_URL,
   synchronize: true,
   logging: false,
   entities: [
