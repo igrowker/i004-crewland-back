@@ -13,11 +13,15 @@ export class PublicationsService {
     @InjectRepository(Publication)
     private readonly publicationRepository: Repository<Publication>,
     private readonly festivalService: FestivalsService,
-  ) { }
+  ) {}
 
-  async create(festivalId: string, createPublicationDto: CreatePublicationDto, userId: string): Promise<Publication> {
+  async create(
+    festivalId: string,
+    createPublicationDto: CreatePublicationDto,
+    userId: string,
+  ): Promise<Publication> {
     try {
-      const festival = await this.festivalService.findOne(festivalId);
+      const festival = await this.festivalService.findOneFestival(festivalId);
 
       if (!festival) {
         throw new NotFoundException(`Festival with ID ${festivalId} not found`);
@@ -25,42 +29,45 @@ export class PublicationsService {
 
       const now = new Date();
       const creationDate = now.toLocaleDateString('es-ES');
-      const creationTime = now.toLocaleTimeString('es-ES', { hour12: false }).slice(0, 5);
-
+      const creationTime = now
+        .toLocaleTimeString('es-ES', { hour12: false })
+        .slice(0, 5);
 
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,
         userId,
         festivalId,
         creationDate,
-        creationTime
+        creationTime,
       });
 
       return await this.publicationRepository.save(newPublication);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new Error('Failed to create publication');
     }
   }
 
   async findAll(filters: FindPublicationsDto): Promise<Publication[]> {
-    const queryBuilder = this.publicationRepository.createQueryBuilder('publication');
+    const queryBuilder =
+      this.publicationRepository.createQueryBuilder('publication');
 
     if (filters.type) {
       queryBuilder.andWhere('publication.type = :type', { type: filters.type });
     }
 
     if (filters.title) {
-      queryBuilder.andWhere('publication.title LIKE :title', { title: `%${filters.title}%` });
+      queryBuilder.andWhere('publication.title LIKE :title', {
+        title: `%${filters.title}%`,
+      });
     }
 
     queryBuilder
       .orderBy('publication.creationDate', 'ASC')
       .addOrderBy('publication.creationTime', 'ASC');
 
-
     return queryBuilder.getMany();
   }
-
 
   async findOne(id: string): Promise<Publication> {
     const publication = await this.publicationRepository.findOne({
@@ -83,11 +90,11 @@ export class PublicationsService {
     });
 
     if (!publication) {
-      throw new NotFoundException('Publicación no encontrada')
+      throw new NotFoundException('Publicación no encontrada');
     }
 
-    const updatedPublication = Object.assign(publication, updatePublicationDto)
-    return await this.publicationRepository.save(updatedPublication)
+    const updatedPublication = Object.assign(publication, updatePublicationDto);
+    return await this.publicationRepository.save(updatedPublication);
   }
 
   async remove(id: string): Promise<void> {
@@ -96,7 +103,7 @@ export class PublicationsService {
     });
 
     if (!publication) {
-      throw new NotFoundException('Publicación no encontrada')
+      throw new NotFoundException('Publicación no encontrada');
     }
 
     await this.publicationRepository.delete(id);
@@ -116,7 +123,10 @@ export class PublicationsService {
     return await this.publicationRepository.save(publication);
   }
 
-  async addParticipant(publicationId: string, userId: string): Promise<Publication> {
+  async addParticipant(
+    publicationId: string,
+    userId: string,
+  ): Promise<Publication> {
     const publication = await this.publicationRepository.findOne({
       where: { id: publicationId },
     });
@@ -137,7 +147,10 @@ export class PublicationsService {
     return this.publicationRepository.save(publication);
   }
 
-  async removeParticipant(publicationId: string, userId: string): Promise<Publication> {
+  async removeParticipant(
+    publicationId: string,
+    userId: string,
+  ): Promise<Publication> {
     const publication = await this.publicationRepository.findOne({
       where: { id: publicationId },
     });
@@ -153,6 +166,6 @@ export class PublicationsService {
 
     publication.participants.splice(index, 1);
 
-    return this.publicationRepository.save(publication)
+    return this.publicationRepository.save(publication);
   }
 }
