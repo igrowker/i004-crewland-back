@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Type } from 'src/shared/utils/enum';
+import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 
 @Entity('reservations')
 export class Reservations {
@@ -6,12 +7,20 @@ export class Reservations {
   id: string;
 
   // array de usuarios que conforman la reservation/crew
-  @Column('simple-array')
+  @Column('simple-array', { nullable: true })
   userIds: string[];
 
   // id del post al que se referencia la reservation
   @Column('uuid')
   postId: string;
+
+  // tipo de reserva (crew/accomodation/transport)
+  @Column({
+    type: 'enum',
+    enum: Type,
+    default: Type.Crew,
+  })
+  type: Type
 
   // estado de la reserva: solamente active/inactive
   @Column({
@@ -21,5 +30,18 @@ export class Reservations {
   })
   status: 'active' | 'inactive';
 
-  // añadir lastEdited con un timestamp para ver la ultima vez que esa crew ha recibido cambios en los usuarios que pertenecen a ella?
+  // timestamp de cuando ha sido creada
+  @CreateDateColumn({
+    type: 'timestamp',
+    name: 'created_at',
+  })
+  createdAt: Date
+
+  // timestamp para ver la ultima vez que esa crew ha recibido cambios
+  @UpdateDateColumn({
+    type: 'timestamp',
+    name: 'last_edited',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  lastEdited: Date
 }
