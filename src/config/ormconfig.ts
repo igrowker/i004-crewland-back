@@ -18,7 +18,7 @@ export const dataSourceOptions: DataSourceOptions = {
   username: dotEnvOptions.DB_USERNAME,
   password: dotEnvOptions.DB_PASSWORD,
   database: dotEnvOptions.DB_NAME,
-  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
+  dropSchema: false,
   synchronize: true,
   logging: false,
   entities: [
@@ -34,7 +34,6 @@ export const dataSourceOptions: DataSourceOptions = {
   ],
   subscribers: [],
   migrations: [],
-  ssl: dotEnvOptions.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);

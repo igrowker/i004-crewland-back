@@ -166,6 +166,7 @@ export class AuthService {
       await this.userRepository.save(user);
 
       return { message: 'Contraseña actualizada.' };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new InternalServerErrorException(
         'Surgió un error durante el reestablecimiento de la contraseña.',
