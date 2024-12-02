@@ -59,7 +59,7 @@ export class ChatService {
     return await this.messageRepository.save(message);
   }
 
-  async getMessages(): Promise<Message[]> {
-    return this.messageRepository.find({ order: { timestamp: 'ASC' } });
-  }
+  // async getMessages(): Promise<Message[]> {
+  //   return this.messageRepository.find({ order: { timestamp: 'ASC' } });
+  // }
 }
