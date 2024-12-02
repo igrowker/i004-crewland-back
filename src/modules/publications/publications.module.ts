@@ -19,10 +19,14 @@ import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
     }),
     ConfigModule,
     FestivalsModule,
-    CloudinaryModule
+    CloudinaryModule,
   ],
 
   controllers: [PublicationsController],
-  providers: [PublicationsService, FestivalsService, GeneralEntityValidationGuard],
+  providers: [
+    PublicationsService,
+    FestivalsService,
+    GeneralEntityValidationGuard,
+  ],
 })
-export class PublicationsModule { }
+export class PublicationsModule {}
