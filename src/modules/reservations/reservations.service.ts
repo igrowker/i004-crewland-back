@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,129 +17,177 @@ export class ReservationsService {
   ) { }
 
 
-  async createReservation(createReservationDto: CreateReservationDto): Promise<Reservations> {
-    const { type, postId, userIds = [] } = createReservationDto
+  async create(createReservationDto: CreateReservationDto): Promise<Reservations> {
+    try {
+      const { type, postId, userIds = [] } = createReservationDto
 
-    const existingReservation = await this.reservationsRepository.findOne({
-      where: { postId }
-    })
-    if (existingReservation) {
-      throw new BadRequestException('Una reserva ya esta asociada a este post')
+      const existingReservation = await this.reservationsRepository.findOne({
+        where: { postId }
+      })
+      if (existingReservation) {
+        throw new BadRequestException('Una reserva ya esta asociada a este post')
+      }
+
+      const reservation = this.reservationsRepository.create({
+        type,
+        postId,
+        userIds,
+      })
+
+      return await this.reservationsRepository.save(reservation)
+    } catch (error) {
+      throw new BadRequestException('Se han enviado datos inválidos mientras se creaba la reserva.')
     }
-
-    const reservation = this.reservationsRepository.create({
-      type,
-      postId,
-      userIds,
-    })
-
-    return await this.reservationsRepository.save(reservation)
   }
 
   // findAll() {
   //   return `This action returns all reservations`;
   // }
 
-  async getReservationById(reservationId: string): Promise<Reservations> {
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id: reservationId }
-    })
+  async getById(reservationId: string): Promise<Reservations> {
+    try {
+      const reservation = await this.reservationsRepository.findOne({
+        where: { id: reservationId }
+      })
 
-    if (!reservation) {
-      throw new NotFoundException('La reserva no se ha encontrado.')
+      if (!reservation) {
+        throw new NotFoundException('La reserva no se ha encontrado.')
+      }
+
+      return reservation
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error
+      }
+
+      throw new InternalServerErrorException('Ha surgido un error inesperado.')
     }
-
-    return reservation
   }
 
   async updateType(reservationId: string, reservationUpdateTypeDto: ReservationUpdateTypeDto): Promise<Reservations> {
-    const { type } = reservationUpdateTypeDto
+    try {
+      const { type } = reservationUpdateTypeDto
 
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id: reservationId }
-    })
+      const reservation = await this.reservationsRepository.findOne({
+        where: { id: reservationId }
+      })
 
-    if (!reservation) {
-      throw new NotFoundException('La reserva no se ha encontrado.')
+      if (!reservation) {
+        throw new NotFoundException('La reserva no se ha encontrado.')
+      }
+
+      reservation.type = type
+
+      return await this.reservationsRepository.save(reservation)
+    } catch (error) {
+
     }
-
-    reservation.type = type
-
-    return await this.reservationsRepository.save(reservation)
   }
 
   async remove(reservationId: string): Promise<void> {
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id: reservationId }
-    })
+    try {
+      const reservation = await this.reservationsRepository.findOne({
+        where: { id: reservationId }
+      })
 
-    if (!reservation) {
-      throw new NotFoundException('La reserva no se ha encontrado')
+      if (!reservation) {
+        throw new NotFoundException('La reserva no se ha encontrado')
+      }
+
+      await this.reservationsRepository.delete(reservationId)
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error
+      }
+
+      throw new InternalServerErrorException('Ha surgido un error mientras se borraba la reserva.')
     }
-
-    await this.reservationsRepository.delete(reservationId)
   }
 
   async addUserToReservation(reservationId: string, addUserDto: ReservationAddUserDto): Promise<Reservations> {
-    const { userId } = addUserDto
+    try {
+      const { userId } = addUserDto
 
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id: reservationId }
-    })
+      const reservation = await this.reservationsRepository.findOne({
+        where: { id: reservationId }
+      })
 
-    if (!reservation) {
-      throw new NotFoundException('La reserva no se encuentra')
+      if (!reservation) {
+        throw new NotFoundException('La reserva no se encuentra')
+      }
+
+      if (reservation.userIds.includes(userId)) {
+        throw new BadRequestException('El usuario ya pertenece a esa reserva')
+      }
+
+      reservation.userIds.push(userId)
+
+      return await this.reservationsRepository.save(reservation)
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error
+      }
+
+      throw new InternalServerErrorException('Ha surgido un error añadiendo el usuario a la reserva')
     }
-
-    if (reservation.userIds.includes(userId)) {
-      throw new BadRequestException('El usuario ya pertenece a esa reserva')
-    }
-
-    reservation.userIds.push(userId)
-
-    return await this.reservationsRepository.save(reservation)
   }
 
   async addUsersToReservation(reservationId: string, addUsersDto: ReservationAddUsersDto): Promise<Reservations> {
-    const { userIds: newUserIds } = addUsersDto
+    try {
+      const { userIds: newUserIds } = addUsersDto
 
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id: reservationId }
-    })
+      const reservation = await this.reservationsRepository.findOne({
+        where: { id: reservationId }
+      })
 
-    if (!reservation) {
-      throw new NotFoundException('La reserva no se encuentra')
+      if (!reservation) {
+        throw new NotFoundException('La reserva no se encuentra')
+      }
+
+      const existingUserIds = reservation.userIds
+      const duplicateUserIds = newUserIds.filter((id) => existingUserIds.includes(id))
+
+      if (duplicateUserIds.length > 0) {
+        throw new BadRequestException(`Algunos usuarios ya pertenecen a esta reserva: ${duplicateUserIds.join(', ')}`)
+      }
+
+      reservation.userIds.push(...newUserIds)
+
+      return await this.reservationsRepository.save(reservation)
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error
+      }
+
+      throw new InternalServerErrorException('Ha surgido un error añadiendo los usuarios a la reserva')
     }
-
-    const existingUserIds = reservation.userIds
-    const duplicateUserIds = newUserIds.filter((id) => existingUserIds.includes(id))
-
-    if (duplicateUserIds.length > 0) {
-      throw new BadRequestException(`Algunos usuarios ya pertenecen a esta reserva: ${duplicateUserIds.join(', ')}`)
-    }
-
-    reservation.userIds.push(...newUserIds)
-
-    return await this.reservationsRepository.save(reservation)
   }
 
   async removeUserFromReservation(reservationId: string, removeUserDto: ReservationRemoveUserDto): Promise<Reservations> {
-    const { userId } = removeUserDto
+    try {
+      const { userId } = removeUserDto
 
-    const reservation = await this.reservationsRepository.findOne({
-      where: { id: reservationId }
-    })
+      const reservation = await this.reservationsRepository.findOne({
+        where: { id: reservationId }
+      })
 
-    if (!reservation) {
-      throw new NotFoundException('La reserva no fue encontrada')
+      if (!reservation) {
+        throw new NotFoundException('La reserva no fue encontrada')
+      }
+
+      if (!reservation.userIds.includes(userId)) {
+        throw new BadRequestException('El usuario no pertenece a esta reserva.')
+      }
+
+      reservation.userIds = reservation.userIds.filter((id) => id !== userId)
+
+      return await this.reservationsRepository.save(reservation)
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof BadRequestException) {
+        throw error
+      }
+
+      throw new InternalServerErrorException('Ha surgido un error eliminando el usuario de la reserva')
     }
-
-    if (!reservation.userIds.includes(userId)) {
-      throw new BadRequestException('El usuario no pertenece a esta reserva.')
-    }
-
-    reservation.userIds = reservation.userIds.filter((id) => id !== userId)
-
-    return await this.reservationsRepository.save(reservation)
   }
 }

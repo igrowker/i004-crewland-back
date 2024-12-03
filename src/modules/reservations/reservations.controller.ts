@@ -45,7 +45,7 @@ export class ReservationsController {
   async createReservation(
     @Body() createReservationDto: CreateReservationDto
   ) {
-    return await this.reservationsService.createReservation(createReservationDto);
+    return await this.reservationsService.create(createReservationDto);
   }
 
   // @Get()
@@ -66,10 +66,10 @@ export class ReservationsController {
     status: 404,
     description: 'Reserva no encontrada.',
   })
-  async getReservationById(
+  async findOne(
     @Param('reservationId') reservationId: string
   ) {
-    return await this.reservationsService.getReservationById(reservationId)
+    return await this.reservationsService.getById(reservationId)
   }
 
   @Patch(':reservationId/type')
