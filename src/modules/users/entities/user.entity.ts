@@ -120,4 +120,4 @@ export class User {
 }
 
 // descripcion
-// location ( string )
+// location ( string ) A VER!!!

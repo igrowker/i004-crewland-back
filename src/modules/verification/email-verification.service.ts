@@ -23,9 +23,7 @@ export class VerificationService {
       __dirname,
       '../../shared/utils/verificationCodeTemplate.html',
     );
-
     const template = fs.readFileSync(templatePath, 'utf8');
-
     return template.replace('{{code}}', code);
   }
 

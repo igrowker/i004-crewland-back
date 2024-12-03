@@ -30,7 +30,8 @@ import {
 export class PublicationsController {
   constructor(private readonly publicationsService: PublicationsService) {}
 
-  @Post(':festivalId')
+  @Post(':festivalId') //
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a new publication for a festival' })
   @ApiBody({ type: CreatePublicationDto })
@@ -55,7 +56,7 @@ export class PublicationsController {
     );
   }
 
-  @Get()
+  @Get() //
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Retrieve all publications with filters' })
   @ApiResponse({
@@ -66,7 +67,7 @@ export class PublicationsController {
     return this.publicationsService.findAll(filters);
   }
 
-  @Get(':id')
+  @Get(':id') //
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Retrieve a specific publication by ID' })
   @ApiResponse({
@@ -81,7 +82,7 @@ export class PublicationsController {
     return this.publicationsService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch(':id') //
   @UseGuards(JwtAuthGuard, PublicationValidationUser)
   @ApiOperation({ summary: 'Update a publication by ID' })
   @ApiBody({ type: UpdatePublicationDto })
@@ -132,15 +133,6 @@ export class PublicationsController {
 
   @Patch(':id/add-participant')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Add a participant to a publication' })
-  @ApiResponse({
-    status: 200,
-    description: 'Participant added successfully.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Publication not found.',
-  })
   async addParticipant(@Param('id') id: string, @Request() req) {
     const userIdFromToken = req.user.id;
     return this.publicationsService.addParticipant(id, userIdFromToken);
@@ -148,15 +140,6 @@ export class PublicationsController {
 
   @Patch(':id/remove-participant')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Remove a participant from a publication' })
-  @ApiResponse({
-    status: 200,
-    description: 'Participant removed successfully.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Publication not found.',
-  })
   async removeParticipant(@Param('id') id: string, @Request() req) {
     const userIdFromToken = req.user.id;
     return this.publicationsService.removeParticipant(id, userIdFromToken);

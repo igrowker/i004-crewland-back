@@ -1,108 +1,92 @@
-// import {
-//   WebSocketGateway,
-//   WebSocketServer,
-//   OnGatewayConnection,
-//   OnGatewayDisconnect,
-//   SubscribeMessage,
-// } from '@nestjs/websockets';
-// import { Server, Socket } from 'socket.io';
-
-// @WebSocketGateway({ cors: true })
-// export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-//   @WebSocketServer()
-//   server: Server;
-
-//   private messages: string[] = [
-//     'Hola, ¿cómo estás?',
-//     '¿Qué tal, todo bien?',
-//     '¡Un mensaje aleatorio!',
-//     'Recuerda, la vida es corta. Sonríe más.',
-//     '¿Tienes alguna pregunta? Estoy aquí para ayudarte.',
-//   ];
-
-//   private sendRandomMessage() {
-//     const randomMessage =
-//       this.messages[Math.floor(Math.random() * this.messages.length)];
-//     this.server.to('room_general').emit('receiveMessage', randomMessage);
-//     console.log('Random message sent:', randomMessage);
-//   }
-
-//   constructor() {
-//     setInterval(() => this.sendRandomMessage(), 6000);
-//   }
-
-//   async handleConnection(client: Socket) {
-//     console.log(`Client connected: ${client.id}`);
-//     client.join('room_general');
-//   }
-
-//   async handleDisconnect(client: Socket) {
-//     console.log(`Client disconnected: ${client.id}`);
-//   }
-
-//   @SubscribeMessage('sendMessage')
-//   async handleMessage(
-//     client: Socket,
-//     payload: { senderId: string; message: string },
-//   ) {
-//     console.log('Message received:', payload);
-
-//     this.server.to('room_general').emit('receiveMessage', payload.message);
-//   }
-// }
-
 import {
   WebSocketGateway,
   WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
   SubscribeMessage,
-  MessageBody,
-  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-import { JoinRoomDto } from './dto/join.room.dto';
 
-@WebSocketGateway({ cors: true })
-export class ChatGateway {
+@WebSocketGateway({
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST'],
+  },
+})
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  private messages: string[] = [
-    'Hola, ¿cómo estás?',
-    '¿Qué tal, todo bien?',
-    '¡Un mensaje aleatorio!',
-    'Recuerda, la vida es corta. Sonríe más.',
-    '¿Tienes alguna pregunta? Estoy aquí para ayudarte.',
-  ];
+  constructor(private readonly chatService: ChatService) {}
 
-  private sendRandomMessage() {
-    const randomMessage =
-      this.messages[Math.floor(Math.random() * this.messages.length)];
-    this.server.to('room_general').emit('receiveMessage', randomMessage);
-    console.log('Random message sent:', randomMessage);
-  }
-
-  constructor() {
-    // setInterval(() => this.sendRandomMessage(), 6000);
-  }
+  private connectedUsers = new Map<string, string>();
 
   async handleConnection(client: Socket) {
-    console.log(`Client connected: ${client.id}`);
-    client.join('room_general');
+    const userId = client.handshake.query.userId as string;
+    if (userId) {
+      this.connectedUsers.set(client.id, userId);
+      console.log(`User connected: ${userId}`);
+    } else {
+      client.disconnect();
+    }
   }
 
   async handleDisconnect(client: Socket) {
-    console.log(`Client disconnected: ${client.id}`);
+    const userId = this.connectedUsers.get(client.id);
+    if (userId) {
+      this.connectedUsers.delete(client.id);
+      console.log(`User disconnected: ${userId}`);
+    }
   }
 
-  @SubscribeMessage('sendMessage')
-  async handleMessage(
+  // Manejar mensajes en la sala general
+  @SubscribeMessage('sendGeneralMessage')
+  async handleGeneralMessage(
     client: Socket,
     payload: { senderId: string; message: string },
   ) {
-    console.log('Message received:', payload);
+    const roomName = 'general';
+    const savedMessage = await this.chatService.saveMessage(
+      payload.senderId,
+      payload.message,
+      roomName,
+    );
 
-    this.server.to('room_general').emit('receiveMessage', payload.message);
-    console.log(payload);
+    this.server.to(roomName).emit('receiveGeneralMessage', savedMessage);
+  }
+
+  // Unirse a una sala privada
+  @SubscribeMessage('joinPrivateChat')
+  async joinPrivateChat(
+    client: Socket,
+    payload: { userId: string; recipientId: string },
+  ) {
+    const roomName = this.getRoomName(payload.userId, payload.recipientId);
+    client.join(roomName);
+    console.log(
+      `${payload.userId} joined private chat with ${payload.recipientId}`,
+    );
+  }
+
+  // Manejar mensajes en un chat privado
+  @SubscribeMessage('sendPrivateMessage')
+  async handlePrivateMessage(
+    client: Socket,
+    payload: { senderId: string; recipientId: string; message: string },
+  ) {
+    const roomName = this.getRoomName(payload.senderId, payload.recipientId);
+    const savedMessage = await this.chatService.saveMessage(
+      payload.senderId,
+      payload.message,
+      roomName,
+    );
+
+    this.server.to(roomName).emit('receivePrivateMessage', savedMessage);
+  }
+
+  // Generar un nombre único para la sala privada
+  private getRoomName(userId: string, recipientId: string): string {
+    return [userId, recipientId].sort().join('_'); // Nombre consistente para la sala
   }
 }
