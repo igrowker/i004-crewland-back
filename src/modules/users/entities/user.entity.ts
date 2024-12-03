@@ -57,6 +57,7 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Role, Gender } from 'src/shared/utils/enum';
 import { Message } from 'src/modules/chat/entities/chat.entity';
+import { Exclude, instanceToPlain } from 'class-transformer';
 
 @Entity('users')
 export class User {
@@ -64,6 +65,7 @@ export class User {
   id: string;
 
   @Column({ type: 'varchar', nullable: false })
+  @Exclude()
   password: string;
 
   @Column({ type: 'varchar', nullable: false })
@@ -103,10 +105,19 @@ export class User {
   @Column({ type: 'simple-array', nullable: true })
   favorites: string[];
 
+  @Column({ type: 'varchar', nullable: true })
+  image: string;
+
+  @Column({ default: false })
+  isDeleted: boolean;
+
   @ManyToMany(() => Message, (chat) => chat.senderId)
   chats: Message[];
+
+  toJSON() {
+    return instanceToPlain(this);
+  }
 }
 
-// agregar imagen con cloudinary
 // descripcion
 // location ( string )
