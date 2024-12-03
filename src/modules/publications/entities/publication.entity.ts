@@ -5,6 +5,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Index,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity({
@@ -19,9 +21,6 @@ export class Publication {
   @Column({ type: 'uuid', nullable: false })
   userId: string;
 
-  @Column({ type: 'enum', enum: ['search', 'offer'] })
-  title: string;
-
   @Column({
     type: 'enum',
     enum: Type,
@@ -31,24 +30,29 @@ export class Publication {
 
   @Column({ type: 'uuid', nullable: false })
   festivalId: string;
+  //desde params
+
+  @Column({ type: 'varchar', nullable: false })
+  title: string;
 
   @Column({ type: 'varchar', nullable: false })
   details: string;
 
-  @Column({ type: 'varchar', nullable: false })
-  availability: string;
+  @Column({ type: 'int', nullable: false, default: 0 })
+  maxParticipants: number;
 
-  @CreateDateColumn({ nullable: false })
-  dateCreation: Date;
+  @Column({ type: 'simple-array', nullable: false, default: '' })
+  participants: string[];
+
+  @Column({ type: 'varchar', nullable: false })
+  creationDate: string;
+
+  @Column({ type: 'varchar', nullable: false })
+  creationTime: string;
 
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
+
+  @Column({ type: 'varchar', nullable: true })
+  imageUrl: string;
 }
-
-// posiblemente tengamos que crear un que estas buscando
-
-// a modificar la entitie.
-
-// tenemos que hacer las filtraciones de las publicaciones
-
-// agreguen la entitie para manejar imagens con cloudinary  (URL) mirar figma la vista de search

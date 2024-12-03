@@ -18,7 +18,8 @@ export const dataSourceOptions: DataSourceOptions = {
   username: dotEnvOptions.DB_USERNAME,
   password: dotEnvOptions.DB_PASSWORD,
   database: dotEnvOptions.DB_NAME,
-  dropSchema: false,
+  dropSchema: dotEnvOptions.DB_MIGRATE_DATA === 'false',
+  // url: dotEnvOptions.DATABASE_URL,
   synchronize: true,
   logging: false,
   entities: [
@@ -34,6 +35,17 @@ export const dataSourceOptions: DataSourceOptions = {
   ],
   subscribers: [],
   migrations: [],
+  ssl:
+    dotEnvOptions.DB_SSL === true
+      ? {
+          rejectUnauthorized:
+            dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED === false ? false : true,
+        }
+      : false,
+
+  // ssl: dotEnvOptions.DB_SSL
+  // ? { rejectUnauthorized: dotEnvOptions.DB_SSL_REJECT_UNAUTHORIZED }
+  // : false,
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);

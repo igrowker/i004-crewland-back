@@ -11,7 +11,6 @@ import { ApiBody, ApiResponse, ApiTags, ApiQuery } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { LoginGuard } from 'src/shared/guards/login/login.guard';
-import { RestorePasswordEmailDto } from './dto/auth.restore-password-email.dto';
 import { ResetPasswordDto } from './dto/auth.reset-password.dto';
 
 @ApiTags('auth')
@@ -29,19 +28,27 @@ export class AuthController {
   async login(@Body() authLoginDto: AuthLoginDto) {
     return await this.authService.login(authLoginDto);
   }
-
   @Post('restore-password')
   @ApiBody({
     description:
       'Cuerpo de la solicitud para pedir una restauración de contraseña',
-    type: RestorePasswordEmailDto,
+    schema: {
+      type: 'object',
+      properties: {
+        email: {
+          type: 'string',
+          description:
+            'Correo electrónico del usuario para restaurar contraseña',
+          example: 'usuario@example.com',
+        },
+      },
+      required: ['email'],
+    },
   })
   @ApiResponse({ status: 200, description: 'Correo enviado.' })
   @ApiResponse({ status: 400, description: 'Petición inválida.' })
-  async restorePasswordEmail(
-    @Body() restorePasswordEmailDto: RestorePasswordEmailDto,
-  ) {
-    return await this.authService.restorePasswordEmail(restorePasswordEmailDto);
+  async restorePasswordEmail(@Body('email') email: string): Promise<void> {
+    return await this.authService.restorePasswordEmail(email);
   }
 
   // validate CODE

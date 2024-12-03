@@ -11,9 +11,11 @@ import { Repository } from 'typeorm';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { User } from '../users/entities/user.entity';
 import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
-import * as bcrypt from 'bcryptjs';
 import { ResetPasswordDto } from './dto/auth.reset-password.dto';
-import { RestorePasswordEmailDto } from './dto/auth.restore-password-email.dto';
+import dotEnvOptions from 'src/config/dotenv.config';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -78,11 +80,21 @@ export class AuthService {
     }
   }
 
-  async restorePasswordEmail(
-    restorePasswordEmailDto: RestorePasswordEmailDto,
-  ): Promise<void> {
-    const { email } = restorePasswordEmailDto;
+  generateVerificationCode(): string {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  }
 
+  async loadTemplateWithCode(code: string, resetLink: string): Promise<string> {
+    const templatePath = path.join(
+      __dirname,
+      '../../shared/utils/restorePasswordCode.html',
+    );
+    console.log('Template path:', templatePath);
+    const template = await fs.readFileSync(templatePath, 'utf8');
+    return template.replace('{{code}}', code).replace('{{token}}', resetLink);
+  }
+
+  async restorePasswordEmail(email: string): Promise<void> {
     try {
       const user = await this.userRepository.findOne({
         where: { email },
@@ -94,26 +106,27 @@ export class AuthService {
         );
       }
 
-      const recoveryCode = Math.floor(1000 + Math.random() * 9000).toString();
-
+      const recoveryCode = this.generateVerificationCode();
       const token = this.jwtService.sign(
         { id: user.id, recoveryCode },
-        { expiresIn: '10m' },
+        { expiresIn: '2m' },
       );
 
-      const emailBody = `Your recovery code is: ${recoveryCode}`;
+      const resetLink = `${dotEnvOptions.FRONTEND_URL}/restore-password/reset-password?token=${token}`;
 
-      // usar el emailTemplate en utils si eso
-      // const strongRegex = /<strong id="code">(.*?)<\/strong>/s
-      // const emailTemplate = resetPasswordTemplate.replace(strongRegex, `<strong id="code">${code}</strong>`)
-
-      const resetLink = `${process.env.FRONTEND_URL}/restore-password/reset-password?token=${token}`;
+      const emailTemplate = await this.loadTemplateWithCode(
+        recoveryCode,
+        resetLink,
+      );
 
       await this.sendGripService.sendEmail(
         email,
         'Restaurar contraseña',
-        emailBody,
+        `Tu código de recuperación es: ${recoveryCode}. El enlace para restablecer tu contraseña está en el correo.`,
+        emailTemplate,
       );
+
+      console.log(`Email enviado con código: ${recoveryCode} y token.`);
     } catch (error) {
       console.error('Error enviando el email de restaurar contraseña: ', error);
 

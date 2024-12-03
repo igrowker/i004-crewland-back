@@ -17,12 +17,13 @@ export class PublicationValidationUser implements CanActivate {
 
     const publication = await this.publicationService.findOne(publicationId);
     if (!publication) {
-      throw new ForbiddenException('Publication not found');
+      throw new ForbiddenException('Publicación no encontrada');
     }
 
-    if (publication.userId !== user.sub) {
+    console.log(publication.userId, user.id);
+    if (publication.userId !== user.id) {
       throw new ForbiddenException(
-        'You do not have permission to modify this publication',
+        'No tienes permiso para acceder a esta publicación.',
       );
     }
 
