@@ -19,6 +19,7 @@ import {
   ApiConsumes,
   ApiOperation,
   ApiParam,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { UserOwnershipGuard } from 'src/shared/guards/user-ownership-guard/user-ownership-guard.guard';
@@ -35,7 +36,23 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
-  @ApiOperation({ summary: 'Register a new user' })
+  @ApiOperation({
+    summary: 'Crear un nuevo usuario',
+    description: 'Permite registrar un nuevo usuario con datos válidos.',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'El usuario ha sido creado exitosamente.',
+    type: CreateUserDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Los datos proporcionados no son válidos.',
+  })
+  @ApiBody({
+    description: 'Datos del usuario a crear',
+    type: CreateUserDto,
+  })
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
@@ -55,6 +72,78 @@ export class UsersController {
   @ApiBody({
     description: 'User data to update',
     type: UpdateUserDto,
+    examples: {
+      example1: {
+        value: {
+          name: 'Juan Perez',
+          username: 'juan.perez',
+          email: 'juan.perez@example.com',
+          password: 'MyNewStrongP@ssw0rd',
+          role: 'User',
+          age: '2000-01-01',
+          gender: 'no especifica',
+          preferences: ['Jugar al futbol', 'Escuchar música'],
+          travelHistory: ['España', 'México'],
+          favorites: ['Jugar al futbol', 'Escuchar música'],
+          tel: '+1 (555) 123-4567',
+        },
+        description:
+          'Ejemplo de actualización de usuario con todos los campos.',
+      },
+      example2: {
+        value: {
+          email: 'nuevo.correo@example.com',
+        },
+        description: 'Ejemplo de actualización de solo el correo electrónico.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'El usuario ha sido actualizado exitosamente.',
+    type: UpdateUserDto,
+    examples: {
+      example1: {
+        value: {
+          name: 'Juan Perez',
+          username: 'juanp',
+          email: 'juan.perez@example.com',
+          password: 'MyNewStrongP@ssw0rd',
+          role: 'User',
+          age: '2000-01-01',
+          gender: 'no especifica',
+          preferences: ['Jugar al futbol', 'Escuchar música'],
+          travelHistory: ['España', 'México'],
+          favorites: ['Jugar al futbol', 'Escuchar música'],
+          tel: '+1 (555) 123-4567',
+        },
+        summary: 'Datos actualizados del usuario.',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Los datos proporcionados no son válidos.',
+    type: UpdateUserDto,
+    examples: {
+      example1: {
+        value: {
+          name: 'Juan',
+          username: 'juanp',
+          email: 'nuevo.correo@example.com',
+          password: 'MyNewStrongP@ssw0rd',
+          role: 'User',
+          age: '2000-01-01',
+          gender: 'no especifica',
+          preferences: ['Jugar al futbol', 'Escuchar música'],
+          travelHistory: ['España', 'México'],
+          favorites: ['Jugar al futbol', 'Escuchar música'],
+          tel: '+1 (555) 123-4567',
+          id: '123e4567-e89b-12d3-a456-426614174000',
+        },
+        summary: 'Datos actualizados del usuario.',
+      },
+    },
   })
   async updateUser(
     @Param('id') id: string,
@@ -72,6 +161,24 @@ export class UsersController {
     description: 'User ID',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Obtener un usuario por ID',
+    description: 'Permite obtener información detallada de un usuario.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID del usuario a buscar',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Detalles del usuario.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Usuario no encontrado.',
+  })
   async getUserById(@Param('id') id: string): Promise<User> {
     return await this.usersService.getUserById(id);
   }
@@ -79,7 +186,19 @@ export class UsersController {
   @Get()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  @ApiOperation({ summary: 'Get all users (Admin only)' })
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Obtener todos los usuarios (Solo Admin)',
+    description: 'Devuelve una lista de todos los usuarios registrados.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuarios recuperada exitosamente.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'No tienes permisos para realizar esta acción.',
+  })
   async getUsers() {
     return this.usersService.getUsers();
   }

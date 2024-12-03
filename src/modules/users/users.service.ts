@@ -25,20 +25,18 @@ export class UsersService {
       const existingEmail = await this.userRepository.findOne({
         where: [{ email: createUserDto.email }],
       });
-
       if (existingEmail) {
         throw new ConflictException('Email en uso');
       }
-
       const existingUser = await this.userRepository.findOne({
         where: [{ username: createUserDto.username }],
       });
-
+      console.log(existingUser);
       if (existingUser) {
         throw new ConflictException('Usuario en uso');
       }
-
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+      console.log(hashedPassword);
       const user = this.userRepository.create({
         ...createUserDto,
         password: hashedPassword,

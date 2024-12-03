@@ -13,7 +13,7 @@ import { AuthLoginDto } from './dto/auth.login.dto';
 import { LoginGuard } from 'src/shared/guards/login/login.guard';
 import { ResetPasswordDto } from './dto/auth.reset-password.dto';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -22,6 +22,40 @@ export class AuthController {
   @ApiBody({
     description: 'Cuerpo de solicitud para iniciar sesión',
     type: AuthLoginDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Usuario iniciado sesión correctamente.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Usuario o contraseña incorrectos.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Usuario o contraseña incorrectos.',
+          description: 'Mensaje de error.',
+        },
+      },
+      required: ['message'],
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Usuario no autorizado.',
+    schema: {
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Usuario no autorizado.',
+          description: 'Mensaje de error.',
+        },
+      },
+      required: ['message'],
+    },
   })
   @HttpCode(HttpStatus.OK)
   @UseGuards(LoginGuard)
@@ -62,8 +96,8 @@ export class AuthController {
 
   @Post('reset-password/:token')
   async resetPassword(
-    @Param('token') token: string, // El token va en los params
-    @Body() resetPasswordDto: ResetPasswordDto, // Recibes el DTO con las contraseñas
+    @Param('token') token: string,
+    @Body() resetPasswordDto: ResetPasswordDto,
   ): Promise<{ message: string }> {
     await this.authService.resetPassword(token, resetPasswordDto);
     return { message: 'Contraseña restablecida con éxito.' };

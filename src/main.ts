@@ -6,6 +6,7 @@ import { ResponseFormatInterceptor } from './shared/interceptors/response-format
 import dotenvOptions from './config/dotenv.config';
 import * as bodyParser from 'body-parser';
 import { ErrorHandlingCloudinary } from './middleware/cloudinary/error-handling.cloudinary';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +27,14 @@ async function bootstrap() {
       },
     }),
   );
+
+  const config = new DocumentBuilder()
+    .setTitle('CREWLAND API')
+    .setDescription('The crewland API description')
+    .setVersion('1.0')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, documentFactory);
 
   await app.listen(dotenvOptions.PORT, () =>
     logger.log(
