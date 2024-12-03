@@ -3,18 +3,23 @@ import {
   Post,
   Patch,
   Body,
-  // UseGuards,
   Param,
   Get,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  Delete,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiParam,
+  ApiTags,
 } from '@nestjs/swagger';
 import { UserOwnershipGuard } from 'src/shared/guards/user-ownership-guard/user-ownership-guard.guard';
 import { User } from './entities/user.entity';
@@ -24,11 +29,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/shared/guards/jwt-auth/jwt-auth.guard';
 import { RoleGuard } from 'src/shared/guards/roles/roles.guard';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
+  @ApiOperation({ summary: 'Register a new user' })
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
@@ -37,46 +44,34 @@ export class UsersController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RoleGuard, UserOwnershipGuard)
   @Roles(Role.Admin, Role.User)
-  @ApiOperation({
-    summary: 'Actualizar parcialmente la información de un usuario',
-  })
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Update user information' })
   @ApiParam({
     name: 'id',
-    description: 'ID del usuario a actualizar',
+    description: 'User ID',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @ApiBody({
-    description: 'Datos a actualizar del usuario',
+    description: 'User data to update',
     type: UpdateUserDto,
-    examples: {
-      example1: {
-        value: {
-          name: 'Juan',
-          lastName: 'Pérez',
-          email: 'juan.perez@example.com',
-          password: 'MyNewStrongP@ssw0rd',
-          cuit: '20-12345678-9',
-        },
-        description:
-          'Ejemplo de actualización de usuario con todos los campos.',
-      },
-      example2: {
-        value: {
-          email: 'nuevo.correo@example.com',
-        },
-        description: 'Ejemplo de actualización de solo el correo electrónico.',
-      },
-    },
   })
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    return this.usersService.updateUser(id, updateUserDto);
+    return this.usersService.updateUser(id, updateUserDto, image);
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get user by ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'User ID',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
   async getUserById(@Param('id') id: string): Promise<User> {
     return await this.usersService.getUserById(id);
   }
@@ -84,9 +79,34 @@ export class UsersController {
   @Get()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiOperation({ summary: 'Get all users (Admin only)' })
   async getUsers() {
     return this.usersService.getUsers();
   }
 
-  // agregar campo para eliminar usuarios
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Soft Delete a user (Admin only)' })
+  @ApiParam({
+    name: 'id',
+    description: 'User ID to soft delete',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  async softDeleteUser(@Param('id') id: string) {
+    return this.usersService.softDeleteUser(id);
+  }
+
+  @Patch(':id/restore')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Restore a soft-deleted user (Admin only)' })
+  @ApiParam({
+    name: 'id',
+    description: 'User ID to restore',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  async restoreUser(@Param('id') id: string) {
+    return this.usersService.restoreUser(id);
+  }
 }

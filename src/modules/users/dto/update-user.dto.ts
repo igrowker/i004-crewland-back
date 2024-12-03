@@ -41,8 +41,9 @@ export class UpdateUserDto {
   @MaxLength(50, {
     message: 'El número máximo de caracteres ha sido excedido.',
   })
-  @Matches(/^[a-zA-Z0-9_-]+$/, {
-    message: 'El nombre de usuario debe contener sólo letras y espacios',
+  @Matches(/^[a-zA-Z0-9_\s-]+$/, {
+    message:
+      'El nombre de usuario debe contener sólo letras, números, espacios, guiones bajos y guiones medios',
   })
   username?: string;
 
@@ -134,8 +135,18 @@ export class UpdateUserDto {
     example: ['hotel1', 'restaurante2'],
     required: false,
   })
-  @IsArray()
+  // @IsArray()
   @IsOptional()
   @IsString({ each: true })
   password: any;
+
+  @ApiProperty({
+    description: 'Archivo de imagen del perfil de user para upload (opcional)',
+    example: 'image.jpg',
+    type: 'string',
+    format: 'binary',
+    required: false,
+  })
+  @IsOptional()
+  image?: Express.Multer.File;
 }
