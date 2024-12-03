@@ -9,4 +9,4 @@ import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
   controllers: [AuthController],
   providers: [AuthService, SendGridService],
 })
-export class AuthModule { }
+export class AuthModule {}

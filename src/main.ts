@@ -5,6 +5,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
 import dotenvOptions from './config/dotenv.config';
 import * as bodyParser from 'body-parser';
+import { ErrorHandlingCloudinary } from './middleware/cloudinary/error-handling.cloudinary';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +15,7 @@ async function bootstrap() {
   app.enableCors();
   app.use(logger.use.bind(logger));
   app.use(bodyParser.json());
+  app.use(new ErrorHandlingCloudinary().use);
   app.useGlobalInterceptors(new ResponseFormatInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
@@ -24,6 +27,14 @@ async function bootstrap() {
       },
     }),
   );
+
+  const config = new DocumentBuilder()
+    .setTitle('CREWLAND API')
+    .setDescription('The crewland API description')
+    .setVersion('1.0')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, documentFactory);
 
   await app.listen(dotenvOptions.PORT, () =>
     logger.log(

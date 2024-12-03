@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
 @Entity({
   name: 'festivals',
 })
+@Index(['name', 'date'], { unique: true })
 export class Festivals {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -23,19 +24,14 @@ export class Festivals {
   description: string;
 
   @Column({ type: 'varchar', nullable: false })
-  url?: string;
+  url: string;
 
   @Column({ type: 'int', nullable: false })
-  attendeesCount?: number;
+  attendeesCount: number;
 
   @Column({ type: 'simple-array', nullable: false })
-  image: string[];
+  images: string[];
+
+  @Column({ type: 'simple-array', nullable: true })
+  imageUrls?: string[];
 }
-
-// sacar date y agregar hora y dia por sepado.
-// solo los admins pueden crear festivales.
-
-// hace falta agregar una imagen (APLICAR CLOUDINARY SI LLEGAMOS)
-// columna imagen manejado con cloudinary
-// agregar la url (string)
-// agregar cantidad de personas ( string ) y pensar que otra cosa se puede agregar

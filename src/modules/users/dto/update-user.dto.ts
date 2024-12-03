@@ -41,8 +41,9 @@ export class UpdateUserDto {
   @MaxLength(50, {
     message: 'El número máximo de caracteres ha sido excedido.',
   })
-  @Matches(/^[a-zA-Z0-9_-]+$/, {
-    message: 'El nombre de usuario debe contener sólo letras y espacios',
+  @Matches(/^[a-zA-Z0-9_\s-]+$/, {
+    message:
+      'El nombre de usuario debe contener sólo letras, números, espacios, guiones bajos y guiones medios',
   })
   username?: string;
 
@@ -71,13 +72,17 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
+  @MinLength(6, { message: 'El nombre debe tener al menos 6 carácter.' })
+  @MaxLength(25, {
+    message: 'El número máximo de caracteres ha sido excedido.',
+  })
   @Matches(
     /^(?:\+?\d{1,3}[-.\s]?)?(\(?\d{1,4}\)?[-.\s]?)?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}$/,
     {
       message: 'El número de teléfono no tiene un formato válido.',
     },
   )
-  tel?: string;
+  tel?: string; // validaciones para evitar espacios y evitar algunos caracteres.
 
   @ApiProperty({
     description: 'Fecha de nacimiento del usuario',
@@ -130,8 +135,18 @@ export class UpdateUserDto {
     example: ['hotel1', 'restaurante2'],
     required: false,
   })
-  @IsArray()
+  // @IsArray()
   @IsOptional()
   @IsString({ each: true })
   password: any;
+
+  @ApiProperty({
+    description: 'Archivo de imagen del perfil de user para upload (opcional)',
+    example: 'image.jpg',
+    type: 'string',
+    format: 'binary',
+    required: false,
+  })
+  @IsOptional()
+  image?: Express.Multer.File;
 }

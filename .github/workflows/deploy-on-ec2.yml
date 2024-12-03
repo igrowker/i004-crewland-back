@@ -23,8 +23,59 @@ jobs:
       - name: Deploy on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_IP }} << EOF
+            # Detenemos los contenedores
+            echo "-----------------> Deteniendo contenedores..."
+            
+            echo "cd /home/ubuntu/crewland/i004-devops/crewland"
+            cd /home/ubuntu/crewland/i004-devops/crewland
+
+            echo "sudo docker-compose -f docker-compose-back-deploy-ec2.yml down"
+            sudo docker-compose -f docker-compose-back-deploy-ec2.yml down
+
+            # Actualizamos la imagen del backedn a su ultima version.
+            echo "-----------------> Actualizamos la imagen del backedn a su ultima version."
+            
+            echo "docker pull igrowker/i004-crewland-back-dev-image:latest"
             docker pull igrowker/i004-crewland-back-dev-image:latest
-            cd /path/to/your/project
-            docker-compose -f docker-compose-back-deploy-ec2.yml down
-            docker-compose -f docker-compose-back-deploy-ec2.yml up -d
+
+            # Ir al directorio del proyecto
+            echo "-----------------> Actualizar el contenido del repositorio"
+            
+            echo "cd /home/ubuntu/crewland/i004-devops"
+            cd /home/ubuntu/crewland/i004-devops
+            
+            # Eliminar cambios locales no deseados
+            echo "-----------------> Eliminar cambios locales no deseados"
+           
+            echo "git reset --hard"
+            git reset --hard  
+            
+            # Actualiza desde la rama main
+            echo "-----------------> Actualiza desde la rama main" 
+            
+            echo "git pull origin main"
+            git pull origin main  
+
+            # Iniciando contenedores
+            echo "-----------------> Iniciando contenedores..."
+            
+            echo "cd /home/ubuntu/crewland/i004-devops/crewland"
+            cd /home/ubuntu/crewland/i004-devops/crewland
+            
+            echo "sudo docker-compose -f docker-compose-back-deploy-ec2.yml up --build -d"   
+            sudo docker-compose -f docker-compose-back-deploy-ec2.yml up --build -d
+            
+            # Eliminando volumenes e imagenes huerfanos
+            echo "-----------------> Eliminando volumenes e imagenes huerfanos"
+
+            echo "docker volume prune -f"
+            sudo docker volume prune -f
+            
+            echo "docker image prune -f"
+            sudo docker image prune -f
+
+            Eliminar imágenes no utilizadas
+            echo "docker image prune -a -f"
+            sudo docker image prune -a -f
+
           EOF
