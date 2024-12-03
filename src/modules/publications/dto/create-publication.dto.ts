@@ -147,4 +147,3 @@ export class CreatePublicationDto {
   @ImageUrlProperty()
   imageUrl?: string;
 }
-

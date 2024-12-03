@@ -8,7 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
-  Request
+  Request,
 } from '@nestjs/common';
 import { PublicationValidationUser } from 'src/shared/guards/user-validator/user-validator-publication.guard';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth/jwt-auth.guard';
@@ -20,9 +20,9 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('publications')
 export class PublicationsController {
-  constructor(private readonly publicationsService: PublicationsService) { }
+  constructor(private readonly publicationsService: PublicationsService) {}
 
-  @Post(':festivalId')//
+  @Post(':festivalId') //
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async create(
@@ -32,22 +32,26 @@ export class PublicationsController {
   ) {
     const userId = req.user.id;
 
-    return this.publicationsService.create(festivalId, createPublicationDto, userId);
+    return this.publicationsService.create(
+      festivalId,
+      createPublicationDto,
+      userId,
+    );
   }
 
-  @Get()//
+  @Get() //
   @UseGuards(JwtAuthGuard)
   async findAll(@Query() filters: FindPublicationsDto) {
     return this.publicationsService.findAll(filters);
   }
 
-  @Get(':id')//
+  @Get(':id') //
   @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.publicationsService.findOne(id);
   }
 
-  @Patch(':id')//
+  @Patch(':id') //
   @UseGuards(JwtAuthGuard, PublicationValidationUser)
   update(
     @Param('id') id: string,
@@ -71,10 +75,7 @@ export class PublicationsController {
   @Patch(':id/add-participant')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  async addParticipant(
-    @Param('id') id: string,
-    @Request() req,
-  ) {
+  async addParticipant(@Param('id') id: string, @Request() req) {
     const userIdFromToken = req.user.id;
 
     return this.publicationsService.addParticipant(id, userIdFromToken);
@@ -83,12 +84,8 @@ export class PublicationsController {
   @Patch(':id/remove-participant')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  async removeParticipant(
-    @Param('id') id: string,
-    @Request() req,
-  ) {
+  async removeParticipant(@Param('id') id: string, @Request() req) {
     const userIdFromToken = req.user.id;
-    return this.publicationsService.removeParticipant(id, userIdFromToken)
+    return this.publicationsService.removeParticipant(id, userIdFromToken);
   }
-
 }

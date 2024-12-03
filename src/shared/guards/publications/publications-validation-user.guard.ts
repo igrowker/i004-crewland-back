@@ -8,7 +8,7 @@ import { PublicationsService } from '../../../modules/publications/publications.
 
 @Injectable()
 export class PublicationValidationUser implements CanActivate {
-  constructor(private readonly publicationService: PublicationsService) { }
+  constructor(private readonly publicationService: PublicationsService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

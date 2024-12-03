@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Index,
   ManyToOne,
-  JoinColumn
+  JoinColumn,
 } from 'typeorm';
 
 @Entity({
@@ -54,6 +54,5 @@ export class Publication {
   isActive: boolean;
 
   @Column({ type: 'varchar', nullable: true })
-  imageUrl: string
+  imageUrl: string;
 }
-
