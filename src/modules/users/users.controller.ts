@@ -182,6 +182,10 @@ export class UsersController {
     status: 200,
     description: 'Lista de usuarios recuperada exitosamente.',
   })
+  @ApiResponse({
+    status: 403,
+    description: 'No tienes permisos para realizar esta acción.',
+  })
   async getUsers() {
     return this.usersService.getUsers();
   }
