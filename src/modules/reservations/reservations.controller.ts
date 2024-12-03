@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiResponse,
@@ -20,8 +21,11 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationAddUserDto } from './dto/reservation.add-user.dto';
 import { ReservationAddUsersDto } from './dto/reservation.add-more-users.dto';
 import { ReservationRemoveUserDto } from './dto/reservation.remove-user.dto';
+import { JwtAuthGuard } from 'src/shared/guards/jwt-auth/jwt-auth.guard';
+import { ReservationUpdateTypeDto } from './dto/reservation.update-type.dto';
 
 @Controller('reservations')
+@UseGuards(JwtAuthGuard)
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) { }
 
@@ -68,18 +72,53 @@ export class ReservationsController {
     return await this.reservationsService.getReservationById(reservationId)
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateReservationDto: UpdateReservationDto,
-  // ) {
-  //   return this.reservationsService.update(+id, updateReservationDto);
-  // }
+  @Patch(':reservationId/type')
+  @ApiParam({
+    name: 'reservationId',
+    description: 'ID de la reserva que se va a actualizar.',
+    type: 'string',
+    format: 'uuid',
+  })
+  @ApiBody({
+    description: 'Actualiza el tipo de la reserva.',
+    type: ReservationUpdateTypeDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tipo de reserva actualizado correctamente.'
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Reserva no encontrada.'
+  })
+  async updateReservationType(
+    @Param('reservationId') reservationId: string,
+    @Body() updateTypeDto: ReservationUpdateTypeDto,
+  ) {
+    return await this.reservationsService.updateType(reservationId, updateTypeDto);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.reservationsService.remove(+id);
-  // }
+  @Delete(':reservationId')
+  @ApiParam({
+    name: 'reservationId',
+    description: 'ID de la reserva que se va a borrar',
+    type: 'string',
+    format: 'uuid',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva borrada correctamente'
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Reserva no encontrada'
+  })
+  async remove(
+    @Param('reservationId') reservationId: string
+  ) {
+    await this.reservationsService.remove(reservationId)
+    return { message: 'La reserva ha sido eliminada.' };
+  }
 
   @Post(':reservationId/add-user')
   @ApiParam({

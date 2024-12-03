@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { ReservationAddUserDto } from './dto/reservation.add-user.dto';
 import { ReservationAddUsersDto } from './dto/reservation.add-more-users.dto';
 import { ReservationRemoveUserDto } from './dto/reservation.remove-user.dto';
+import { ReservationUpdateTypeDto } from './dto/reservation.update-type.dto';
 
 @Injectable()
 export class ReservationsService {
@@ -51,13 +52,33 @@ export class ReservationsService {
     return reservation
   }
 
-  // update(id: number, updateReservationDto: UpdateReservationDto) {
-  //   return `This action updates a #${id} reservation`;
-  // }
+  async updateType(reservationId: string, reservationUpdateTypeDto: ReservationUpdateTypeDto): Promise<Reservations> {
+    const { type } = reservationUpdateTypeDto
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} reservation`;
-  // }
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id: reservationId }
+    })
+
+    if (!reservation) {
+      throw new NotFoundException('La reserva no se ha encontrado.')
+    }
+
+    reservation.type = type
+
+    return await this.reservationsRepository.save(reservation)
+  }
+
+  async remove(reservationId: string): Promise<void> {
+    const reservation = await this.reservationsRepository.findOne({
+      where: { id: reservationId }
+    })
+
+    if (!reservation) {
+      throw new NotFoundException('La reserva no se ha encontrado')
+    }
+
+    await this.reservationsRepository.delete(reservationId)
+  }
 
   async addUserToReservation(reservationId: string, addUserDto: ReservationAddUserDto): Promise<Reservations> {
     const { userId } = addUserDto
