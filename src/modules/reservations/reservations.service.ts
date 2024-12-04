@@ -40,11 +40,8 @@ export class ReservationsService {
     }
   }
 
-  // findAll() {
-  //   return `This action returns all reservations`;
-  // }
 
-  async getById(reservationId: string): Promise<Reservations> {
+  async findOne(reservationId: string): Promise<Reservations> {
     try {
       const reservation = await this.reservationsRepository.findOne({
         where: { id: reservationId }
@@ -61,6 +58,16 @@ export class ReservationsService {
       }
 
       throw new InternalServerErrorException('Ha surgido un error inesperado.')
+    }
+  }
+
+  async findAll() {
+    try {
+      return await this.reservationsRepository.find({
+        relations: ['users']
+      })
+    } catch (error) {
+      throw new Error(`Error fetching reservations`)
     }
   }
 
