@@ -8,13 +8,13 @@ import { Type } from "src/shared/utils/enum";
 
 export class ReservationUpdateTypeDto {
     @ApiProperty({
-        description: 'Nuevo tipo asociado a la reserva.',
+        description: 'New type associated with the reservation.',
         enum: Type,
         example: Type.Crew,
     })
-    @IsNotEmpty({ message: 'El tipo de la reserva es un campo requerido.' })
+    @IsNotEmpty({ message: 'Type of reservation is a required field.' })
     @IsEnum(Type, {
-        message: `El tipo del a reserva debe ser ${Type.Crew}, ${Type.Accommodation}, ${Type.Transport}.`,
+        message: `Type of reservation must be: ${Type.Crew}, ${Type.Accommodation}, ${Type.Transport}.`,
     })
     type: Type
 }

@@ -11,24 +11,24 @@ import { Type } from "src/shared/utils/enum";
 
 export class CreateReservationDto {
     @ApiProperty({
-        description: 'Tipo de reserva (crew/transporte/estancia)',
+        description: 'Reserve type (crew/accommodation/transport)',
         enum: Type,
     })
-    @IsNotEmpty({ message: 'El tipo es un campo requerido.' })
-    @IsEnum(Type, { message: 'El tipo debe ser crew, transport, accomodation.' })
+    @IsNotEmpty({ message: 'Type is a required field' })
+    @IsEnum(Type, { message: 'Type must be crew, accommodation or transport.' })
     type: Type;
 
     @ApiProperty({
-        description: 'El ID del post.',
+        description: 'Post ID',
         type: 'string',
         format: 'uuid',
     })
-    @IsNotEmpty({ message: 'El ID del post es un campo requerido.' })
-    @IsUUID('4', { message: 'El ID del post debe ser un UUID válida' })
+    @IsNotEmpty({ message: 'Post ID is a required field' })
+    @IsUUID('4', { message: 'Post ID must be a valid UUID' })
     postId: string;
 
     @ApiProperty({
-        description: 'Array de IDs de usuario que inicialian la reserva.',
+        description: 'Array of user IDs that initiate the reservation.',
         type: [String],
         required: false,
     })

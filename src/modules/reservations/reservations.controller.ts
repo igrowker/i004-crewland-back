@@ -139,28 +139,28 @@ export class ReservationsController {
     return await this.reservationsService.addUsersToReservation(id, addUsersDto)
   }
 
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update a reservation by ID' })
-  @ApiParam({
-    name: 'id',
-    description: 'ID of the reservation to update',
-    type: 'string',
-  })
-  @ApiBody({
-    description: 'Data to update the reservation',
-    type: UpdateReservationDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Reservation updated successfully.',
-  })
-  @ApiResponse({ status: 404, description: 'Reservation not found.' })
-  update(
-    @Param('id') id: string,
-    @Body() updateReservationDto: UpdateReservationDto,
-  ) {
-    return await this.reservationsService.update(id, updateReservationDto)
-  }
+  // @Patch(':id')
+  // @ApiOperation({ summary: 'Update a reservation by ID' })
+  // @ApiParam({
+  //   name: 'id',
+  //   description: 'ID of the reservation to update',
+  //   type: 'string',
+  // })
+  // @ApiBody({
+  //   description: 'Data to update the reservation',
+  //   type: UpdateReservationDto,
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Reservation updated successfully.',
+  // })
+  // @ApiResponse({ status: 404, description: 'Reservation not found.' })
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateReservationDto: UpdateReservationDto,
+  // ) {
+  //   return await this.reservationsService.update(id, updateReservationDto)
+  // }
 
   @Patch(':id/type')
   @ApiOperation({ summary: 'Update a reservation type by ID' })
