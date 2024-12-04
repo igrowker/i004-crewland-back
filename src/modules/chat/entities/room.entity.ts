@@ -9,6 +9,6 @@ export class Room {
   @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => Message, (message) => message.room)
+  @OneToMany(() => Message, (message) => message.room, { eager: true })
   messages: Message[];
 }

@@ -91,6 +91,7 @@ export class UsersService {
       }
 
       // Crear un objeto con las propiedades actualizadas, excluyendo 'image'
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image: _, ...updateData } = updateUserDto;
 
       // Fusionar las actualizaciones con el usuario existente
