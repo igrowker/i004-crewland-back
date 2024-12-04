@@ -18,7 +18,7 @@ export class PublicationsService {
   async create(
     festivalId: string,
     createPublicationDto: CreatePublicationDto,
-    userId: string,
+    // userId: string,
   ): Promise<Publication> {
     try {
       const festival = await this.festivalService.findOneFestival(festivalId);
@@ -35,7 +35,7 @@ export class PublicationsService {
 
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,
-        userId,
+        // userId,
         festivalId,
         creationDate,
         creationTime,
@@ -63,6 +63,7 @@ export class PublicationsService {
     }
 
     queryBuilder
+      .leftJoinAndSelect('publication.user', 'user') // Esto carga la relación 'user'
       .orderBy('publication.creationDate', 'ASC')
       .addOrderBy('publication.creationTime', 'ASC');
 
