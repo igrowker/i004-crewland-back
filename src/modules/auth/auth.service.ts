@@ -12,9 +12,11 @@ import { Repository } from 'typeorm';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { User } from '../users/entities/user.entity';
 import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
-import * as bcrypt from 'bcryptjs';
 import { ResetPasswordDto } from './dto/auth.reset-password.dto';
-import { RestorePasswordEmailDto } from './dto/auth.restore-password-email.dto';
+import dotEnvOptions from 'src/config/dotenv.config';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -81,11 +83,21 @@ export class AuthService {
     }
   }
 
-  async restorePasswordEmail(
-    restorePasswordEmailDto: RestorePasswordEmailDto,
-  ): Promise<void> {
-    const { email } = restorePasswordEmailDto;
+  generateVerificationCode(): string {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  }
 
+  async loadTemplateWithCode(code: string, resetLink: string): Promise<string> {
+    const templatePath = path.join(
+      __dirname,
+      '../../shared/utils/restorePasswordCode.html',
+    );
+    console.log('Template path:', templatePath);
+    const template = await fs.readFileSync(templatePath, 'utf8');
+    return template.replace('{{code}}', code).replace('{{token}}', resetLink);
+  }
+
+  async restorePasswordEmail(email: string): Promise<void> {
     try {
       const user = await this.userRepository.findOne({
         where: { email },
@@ -97,25 +109,24 @@ export class AuthService {
         );
       }
 
-      const recoveryCode = Math.floor(1000 + Math.random() * 9000).toString();
-
+      const recoveryCode = this.generateVerificationCode();
       const token = this.jwtService.sign(
         { id: user.id, recoveryCode },
-        { expiresIn: '10m' },
+        { expiresIn: '5m' },
       );
 
-      const emailBody = `Your recovery code is: ${recoveryCode}`;
+      const resetLink = `${dotEnvOptions.FRONTEND_URL}/restore-password/reset-password?token=${token}`;
 
-      // usar el emailTemplate en utils si eso
-      // const strongRegex = /<strong id="code">(.*?)<\/strong>/s
-      // const emailTemplate = resetPasswordTemplate.replace(strongRegex, `<strong id="code">${code}</strong>`)
-
-      const resetLink = `${process.env.FRONTEND_URL}/restore-password/reset-password?token=${token}`;
+      const emailTemplate = await this.loadTemplateWithCode(
+        recoveryCode,
+        resetLink,
+      );
 
       await this.sendGripService.sendEmail(
         email,
         'Restaurar contraseña',
-        emailBody,
+        `Tu código de recuperación es: ${recoveryCode}. El enlace para restablecer tu contraseña está en el correo.`,
+        emailTemplate,
       );
     } catch (error) {
       console.error('Error enviando el email de restaurar contraseña: ', error);
@@ -129,64 +140,78 @@ export class AuthService {
   async verifyRecoveryCode(
     token: string,
     inputRecoveryCode: string,
-  ): Promise<void> {
+  ): Promise<string> {
     try {
       const { id, recoveryCode } = this.jwtService.verify(token);
 
       if (recoveryCode !== inputRecoveryCode) {
-        throw new UnauthorizedException('Código de recuperación inválido');
+        throw new UnauthorizedException('Código de recuperación inválido.');
       }
 
       console.log(
-        `Código de recuperación verificado para usuario con el ID: ${id}`,
+        `Código de recuperación verificado para usuario con ID: ${id}`,
       );
+      return token;
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Codigo de recuperación expirado');
+        throw new UnauthorizedException('Código de recuperación expirado.');
       }
-      throw new UnauthorizedException('Token inválido');
+      throw new UnauthorizedException('Token inválido.');
     }
   }
 
   async resetPassword(
     token: string,
     resetPasswordDto: ResetPasswordDto,
-  ): Promise<any> {
-    const { newPassword, repeatPassword } = resetPasswordDto;
-
-    if (newPassword !== repeatPassword) {
-      return new BadRequestException('Las contraseñas no coinciden.');
-    }
-
+  ): Promise<void> {
     try {
-      const user = await this.verifyToken(token);
+      console.log('Recibiendo el token:', token);
 
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      // Verificar el token
+      const decoded = this.jwtService.verify(token);
+      console.log('Token decodificado:', decoded);
 
-      user.password = hashedPassword;
+      const { id } = decoded; // Desestructurar el ID del token
 
-      console.log(user);
-      await this.userRepository.save(user);
-
-      return { message: 'Contraseña actualizada.' };
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Surgió un error durante el reestablecimiento de la contraseña.',
-      );
-    }
-  }
-
-  async verifyToken(token: string): Promise<User> {
-    try {
-      const { id } = this.jwtService.verify(token);
+      // Buscar al usuario por ID
       const user = await this.userRepository.findOne({ where: { id } });
+      console.log('Usuario encontrado:', user);
 
       if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
+        throw new NotFoundException('Usuario no encontrado.');
       }
 
-      return user;
+      // Comparar la nueva contraseña con la anterior
+      const isSamePassword = await bcrypt.compare(
+        resetPasswordDto.newPassword,
+        user.password,
+      );
+      console.log('Contraseña nueva es igual a la anterior:', isSamePassword);
+
+      if (isSamePassword) {
+        throw new BadRequestException(
+          'La nueva contraseña no puede ser igual a la contraseña anterior.',
+        );
+      }
+
+      // Generar el hash de la nueva contraseña
+      const hashedPassword = await bcrypt.hash(
+        resetPasswordDto.newPassword,
+        10,
+      );
+      console.log('Nueva contraseña hasheada:', hashedPassword);
+
+      // Actualizar la contraseña del usuario
+      user.password = hashedPassword;
+      await this.userRepository.save(user);
+
+      console.log(`Contraseña actualizada para usuario con ID: ${id}`);
     } catch (error) {
+      console.error(
+        'Error durante el restablecimiento de la contraseña:',
+        error,
+      );
+
       if (error.name === 'TokenExpiredError') {
         throw new UnauthorizedException('El token ha expirado.');
       }

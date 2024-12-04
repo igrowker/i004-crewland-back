@@ -29,7 +29,6 @@ export class FestivalsService {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Verifica si la fecha es válida
     if (isNaN(date.getTime())) {
       return false;
     }
@@ -37,7 +36,7 @@ export class FestivalsService {
   }
 
   defaultMessage(args: ValidationArguments) {
-    return `${args.property} debe ser una fecha válida y existente en el futuro, no en el pasado`;
+    return `${args.property} Debe ser una fecha válida y existente en el futuro, no en el pasado`;
   }
 
   async festivalExists(name: string, date: string): Promise<boolean> {
@@ -51,7 +50,6 @@ export class FestivalsService {
     createFestivalDto: CreateFestivalDto,
     images: Express.Multer.File[],
   ): Promise<Festivals> {
-    // Verifica que la fecha sea valida y exista en el futuro
     if (!this.isValidFutureDate(createFestivalDto.date)) {
       throw new HttpException(
         'La fecha debe ser válida y estar en el futuro',
@@ -61,7 +59,6 @@ export class FestivalsService {
     try {
       const { name, date } = createFestivalDto;
 
-      // Verificar si ya existe un festival con el mismo nombre y fecha
       const exists = await this.festivalExists(name, date);
       if (exists) {
         throw new HttpException(
@@ -69,7 +66,6 @@ export class FestivalsService {
           HttpStatus.CONFLICT,
         );
       }
-      // Subir imagenes
       let imageUrls: string[];
       if (images && images.length > 0) {
         imageUrls =
@@ -84,7 +80,7 @@ export class FestivalsService {
       });
       return await this.festivalRepository.save(newFestival);
     } catch (error) {
-      this.handleError(error, 'Failed to create festival');
+      this.handleError(error, ' No se pudo crear el festival');
     }
   }
 
@@ -92,7 +88,7 @@ export class FestivalsService {
     try {
       return await this.festivalRepository.find();
     } catch (error) {
-      this.handleError(error, 'Failed to retrieve festivals');
+      this.handleError(error, 'No se pudieron recuperar los festivales');
     }
   }
 
@@ -101,16 +97,15 @@ export class FestivalsService {
       const festival = await this.festivalRepository.findOne({
         where: { id },
       });
-      // const festival = await this.festivalRepository.findOneBy({ id });
       if (!festival) {
         throw new HttpException(
-          `Festival with ID ${id} not found`,
+          `Festival con ID ${id} no encontrado`,
           HttpStatus.NOT_FOUND,
         );
       }
       return festival;
     } catch (error) {
-      this.handleError(error, `Failed to retrieve festival with ID ${id}`);
+      this.handleError(error, `No se pudo recuperar el festival con ID ${id}`);
     }
   }
 
@@ -141,14 +136,12 @@ export class FestivalsService {
       }
       let updatedImageUrls: string[] = [];
 
-      // Manejar nuevos archivos de imagen
       if (images && images.length > 0) {
         await this.cloudinaryService.deleteImgFromCloudinary(festival.images);
         updatedImageUrls =
           await this.cloudinaryService.uploadImagesToCloudinary(images);
       }
 
-      // Manejar URLs de imágenes proporcionadas
       if (
         updateFestivalDto.imageUrls &&
         updateFestivalDto.imageUrls.length > 0
@@ -156,12 +149,10 @@ export class FestivalsService {
         updatedImageUrls = updateFestivalDto.imageUrls;
       }
 
-      // Si no se proporcionaron nuevas imágenes ni URLs, mantener las imágenes existentes
       if (updatedImageUrls.length === 0) {
         updatedImageUrls = festival.images;
       }
 
-      // Actualizar el festival
       await this.festivalRepository.update(
         { id },
         {
@@ -172,7 +163,7 @@ export class FestivalsService {
 
       return await this.findOneFestival(id);
     } catch (error) {
-      this.handleError(error, `Failed to update festival with ID ${id}`);
+      this.handleError(error, `No se pudo actualizar el festival con ID ${id}`);
     }
   }
   async removeOneFestival(id: string): Promise<void> {
@@ -181,7 +172,7 @@ export class FestivalsService {
       await this.cloudinaryService.deleteImgFromCloudinary(festival.images);
       await this.festivalRepository.delete(id);
     } catch (error) {
-      this.handleError(error, `Failed to remove festival with ID ${id}`);
+      this.handleError(error, `No se pudo eliminar el festival con ID ${id}`);
     }
   }
 }

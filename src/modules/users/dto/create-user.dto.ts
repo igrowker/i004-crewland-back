@@ -112,7 +112,7 @@ export class CreateUserDto {
     },
   )
   @IsPastDate({ message: 'La fecha debe ser del pasado.' })
-  age: string; // agregar validaciones para que no sep uedan registrar personas menos de 18.
+  age: string;
 
   @ApiProperty({
     description: 'Género del usuario',

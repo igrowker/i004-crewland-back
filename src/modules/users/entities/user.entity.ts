@@ -129,3 +129,6 @@ export class User {
     return instanceToPlain(this);
   }
 }
+
+// descripcion
+// location ( string ) A VER!!!

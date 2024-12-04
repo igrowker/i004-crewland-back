@@ -12,7 +12,7 @@ export class ReservationValidationUser implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    // const user = request.user;
     const reservationId = request.params.id;
 
     const reservation = await this.reservationsService.findOne(reservationId);

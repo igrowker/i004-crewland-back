@@ -28,10 +28,12 @@ const DEFAULT_IMG_EVENT_CLOUDINARY = process.env.DEFAULT_IMG_EVENT_CLOUDINARY;
 const DEFAULT_IMG_USER_CLOUDINARY = process.env.DEFAULT_IMG_USER_CLOUDINARY;
 const NODE_ENV = process.env.NODE_ENV;
 const DB_SSL = process.env.DB_SSL === 'true';
+const FRONTEND_URL = process.env.FRONTEND_URL;
 const DB_SSL_REJECT_UNAUTHORIZED =
   process.env.DB_SSL_REJECT_UNAUTHORIZED === 'false' ? false : true;
 
 const dotEnvOptions = {
+  FRONTEND_URL,
   SENDGRIP_AUTH_TOKEN,
   SENDGRID_FROM_EMAIL,
   SENDGRID_REPLY_TO,

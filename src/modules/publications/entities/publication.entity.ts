@@ -2,7 +2,6 @@ import { User } from 'src/modules/users/entities/user.entity';
 import { Type } from 'src/shared/utils/enum';
 import {
   Column,
-  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   Index,
@@ -13,14 +12,10 @@ import {
 @Entity({
   name: 'publications',
 })
-@Index('idx_userId', ['userId'])
 @Index('idx_festivalId', ['festivalId'])
 export class Publication {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ type: 'uuid', nullable: false })
-  userId: string;
 
   @Column({
     type: 'enum',
@@ -31,7 +26,6 @@ export class Publication {
 
   @Column({ type: 'uuid', nullable: false })
   festivalId: string;
-  //desde params
 
   @Column({ type: 'varchar', nullable: false })
   title: string;
@@ -58,7 +52,7 @@ export class Publication {
   imageUrl: string;
 
   // Relación con el usuario
-  @ManyToOne(() => User, (user) => user.publications, { eager: true }) // eager permite cargar la relación automáticamente
-  @JoinColumn({ name: 'userId' }) // Vincula este campo con la columna userId en la base de datos
+  @ManyToOne(() => User, (user) => user.publications, { eager: true })
+  @JoinColumn({ name: 'userId' }) // Clave foránea creada automáticamente
   user: User;
 }

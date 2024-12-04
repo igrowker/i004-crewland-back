@@ -1,24 +1,29 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
-import { JoinRoomDto } from './dto/create-chat.dto';
-import { CreateMessageDto } from './dto/send-message.dto';
-import { ChatService1 } from './chat.service1';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { ChatService } from './chat.service';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService1) {}
+  constructor(private readonly chatService: ChatService) {}
 
+  // Crear o buscar una sala
   @Post('rooms')
-  async createRoom(@Body() joinRoomDto: JoinRoomDto) {
-    return this.chatService.createRoom(joinRoomDto.roomName);
+  async createRoom(@Body('roomName') roomName: string) {
+    return this.chatService.getOrCreateRoom(roomName);
   }
 
-  @Post('messages')
-  async sendMessage(@Body() createMessageDto: CreateMessageDto) {
-    return this.chatService.saveMessage(createMessageDto);
+  // Enviar un mensaje a una sala
+  @Post('rooms/:roomName/messages')
+  async sendMessage(
+    @Param('roomName') roomName: string,
+    @Body('senderId') senderId: string,
+    @Body('content') content: string,
+  ) {
+    return this.chatService.saveMessage(senderId, content, roomName);
   }
 
-  @Get('rooms/:roomId/messages')
-  async getMessagesByRoom(@Param('roomId') roomId: string) {
-    return this.chatService.getMessagesByRoom(roomId);
+  // Obtener todos los mensajes de una sala
+  @Get('rooms/:roomName/messages')
+  async getMessages(@Param('roomName') roomName: string) {
+    return this.chatService.getMessages(roomName);
   }
 }
