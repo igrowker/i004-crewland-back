@@ -16,14 +16,6 @@ export class FestivalsService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  private handleError(error: any, message: string): never {
-    console.error(error);
-    if (error instanceof HttpException) {
-      throw error;
-    }
-    throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
   isValidFutureDate(dateString: string): boolean {
     const date = new Date(dateString);
     const today = new Date();
@@ -50,13 +42,14 @@ export class FestivalsService {
     createFestivalDto: CreateFestivalDto,
     images: Express.Multer.File[],
   ): Promise<Festivals> {
-    if (!this.isValidFutureDate(createFestivalDto.date)) {
-      throw new HttpException(
-        'La fecha debe ser válida y estar en el futuro',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
     try {
+      if (!this.isValidFutureDate(createFestivalDto.date)) {
+        throw new HttpException(
+          'La fecha debe ser válida y estar en el futuro',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       const { name, date } = createFestivalDto;
 
       const exists = await this.festivalExists(name, date);
@@ -66,6 +59,7 @@ export class FestivalsService {
           HttpStatus.CONFLICT,
         );
       }
+
       let imageUrls: string[];
       if (images && images.length > 0) {
         imageUrls =
@@ -80,7 +74,13 @@ export class FestivalsService {
       });
       return await this.festivalRepository.save(newFestival);
     } catch (error) {
-      this.handleError(error, ' No se pudo crear el festival');
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'No se pudo crear el festival',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -88,7 +88,13 @@ export class FestivalsService {
     try {
       return await this.festivalRepository.find();
     } catch (error) {
-      this.handleError(error, 'No se pudieron recuperar los festivales');
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'No se pudieron recuperar los festivales',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -105,7 +111,13 @@ export class FestivalsService {
       }
       return festival;
     } catch (error) {
-      this.handleError(error, `No se pudo recuperar el festival con ID ${id}`);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `No se pudo recuperar el festival con ID ${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -134,6 +146,7 @@ export class FestivalsService {
           );
         }
       }
+
       let updatedImageUrls: string[] = [];
 
       if (images && images.length > 0) {
@@ -163,16 +176,29 @@ export class FestivalsService {
 
       return await this.findOneFestival(id);
     } catch (error) {
-      this.handleError(error, `No se pudo actualizar el festival con ID ${id}`);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `No se pudo actualizar el festival con ID ${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
+
   async removeOneFestival(id: string): Promise<void> {
     try {
       const festival = await this.findOneFestival(id);
       await this.cloudinaryService.deleteImgFromCloudinary(festival.images);
       await this.festivalRepository.delete(id);
     } catch (error) {
-      this.handleError(error, `No se pudo eliminar el festival con ID ${id}`);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `No se pudo eliminar el festival con ID ${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

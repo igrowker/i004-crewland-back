@@ -199,8 +199,8 @@ export class UsersController {
     status: 403,
     description: 'No tienes permisos para realizar esta acción.',
   })
-  async getUsers() {
-    return this.usersService.getUsers();
+  async getAllUsers() {
+    return this.usersService.getAllUsers();
   }
 
   @Delete(':id')
