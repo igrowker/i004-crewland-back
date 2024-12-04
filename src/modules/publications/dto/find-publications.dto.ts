@@ -9,6 +9,10 @@ import { Type } from 'src/shared/utils/enum';
 
 export class FindPublicationsDto {
   @IsOptional()
+  @IsString()
+  festivalId: string;
+
+  @IsOptional()
   @IsEnum(Type)
   type?: Type;
 
