@@ -54,10 +54,17 @@
 // agregar imagen con cloudinary
 // descripcion
 // location ( string)
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Role, Gender } from 'src/shared/utils/enum';
 import { Message } from 'src/modules/chat/entities/chat.entity';
 import { Exclude, instanceToPlain } from 'class-transformer';
+import { Publication } from 'src/modules/publications/entities/publication.entity';
 
 @Entity('users')
 export class User {
@@ -114,10 +121,11 @@ export class User {
   @ManyToMany(() => Message, (chat) => chat.senderId)
   chats: Message[];
 
+  // Relación con publicaciones
+  @OneToMany(() => Publication, (publication) => publication.user)
+  publications: Publication[];
+
   toJSON() {
     return instanceToPlain(this);
   }
 }
-
-// descripcion
-// location ( string )

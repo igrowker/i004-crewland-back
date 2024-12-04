@@ -22,6 +22,7 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
+      console.log('llego peticion front');
       const existingEmail = await this.userRepository.findOne({
         where: [{ email: createUserDto.email }],
       });
@@ -40,6 +41,7 @@ export class UsersService {
       const user = this.userRepository.create({
         ...createUserDto,
         password: hashedPassword,
+        image: dotEnvOptions.DEFAULT_IMG_USER_CLOUDINARY,
       });
 
       return await this.userRepository.save(user);
@@ -91,6 +93,7 @@ export class UsersService {
       }
 
       // Crear un objeto con las propiedades actualizadas, excluyendo 'image'
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image: _, ...updateData } = updateUserDto;
 
       // Fusionar las actualizaciones con el usuario existente

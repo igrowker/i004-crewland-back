@@ -1,3 +1,4 @@
+import { User } from 'src/modules/users/entities/user.entity';
 import { Type } from 'src/shared/utils/enum';
 import {
   Column,
@@ -55,4 +56,9 @@ export class Publication {
 
   @Column({ type: 'varchar', nullable: true })
   imageUrl: string;
+
+  // Relación con el usuario
+  @ManyToOne(() => User, (user) => user.publications, { eager: true }) // eager permite cargar la relación automáticamente
+  @JoinColumn({ name: 'userId' }) // Vincula este campo con la columna userId en la base de datos
+  user: User;
 }

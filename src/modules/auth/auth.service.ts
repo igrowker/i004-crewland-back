@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   Injectable,
@@ -28,6 +29,8 @@ export class AuthService {
     const { email, password } = authLoginDto;
 
     try {
+      console.log("LLEGO PETICION FRONT");
+      console.log(authLoginDto);
       const user = await this.userRepository.findOne({
         where: { email },
       });
