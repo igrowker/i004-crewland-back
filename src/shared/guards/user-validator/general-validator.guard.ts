@@ -51,18 +51,6 @@ export class GeneralEntityValidationGuard implements CanActivate {
     return true;
   }
 
-  // private async validateReservation(user: any, entityId: string): Promise<boolean> {
-  //     const reservation = await this.reservationsService.findOne(entityId);
-  //     if (!reservation) {
-  //         throw new ForbiddenException('Reserva no encontrada');
-  //     }
-
-  //     if (reservation.userId !== user.sub) {
-  //         throw new ForbiddenException('No tienes permiso para acceder a esta reserva');
-  //     }
-  //     return true;
-  // }
-
   private async validatePublication(
     user: any,
     entityId: string,
@@ -72,11 +60,11 @@ export class GeneralEntityValidationGuard implements CanActivate {
       throw new ForbiddenException('Publicación no encontrada');
     }
 
-    if (publication.userId !== user.sub) {
-      throw new ForbiddenException(
-        'No tienes permiso para acceder a esta publicación',
-      );
-    }
+    // if (publication.userId !== user.sub) {
+    //   throw new ForbiddenException(
+    //     'No tienes permiso para acceder a esta publicación',
+    //   );
+    // }
     return true;
   }
 

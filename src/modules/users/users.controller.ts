@@ -184,8 +184,8 @@ export class UsersController {
   }
 
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Obtener todos los usuarios (Solo Admin)',

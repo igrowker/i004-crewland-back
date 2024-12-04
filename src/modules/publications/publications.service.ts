@@ -18,7 +18,7 @@ export class PublicationsService {
   async create(
     festivalId: string,
     createPublicationDto: CreatePublicationDto,
-    userId: string,
+    // userId: string,
   ): Promise<Publication> {
     try {
       const festival = await this.festivalService.findOneFestival(festivalId);
@@ -35,7 +35,7 @@ export class PublicationsService {
 
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,
-        userId,
+        // userId,
         festivalId,
         creationDate,
         creationTime,
@@ -52,17 +52,28 @@ export class PublicationsService {
     const queryBuilder =
       this.publicationRepository.createQueryBuilder('publication');
 
+    // Filtrar por tipo
     if (filters.type) {
       queryBuilder.andWhere('publication.type = :type', { type: filters.type });
     }
 
+    // Filtrar por título
     if (filters.title) {
       queryBuilder.andWhere('publication.title LIKE :title', {
         title: `%${filters.title}%`,
       });
     }
 
+    // Filtrar por festivalId
+    if (filters.festivalId) {
+      queryBuilder.andWhere('publication.festivalId = :festivalId', {
+        festivalId: filters.festivalId,
+      });
+    }
+
+    // Realizar la unión con la tabla de usuarios para traer los datos del usuario
     queryBuilder
+      .leftJoinAndSelect('publication.user', 'user')
       .orderBy('publication.creationDate', 'ASC')
       .addOrderBy('publication.creationTime', 'ASC');
 

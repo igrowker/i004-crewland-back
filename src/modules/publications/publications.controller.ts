@@ -10,7 +10,7 @@ import {
   Query,
   Request,
 } from '@nestjs/common';
-import { PublicationValidationUser } from 'src/shared/guards/user-validator/user-validator-publication.guard';
+// import { PublicationValidationUser } from 'src/shared/guards/user-validator/user-validator-publication.guard';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth/jwt-auth.guard';
 import { PublicationsService } from './publications.service';
 import { CreatePublicationDto } from './dto/create-publication.dto';
@@ -46,13 +46,13 @@ export class PublicationsController {
   async create(
     @Param('festivalId') festivalId: string,
     @Body() createPublicationDto: CreatePublicationDto,
-    @Request() req,
+    // @Request() req,
   ) {
-    const userId = req.user.id;
+    // const userId = req.user.id;
     return this.publicationsService.create(
       festivalId,
       createPublicationDto,
-      userId,
+      // userId,
     );
   }
 
@@ -83,7 +83,8 @@ export class PublicationsController {
   }
 
   @Patch(':id') //
-  @UseGuards(JwtAuthGuard, PublicationValidationUser)
+  // @UseGuards(JwtAuthGuard, PublicationValidationUser)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a publication by ID' })
   @ApiBody({ type: UpdatePublicationDto })
   @ApiResponse({
@@ -102,7 +103,8 @@ export class PublicationsController {
   }
 
   @Patch(':id/toggle-active')
-  @UseGuards(JwtAuthGuard, PublicationValidationUser)
+  // @UseGuards(JwtAuthGuard, PublicationValidationUser)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Toggle the active status of a publication' })
   @ApiResponse({
     status: 200,
