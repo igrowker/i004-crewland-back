@@ -88,6 +88,17 @@ export class UsersService {
           throw new HttpException('Usuario en uso', HttpStatus.CONFLICT);
         }
       }
+      if (updateUserDto.tel && updateUserDto.tel !== user.tel) {
+        const existingTel = await this.userRepository.findOne({
+          where: { tel: updateUserDto.tel },
+        });
+        if (existingTel) {
+          throw new HttpException(
+            'Numero de telefono en uso',
+            HttpStatus.CONFLICT,
+          );
+        }
+      }
 
       if (updateUserDto.password) {
         updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
