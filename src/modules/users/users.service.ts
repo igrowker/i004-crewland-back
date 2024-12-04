@@ -16,14 +16,6 @@ export class UsersService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  private handleError(error: any, message: string): never {
-    console.error(error);
-    if (error instanceof HttpException) {
-      throw error;
-    }
-    throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
       const existingEmail = await this.userRepository.findOne({
@@ -55,7 +47,13 @@ export class UsersService {
       });
       return await this.userRepository.save(user);
     } catch (error) {
-      this.handleError(error, 'Error al crear el usuario');
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Error al crear el usuario',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -119,7 +117,13 @@ export class UsersService {
 
       return await this.userRepository.save(updatedUser);
     } catch (error) {
-      this.handleError(error, `Error al actualizar el usuario con ID ${id}`);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Error al actualizar el usuario con ID ${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -133,35 +137,72 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      this.handleError(error, `Error al obtener el usuario con ID ${id}`);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Error al obtener el usuario con ID ${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
-  async getUsers() {
-    return await this.userRepository.find({ where: { isDeleted: false } });
+  async getAllUsers(): Promise<User[]> {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Error al obtener los usuarios',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async softDeleteUser(id: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-    }
-    user.isDeleted = true;
-    return await this.userRepository.save(user);
-  }
-  async restoreUser(id: string): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { id, isDeleted: true },
-    });
-
-    if (!user) {
+    try {
+      const user = await this.userRepository.findOne({ where: { id } });
+      if (!user) {
+        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+      }
+      user.isDeleted = true;
+      return await this.userRepository.save(user);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
       throw new HttpException(
-        'Usuario eliminado no encontrado',
-        HttpStatus.NOT_FOUND,
+        `Error al eliminar suavemente el usuario con ID ${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
 
-    user.isDeleted = false;
-    return await this.userRepository.save(user);
+  async restoreUser(id: string): Promise<User> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id, isDeleted: true },
+      });
+
+      if (!user) {
+        throw new HttpException(
+          'Usuario eliminado no encontrado',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      user.isDeleted = false;
+      return await this.userRepository.save(user);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Error al restaurar el usuario con ID ${id}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
