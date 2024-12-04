@@ -11,10 +11,7 @@ import {
   IsInt,
   Min,
   IsDateString,
-  // Validate,
-  IsArray,
 } from 'class-validator';
-// import { isValidFutureDateConstraint } from './create-festival.dto';
 
 export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   @ApiProperty({
@@ -59,7 +56,6 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'La fecha debe ser una cadena en formato YYYY-MM-DD',
   })
-  // @Validate(isValidFutureDateConstraint)
   date?: string;
 
   @ApiProperty({
@@ -137,7 +133,6 @@ export class UpdateFestivalDto extends PartialType(CreateFestivalDto) {
     required: false,
   })
   @IsOptional()
-  // @IsArray()
   @IsString({ each: true })
   @IsUrl(
     { protocols: ['http', 'https'], require_protocol: true },
