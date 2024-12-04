@@ -10,35 +10,7 @@ import {
   Min,
   IsOptional,
   IsDateString,
-  IsArray,
 } from 'class-validator';
-
-// import {
-//   ValidationArguments,
-//   ValidatorConstraint,
-//   ValidatorConstraintInterface,
-//   Validate,
-// } from 'class-validator';
-
-// export
-// @ValidatorConstraint({ name: 'isValidFutureDate', async: false })
-// class isValidFutureDateConstraint implements ValidatorConstraintInterface {
-//   validate(value: string) {
-//     const date = new Date(value);
-//     const today = new Date();
-//     today.setHours(0, 0, 0, 0);
-
-//     // Verifica si la fecha es válida
-//     if (isNaN(date.getTime())) {
-//       return false;
-//     }
-//     return date > today;
-//   }
-
-//   defaultMessage(args: ValidationArguments) {
-//     return `${args.property} debe ser una fecha válida y existente en el futuro, no en el pasado`;
-//   }
-// }
 
 export class CreateFestivalDto {
   @ApiProperty({
@@ -82,7 +54,6 @@ export class CreateFestivalDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'La fecha debe ser una cadena en formato YYYY-MM-DD.',
   })
-  // @Validate(isValidFutureDateConstraint)
   date: string;
 
   @ApiProperty({
@@ -153,7 +124,6 @@ export class CreateFestivalDto {
     required: false,
   })
   @IsOptional()
-  // @IsArray()
   @IsString({ each: true })
   @IsUrl(
     { protocols: ['http', 'https'], require_protocol: true },

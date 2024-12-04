@@ -37,19 +37,19 @@ export class FestivalsController {
   @Post()
   @Roles(Role.Admin)
   @UseInterceptors(FilesInterceptor('images'))
-  @ApiOperation({ summary: 'Create a new festival' })
+  @ApiOperation({ summary: 'Create un nuevo festival' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Festival details including images',
+    description: 'Detalles del festival incluyendo imagenes',
     type: CreateFestivalDto,
   })
   @ApiResponse({
     status: 201,
-    description: 'Festival created successfully.',
+    description: 'Festival creado con exito.',
   })
   @ApiResponse({
     status: 403,
-    description: 'Forbidden. Only admins can create festivals.',
+    description: 'Prohibido. Solo los administradores pueden crear festivales.',
   })
   create(
     @Body() createFestivalDto: CreateFestivalDto,
@@ -59,24 +59,24 @@ export class FestivalsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all festivals' })
+  @ApiOperation({ summary: 'Obtener todos los festivales' })
   @ApiResponse({
     status: 200,
-    description: 'List of all festivals.',
+    description: 'Lista de todos los festivales.',
   })
   findAll() {
     return this.festivalService.findAllFestivals();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get a festival by ID' })
+  @ApiOperation({ summary: 'Obtener un festival por ID' })
   @ApiResponse({
     status: 200,
-    description: 'Festival found.',
+    description: 'Festival encontrado.',
   })
   @ApiResponse({
     status: 404,
-    description: 'Festival not found.',
+    description: 'Festival no encontrado.',
   })
   findOne(@Param('id') id: string) {
     return this.festivalService.findOneFestival(id);
@@ -85,19 +85,19 @@ export class FestivalsController {
   @Patch(':id')
   @Roles(Role.Admin)
   @UseInterceptors(FilesInterceptor('images'))
-  @ApiOperation({ summary: 'Update a festival by ID' })
+  @ApiOperation({ summary: 'Actualizar un festival por ID' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Updated festival details including images',
+    description: 'Detalles actualizados del festival incluyendo imágenes',
     type: UpdateFestivalDto,
   })
   @ApiResponse({
     status: 200,
-    description: 'Festival updated successfully.',
+    description: 'Festival actualizado con éxito.',
   })
   @ApiResponse({
     status: 404,
-    description: 'Festival not found.',
+    description: 'Festival no encontrado.',
   })
   update(
     @Param('id') id: string,
@@ -113,14 +113,14 @@ export class FestivalsController {
 
   @Delete(':id')
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Delete a festival by ID' })
+  @ApiOperation({ summary: 'Eliminar un festival por ID' })
   @ApiResponse({
     status: 200,
-    description: 'Festival deleted successfully.',
+    description: 'Festival eliminado con éxito.',
   })
   @ApiResponse({
     status: 404,
-    description: 'Festival not found.',
+    description: 'Festival no encontrado.',
   })
   remove(@Param('id') id: string) {
     return this.festivalService.removeOneFestival(id);
