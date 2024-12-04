@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,31 +16,46 @@ export class UsersService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  private handleError(error: any, message: string): never {
+    console.error(error);
+    if (error instanceof HttpException) {
+      throw error;
+    }
+    throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
       const existingEmail = await this.userRepository.findOne({
         where: [{ email: createUserDto.email }],
       });
       if (existingEmail) {
-        throw new ConflictException('Email en uso');
+        throw new HttpException('Email en uso', HttpStatus.CONFLICT);
       }
       const existingUser = await this.userRepository.findOne({
         where: [{ username: createUserDto.username }],
       });
-      console.log(existingUser);
       if (existingUser) {
-        throw new ConflictException('Usuario en uso');
+        throw new HttpException('Usuario en uso', HttpStatus.CONFLICT);
+      }
+      const existingPhone = await this.userRepository.findOne({
+        where: [{ tel: createUserDto.tel }],
+      });
+      if (existingPhone) {
+        throw new HttpException(
+          'Número de teléfono en uso',
+          HttpStatus.CONFLICT,
+        );
       }
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-      console.log(hashedPassword);
       const user = this.userRepository.create({
         ...createUserDto,
         password: hashedPassword,
+        image: dotEnvOptions.DEFAULT_IMG_USER_CLOUDINARY,
       });
-
       return await this.userRepository.save(user);
     } catch (error) {
-      throw new Error('Error while creating the user: ' + error.message);
+      this.handleError(error, 'Error al crear el usuario');
     }
   }
 
@@ -57,7 +68,7 @@ export class UsersService {
       const user = await this.userRepository.findOne({ where: { id } });
 
       if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
+        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
 
       if (updateUserDto.email && updateUserDto.email !== user.email) {
@@ -65,7 +76,7 @@ export class UsersService {
           where: { email: updateUserDto.email },
         });
         if (existingEmail) {
-          throw new ConflictException('Email en uso');
+          throw new HttpException('Email en uso', HttpStatus.CONFLICT);
         }
       }
 
@@ -74,7 +85,18 @@ export class UsersService {
           where: { username: updateUserDto.username },
         });
         if (existingUsername) {
-          throw new ConflictException('Usuario en uso');
+          throw new HttpException('Usuario en uso', HttpStatus.CONFLICT);
+        }
+      }
+      if (updateUserDto.tel && updateUserDto.tel !== user.tel) {
+        const existingTel = await this.userRepository.findOne({
+          where: { tel: updateUserDto.tel },
+        });
+        if (existingTel) {
+          throw new HttpException(
+            'Numero de telefono en uso',
+            HttpStatus.CONFLICT,
+          );
         }
       }
 
@@ -90,16 +112,14 @@ export class UsersService {
         user.image = dotEnvOptions.DEFAULT_IMG_USER_CLOUDINARY;
       }
 
-      // Crear un objeto con las propiedades actualizadas, excluyendo 'image'
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image: _, ...updateData } = updateUserDto;
 
-      // Fusionar las actualizaciones con el usuario existente
       const updatedUser = this.userRepository.merge(user, updateData);
 
       return await this.userRepository.save(updatedUser);
     } catch (error) {
-      throw new Error('Error while updating the user: ' + error.message);
+      this.handleError(error, `Error al actualizar el usuario con ID ${id}`);
     }
   }
 
@@ -108,12 +128,12 @@ export class UsersService {
       const user = await this.userRepository.findOne({ where: { id } });
 
       if (!user) {
-        throw new NotFoundException('Usuario no encontrado');
+        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
       }
 
       return user;
     } catch (error) {
-      throw new Error('Error while fetching the user: ' + error.message);
+      this.handleError(error, `Error al obtener el usuario con ID ${id}`);
     }
   }
 
@@ -124,7 +144,7 @@ export class UsersService {
   async softDeleteUser(id: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException('Usuario no encontrado');
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
     user.isDeleted = true;
     return await this.userRepository.save(user);
@@ -135,7 +155,10 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('Usuario eliminado no encontrado');
+      throw new HttpException(
+        'Usuario eliminado no encontrado',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     user.isDeleted = false;

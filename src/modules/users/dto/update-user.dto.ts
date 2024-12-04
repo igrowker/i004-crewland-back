@@ -72,7 +72,9 @@ export class UpdateUserDto {
   })
   @IsString()
   @IsOptional()
-  @MinLength(6, { message: 'El nombre debe tener al menos 6 carácter.' })
+  @MinLength(6, {
+    message: 'El número de teléfono debe tener al menos 6 caracteres.',
+  })
   @MaxLength(25, {
     message: 'El número máximo de caracteres ha sido excedido.',
   })
@@ -82,7 +84,7 @@ export class UpdateUserDto {
       message: 'El número de teléfono no tiene un formato válido.',
     },
   )
-  tel?: string; // validaciones para evitar espacios y evitar algunos caracteres.
+  tel?: string;
 
   @ApiProperty({
     description: 'Fecha de nacimiento del usuario',
@@ -135,7 +137,6 @@ export class UpdateUserDto {
     example: ['hotel1', 'restaurante2'],
     required: false,
   })
-  // @IsArray()
   @IsOptional()
   @IsString({ each: true })
   password: any;
