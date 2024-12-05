@@ -6,9 +6,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role, Gender } from 'src/shared/utils/enum';
-import { Message } from 'src/modules/chat/entities/chat.entity';
+import { Message } from 'src/modules/chat/entities/message.entity';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { Publication } from 'src/modules/publications/entities/publication.entity';
+import { Room } from 'src/modules/chat/entities/room.entity';
 
 @Entity('users')
 export class User {
@@ -92,10 +93,10 @@ export class User {
   @OneToMany(() => Publication, (publication) => publication.user)
   publications: Publication[];
 
+  @ManyToMany(() => Room, (room) => room.users)
+  rooms: Room[];
+
   toJSON() {
     return instanceToPlain(this);
   }
 }
-
-// descripcion
-// location ( string ) A VER!!!

@@ -2,6 +2,12 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class JoinRoomDto {
   @IsString()
+  userId1: string;
+
+  @IsString()
+  userId2: string;
+
+  @IsString()
   @IsNotEmpty({ message: 'El id del user es requerido' })
   userId: string;
 

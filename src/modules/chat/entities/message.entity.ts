@@ -12,7 +12,7 @@ export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
+  @Column()
   senderId: string;
 
   @Column()

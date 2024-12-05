@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
@@ -42,7 +41,6 @@ export class ReservationsService {
         type,
         postId,
         userIds,
-        peopleAmount : createReservationDto.peopleAmount,
       });
 
       return await this.reservationsRepository.save(reservation);
