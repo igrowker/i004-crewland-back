@@ -31,8 +31,11 @@ export class AuthService {
     const { email, password } = authLoginDto;
 
     try {
+<<<<<<< HEAD
       console.log('LLEGO PETICION FRONT');
       console.log(authLoginDto);
+=======
+>>>>>>> 18c2bd351faf34d86ffdf7b369d155cc2bf25001
       const user = await this.userRepository.findOne({
         where: { email },
       });
@@ -72,6 +75,7 @@ export class AuthService {
           preferences: user.preferences,
           travelHistory: user.travelHistory,
           favorites: user.favorites,
+          image: user.image,
         },
         token,
       };
