@@ -35,8 +35,9 @@ export class ChatController {
   }
 
   // Obtener todos los mensajes de una sala
-  @Get('rooms/:roomId/messages/algo')
+  @Get('rooms/:roomId/messages')
   async getMessages(@Param('roomId') roomId: string) {
     return this.chatService.getMessagesByRoom(roomId);
+  }
   }
 }
