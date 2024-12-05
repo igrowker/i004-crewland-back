@@ -13,7 +13,7 @@ export class Message {
   id: string;
 
   @Column()
-  senderUsername: string;
+  senderId: string;
 
   @Column()
   content: string;

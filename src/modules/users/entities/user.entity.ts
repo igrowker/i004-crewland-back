@@ -65,6 +65,7 @@ import { Role, Gender } from 'src/shared/utils/enum';
 import { Message } from 'src/modules/chat/entities/message.entity';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { Publication } from 'src/modules/publications/entities/publication.entity';
+import { Room } from 'src/modules/chat/entities/room.entity';
 
 @Entity('users')
 export class User {
@@ -118,12 +119,15 @@ export class User {
   @Column({ default: false })
   isDeleted: boolean;
 
-  @ManyToMany(() => Message, (chat) => chat.senderUsername)
+  @ManyToMany(() => Message, (chat) => chat.senderId)
   chats: Message[];
 
   // Relación con publicaciones
   @OneToMany(() => Publication, (publication) => publication.user)
   publications: Publication[];
+
+  @ManyToMany(() => Room, (room) => room.users)
+  rooms: Room[];
 
   toJSON() {
     return instanceToPlain(this);

@@ -8,43 +8,64 @@ import {
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
 import { CreateMessageDto } from './dto/create.message.dto';
+import { Logger } from '@nestjs/common';
+import { JoinRoomDto } from './dto/join.room.dto'; // Nuevo DTO para validar datos
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway {
   @WebSocketServer()
   server: Server;
 
+  private readonly logger = new Logger(ChatGateway.name); // Usar logger
+
   constructor(private readonly chatService: ChatService) {}
 
-  // Método para unirse a una sala
+  // Método para unirse a una sala basado en nombres de usuarios
   @SubscribeMessage('joinRoom')
   async joinRoom(
-    @MessageBody() data: { userId1: string; userId2: string },
+    @MessageBody() data: JoinRoomDto, // Validar con un DTO
     @ConnectedSocket() client: Socket,
   ) {
-    // Creamos o recuperamos la sala
-    const room = await this.chatService.createRoomForUsers(
-      data.userId1,
-      data.userId2,
-    );
+    try {
+      // Creamos o recuperamos la sala utilizando nombres
+      const room = await this.chatService.createRoomForUsers(
+        data.username1,
+        data.username2,
+      );
 
-    // El usuario se une a la sala
-    client.join(room.id); // el user usa el roomId q tiene q ser un uuid para unir al usuario
+      // El usuario se une a la sala
+      client.join(room.id);
 
-    // emit --> Emitimos que el user se ha unido a la sala, no olvidar incluir el el roomId
-    client.emit('joinedRoom', {
-      roomId: room.id,
-      roomName: room.name,
-    });
+      // Emitimos que el usuario se ha unido a la sala
+      client.emit('joinedRoom', {
+        roomId: room.id,
+        roomName: room.name,
+      });
 
-    console.log(`Usuario ${data.userId1} se ha unido a la sala ${room.name}`);
+      this.logger.log(
+        `Usuario ${data.username1} se ha unido a la sala ${room.name} con ${data.username2}`,
+      );
+    } catch (error) {
+      this.logger.error(`Error al unirse a la sala: ${error.message}`);
+      client.emit('error', { message: 'Error al unirse a la sala' });
+    }
   }
 
   @SubscribeMessage('sendMessage')
   async sendMessage(@MessageBody() data: CreateMessageDto) {
-    console.log('GATE WAY SEND MESSAGE', data);
-    const message = await this.chatService.saveMessage(data); // Guardamos el mensaje
-    this.server.to(message.room.id).emit('receiveMessage', message); //con esto mandamos el mensjae a todos los de la sala
-    return message;
+    try {
+      this.logger.log('GATEWAY SEND MESSAGE', data);
+
+      // Guardamos el mensaje
+      const message = await this.chatService.saveMessage(data);
+
+      // Enviamos el mensaje a todos los clientes en la sala
+      this.server.to(message.room.id).emit('receiveMessage', message);
+
+      return message;
+    } catch (error) {
+      this.logger.error(`Error al enviar mensaje: ${error.message}`);
+      throw error;
+    }
   }
 }

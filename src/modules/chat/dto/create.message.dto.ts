@@ -5,7 +5,7 @@ export class CreateMessageDto {
   @IsNotEmpty({
     message: 'El nombre del usuario que envía el mensaje es requerido',
   })
-  senderUsername: string;
+  senderId: string;
 
   @IsString()
   @IsNotEmpty({ message: 'El mensaje no puede ser vacío' })
