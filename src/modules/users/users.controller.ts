@@ -57,6 +57,13 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
+  @Get('/for-publications')
+  @Roles(Role.User)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async getAllUsersForPublications() {
+    return this.usersService.getAllUsersForPublications();
+  }
+
   @ApiBearerAuth()
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RoleGuard, UserOwnershipGuard)
@@ -199,8 +206,8 @@ export class UsersController {
     status: 403,
     description: 'No tienes permisos para realizar esta acción.',
   })
-  async getUsers() {
-    return this.usersService.getUsers();
+  async getAllUsers() {
+    return this.usersService.getAllUsers();
   }
 
   @Delete(':id')

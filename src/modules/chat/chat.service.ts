@@ -19,19 +19,18 @@ export class ChatService {
   async createRoomForUsers(userId1: string, userId2: string): Promise<Room> {
     const roomId = uuidv4(); // Generar un UUID único para la sala
     const roomName = `room_${userId1}_${userId2}`; // Usamos un nombre descriptivo para la sala
-  
+
     // Verificamos si ya existe una sala con este ID
     let room = await this.roomRepository.findOne({ where: { name: roomName } });
-  
+
     // Si no existe, la creamos
     if (!room) {
       room = this.roomRepository.create({ id: roomId, name: roomName });
       await this.roomRepository.save(room);
     }
-  
+
     return room; // Retornamos la sala con el UUID
   }
-  
 
   // Guardar el mensaje en la base de datos
   async saveMessage(createMessageDto: CreateMessageDto): Promise<Message> {

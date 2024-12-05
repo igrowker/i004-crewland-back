@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { AuthLoginDto } from './dto/auth.login.dto';
 import { LoginGuard } from 'src/shared/guards/login/login.guard';
 import { ResetPasswordDto } from './dto/auth.reset-password.dto';
+import { VerifyRecoveryCodeDto } from './dto/auth.verify-recovery-code.dto';
 
 @ApiTags('Auth')
 @Controller('auth')

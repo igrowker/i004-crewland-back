@@ -12,7 +12,7 @@ export class PublicationValidationUser implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    // const user = request.user;
     const publicationId = request.params.id;
 
     const publication = await this.publicationService.findOne(publicationId);
@@ -20,11 +20,11 @@ export class PublicationValidationUser implements CanActivate {
       throw new ForbiddenException('Publication not found');
     }
 
-    if (publication.userId !== user.sub) {
-      throw new ForbiddenException(
-        'You do not have permission to modify this publication',
-      );
-    }
+    // if (publication.userId !== user.sub) {
+    //   throw new ForbiddenException(
+    //     'You do not have permission to modify this publication',
+    //   );
+    // }
 
     return true;
   }

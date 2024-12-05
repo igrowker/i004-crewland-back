@@ -6,6 +6,7 @@ import { ResponseFormatInterceptor } from './shared/interceptors/response-format
 import dotenvOptions from './config/dotenv.config';
 import * as bodyParser from 'body-parser';
 import { ErrorHandlingCloudinary } from './middleware/cloudinary/error-handling.cloudinary';
+import { HttpExceptionFilter } from './middleware/errorHandling/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -17,6 +18,7 @@ async function bootstrap() {
   app.use(bodyParser.json());
   app.use(new ErrorHandlingCloudinary().use);
   app.useGlobalInterceptors(new ResponseFormatInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
