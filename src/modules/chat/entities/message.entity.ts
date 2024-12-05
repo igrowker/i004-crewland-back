@@ -12,8 +12,8 @@ export class Message {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
-  senderId: string;
+  @Column()
+  senderUsername: string;
 
   @Column()
   content: string;

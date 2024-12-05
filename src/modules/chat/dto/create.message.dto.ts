@@ -2,14 +2,16 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMessageDto {
   @IsString()
-  @IsNotEmpty({ message: 'El id del user que envia el mensaje es requerido' })
-  senderId: string;
+  @IsNotEmpty({
+    message: 'El nombre del usuario que envía el mensaje es requerido',
+  })
+  senderUsername: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'El mensaje no puede ser vacio' })
+  @IsNotEmpty({ message: 'El mensaje no puede ser vacío' })
   content: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'El nombre la room de chat es requerido' })
+  @IsNotEmpty({ message: 'El ID de la sala de chat es requerido' })
   roomId: string;
 }

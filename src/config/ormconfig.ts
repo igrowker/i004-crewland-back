@@ -36,7 +36,7 @@
 
 // export const AppDataSource = new DataSource(dataSourceOptions);
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { Message } from '../modules/chat/entities/chat.entity';
+import { Message } from '../modules/chat/entities/message.entity';
 import { Room } from 'src/modules/chat/entities/room.entity';
 import { Publication } from '../modules/publications/entities/publication.entity';
 import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
@@ -69,8 +69,6 @@ export const dataSourceOptions: DataSourceOptions = {
     Room,
     VerificationCodeSms,
     VerificationCodeEmail,
-    Message,
-    Room,
   ],
   subscribers: [],
   migrations: [],

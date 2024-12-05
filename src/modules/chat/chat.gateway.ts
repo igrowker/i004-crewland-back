@@ -1,92 +1,50 @@
 import {
   WebSocketGateway,
   WebSocketServer,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ChatService } from './chat.service';
+import { CreateMessageDto } from './dto/create.message.dto';
 
-@WebSocketGateway({
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST'],
-  },
-})
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+@WebSocketGateway({ cors: true })
+export class ChatGateway {
   @WebSocketServer()
   server: Server;
 
   constructor(private readonly chatService: ChatService) {}
 
-  private connectedUsers = new Map<string, string>();
-
-  async handleConnection(client: Socket) {
-    const userId = client.handshake.query.userId as string;
-    if (userId) {
-      this.connectedUsers.set(client.id, userId);
-      console.log(`User connected: ${userId}`);
-    } else {
-      client.disconnect();
-    }
-  }
-
-  async handleDisconnect(client: Socket) {
-    const userId = this.connectedUsers.get(client.id);
-    if (userId) {
-      this.connectedUsers.delete(client.id);
-      console.log(`User disconnected: ${userId}`);
-    }
-  }
-
-  // Manejar mensajes en la sala general
-  @SubscribeMessage('sendGeneralMessage')
-  async handleGeneralMessage(
-    client: Socket,
-    payload: { senderId: string; message: string },
+  // Método para unirse a una sala
+  @SubscribeMessage('joinRoom')
+  async joinRoom(
+    @MessageBody() data: { userId1: string; userId2: string },
+    @ConnectedSocket() client: Socket,
   ) {
-    const roomName = 'general';
-    const savedMessage = await this.chatService.saveMessage(
-      payload.senderId,
-      payload.message,
-      roomName,
+    // Creamos o recuperamos la sala
+    const room = await this.chatService.createRoomForUsers(
+      data.userId1,
+      data.userId2,
     );
 
-    this.server.to(roomName).emit('receiveGeneralMessage', savedMessage);
+    // El usuario se une a la sala
+    client.join(room.id); // el user usa el roomId q tiene q ser un uuid para unir al usuario
+
+    // emit --> Emitimos que el user se ha unido a la sala, no olvidar incluir el el roomId
+    client.emit('joinedRoom', {
+      roomId: room.id,
+      roomName: room.name,
+    });
+
+    console.log(`Usuario ${data.userId1} se ha unido a la sala ${room.name}`);
   }
 
-  // Unirse a una sala privada
-  @SubscribeMessage('joinPrivateChat')
-  async joinPrivateChat(
-    client: Socket,
-    payload: { userId: string; recipientId: string },
-  ) {
-    const roomName = this.getRoomName(payload.userId, payload.recipientId);
-    client.join(roomName);
-    console.log(
-      `${payload.userId} joined private chat with ${payload.recipientId}`,
-    );
-  }
-
-  // Manejar mensajes en un chat privado
-  @SubscribeMessage('sendPrivateMessage')
-  async handlePrivateMessage(
-    client: Socket,
-    payload: { senderId: string; recipientId: string; message: string },
-  ) {
-    const roomName = this.getRoomName(payload.senderId, payload.recipientId);
-    const savedMessage = await this.chatService.saveMessage(
-      payload.senderId,
-      payload.message,
-      roomName,
-    );
-
-    this.server.to(roomName).emit('receivePrivateMessage', savedMessage);
-  }
-
-  // Generar un nombre único para la sala privada
-  private getRoomName(userId: string, recipientId: string): string {
-    return [userId, recipientId].sort().join('_'); // Nombre consistente para la sala
+  @SubscribeMessage('sendMessage')
+  async sendMessage(@MessageBody() data: CreateMessageDto) {
+    console.log('GATE WAY SEND MESSAGE', data);
+    const message = await this.chatService.saveMessage(data); // Guardamos el mensaje
+    this.server.to(message.room.id).emit('receiveMessage', message); //con esto mandamos el mensjae a todos los de la sala
+    return message;
   }
 }
