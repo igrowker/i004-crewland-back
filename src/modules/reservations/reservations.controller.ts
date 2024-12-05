@@ -47,7 +47,7 @@ export class ReservationsController {
     return this.reservationsService.create(createReservationDto);
   }
 
-  @Get()
+  @Get('/all')
   @ApiOperation({ summary: 'Get all reservations' })
   @ApiResponse({
     status: 200,
@@ -57,21 +57,21 @@ export class ReservationsController {
     return this.reservationsService.findAll();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a specific reservation by ID' })
-  @ApiParam({
-    name: 'id',
-    description: 'ID of the reservation to retrieve',
-    type: 'string',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns the reservation data.',
-  })
-  @ApiResponse({ status: 404, description: 'Reservation not found.' })
-  findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(id);
-  }
+  // @Get(':id')
+  // @ApiOperation({ summary: 'Get a specific reservation by ID' })
+  // @ApiParam({
+  //   name: 'id',
+  //   description: 'ID of the reservation to retrieve',
+  //   type: 'string',
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Returns the reservation data.',
+  // })
+  // @ApiResponse({ status: 404, description: 'Reservation not found.' })
+  // findOne(@Param('id') id: string) {
+  //   return this.reservationsService.findOne(id);
+  // }
 
   @Post(':id/add-user')
   @ApiOperation({ summary: 'Add a new user to the reservation.' })
@@ -140,29 +140,6 @@ export class ReservationsController {
       addUsersDto,
     );
   }
-
-  // @Patch(':id')
-  // @ApiOperation({ summary: 'Update a reservation by ID' })
-  // @ApiParam({
-  //   name: 'id',
-  //   description: 'ID of the reservation to update',
-  //   type: 'string',
-  // })
-  // @ApiBody({
-  //   description: 'Data to update the reservation',
-  //   type: UpdateReservationDto,
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Reservation updated successfully.',
-  // })
-  // @ApiResponse({ status: 404, description: 'Reservation not found.' })
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateReservationDto: UpdateReservationDto,
-  // ) {
-  //   return await this.reservationsService.update(id, updateReservationDto)
-  // }
 
   @Patch(':id/type')
   @ApiOperation({ summary: 'Update a reservation type by ID' })

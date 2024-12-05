@@ -71,6 +71,9 @@ export class AuthService {
           travelHistory: user.travelHistory,
           favorites: user.favorites,
           image: user.image,
+          description: user.description,
+          location: user.location,
+          crews: user.crews,
         },
         token,
       };
