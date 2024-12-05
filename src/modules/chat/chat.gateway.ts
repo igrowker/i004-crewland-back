@@ -29,8 +29,8 @@ export class ChatGateway {
     try {
       // Creamos o recuperamos la sala utilizando nombres
       const room = await this.chatService.createRoomForUsers(
-        data.username1,
-        data.username2,
+        data.userId1,
+        data.userId2,
       );
 
       // El usuario se une a la sala
@@ -43,7 +43,7 @@ export class ChatGateway {
       });
 
       this.logger.log(
-        `Usuario ${data.username1} se ha unido a la sala ${room.name} con ${data.username2}`,
+        `Usuario ${data.userId1} se ha unido a la sala ${room.name} con ${data.userId2}`,
       );
     } catch (error) {
       this.logger.error(`Error al unirse a la sala: ${error.message}`);
