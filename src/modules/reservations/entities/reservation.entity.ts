@@ -1,5 +1,11 @@
 import { Type } from 'src/shared/utils/enum';
-import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  UpdateDateColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity('reservations')
 export class Reservations {
@@ -20,13 +26,13 @@ export class Reservations {
     enum: Type,
     default: Type.Crew,
   })
-  type: Type
+  type: Type;
 
   // estado de la reserva: solamente active/inactive
   @Column({
     type: 'enum',
     enum: ['active', 'inactive'],
-    default: 'active'
+    default: 'active',
   })
   status: 'active' | 'inactive';
 
@@ -35,7 +41,7 @@ export class Reservations {
     type: 'timestamp',
     name: 'created_at',
   })
-  createdAt: Date
+  createdAt: Date;
 
   // timestamp para ver la ultima vez que esa crew ha recibido cambios
   @UpdateDateColumn({
@@ -43,5 +49,5 @@ export class Reservations {
     name: 'last_edited',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  lastEdited: Date
+  lastEdited: Date;
 }
