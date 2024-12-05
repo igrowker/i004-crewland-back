@@ -57,6 +57,13 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
+  @Get('/for-publications')
+  @Roles(Role.User)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  async getAllUsersForPublications() {
+    return this.usersService.getAllUsersForPublications();
+  }
+
   @ApiBearerAuth()
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RoleGuard, UserOwnershipGuard)
@@ -184,8 +191,8 @@ export class UsersController {
   }
 
   @Get()
-  // @Roles(Role.Admin)
-  // @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiBearerAuth()
   @ApiOperation({
     summary: 'Obtener todos los usuarios (Solo Admin)',

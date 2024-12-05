@@ -162,6 +162,22 @@ export class UsersService {
     }
   }
 
+  async getAllUsersForPublications(): Promise<User[]> {
+    try {
+      return await this.userRepository.find({
+        select: ['name', 'image'],
+      });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Error al obtener los usuarios',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async softDeleteUser(id: string): Promise<User> {
     try {
       const user = await this.userRepository.findOne({ where: { id } });
