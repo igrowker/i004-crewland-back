@@ -1,59 +1,3 @@
-// import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-// import { Role, Gender } from 'src/shared/utils/enum';
-// import { Message } from 'src/modules/chat/entities/chat.entity';
-
-// @Entity('users')
-// export class User {
-//   @PrimaryGeneratedColumn('uuid')
-//   id: string;
-
-//   @Column({ type: 'varchar', nullable: false })
-//   password: string;
-
-//   @Column({ type: 'varchar', nullable: false })
-//   name: string;
-
-//   @Column({ type: 'varchar', unique: true, nullable: false })
-//   username: string;
-
-//   @Column({ type: 'varchar', unique: true, nullable: false })
-//   email: string;
-
-//   @Column({ type: 'varchar', nullable: false })
-//   age: string;
-
-//   @Column({ type: 'varchar', unique: true, nullable: false })
-//   tel: string;
-
-//   @Column({
-//     type: 'enum',
-//     enum: Gender,
-//   })
-//   gender: string;
-
-//   @Column({
-//     type: 'enum',
-//     enum: Role,
-//     default: Role.User,
-//   })
-//   role: string;
-
-//   @Column({ type: 'simple-array', nullable: true })
-//   preferences: string[];
-
-//   @Column({ type: 'simple-array', nullable: true })
-//   travelHistory: string[];
-
-//   @Column({ type: 'simple-array', nullable: true })
-//   favorites: string[];
-
-//   @ManyToMany(() => Message, (chat) => chat.senderId)
-//   chats: Message[];
-// }
-
-// agregar imagen con cloudinary
-// descripcion
-// location ( string)
 import {
   Column,
   Entity,
@@ -117,6 +61,29 @@ export class User {
 
   @Column({ default: false })
   isDeleted: boolean;
+
+  // Nuevo campo: descripción
+  @Column({ type: 'varchar', nullable: true, default: '' })
+  description?: string;
+
+  // Nuevo campo: ubicación
+  @Column({ type: 'varchar', nullable: true, default: 'Sin definir' })
+  location?: string;
+
+  // Nuevo campo: crews
+  @Column({
+    type: 'jsonb', // Utilizamos JSONB para almacenar arrays de objetos en PostgreSQL
+    nullable: true,
+    default: () =>
+      '\'[{"type": "Otro", "title": "sin definir", "peopleAmount": 1, "companions": [], "detail": "sin descripcion"}]\'', // JSON serializado como valor por defecto
+  })
+  crews: {
+    type: string; // crew, Alojamiento, Transporte, Compañero, Otro
+    title: string;
+    peopleAmount: number;
+    companions: string[]; // UUIDs de otros usuarios
+    detail: string;
+  }[];
 
   @ManyToMany(() => Message, (chat) => chat.senderId)
   chats: Message[];

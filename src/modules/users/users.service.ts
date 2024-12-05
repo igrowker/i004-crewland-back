@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -111,7 +112,6 @@ export class UsersService {
         user.image = dotEnvOptions.DEFAULT_IMG_USER_CLOUDINARY;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { image: _, ...updateData } = updateUserDto;
 
       const updatedUser = this.userRepository.merge(user, updateData);

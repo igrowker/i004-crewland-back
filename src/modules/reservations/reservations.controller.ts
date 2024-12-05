@@ -30,7 +30,7 @@ import { ReservationUpdateTypeDto } from './dto/reservation.update-type.dto';
 @Controller('reservations')
 @UseGuards(JwtAuthGuard)
 export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) { }
+  constructor(private readonly reservationsService: ReservationsService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new reservation' })
@@ -47,7 +47,7 @@ export class ReservationsController {
     return this.reservationsService.create(createReservationDto);
   }
 
-  @Get()
+  @Get('/all')
   @ApiOperation({ summary: 'Get all reservations' })
   @ApiResponse({
     status: 200,
@@ -57,28 +57,27 @@ export class ReservationsController {
     return this.reservationsService.findAll();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a specific reservation by ID' })
-  @ApiParam({
-    name: 'id',
-    description: 'ID of the reservation to retrieve',
-    type: 'string',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Returns the reservation data.',
-  })
-  @ApiResponse({ status: 404, description: 'Reservation not found.' })
-  findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(id);
-  }
+  // @Get(':id')
+  // @ApiOperation({ summary: 'Get a specific reservation by ID' })
+  // @ApiParam({
+  //   name: 'id',
+  //   description: 'ID of the reservation to retrieve',
+  //   type: 'string',
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Returns the reservation data.',
+  // })
+  // @ApiResponse({ status: 404, description: 'Reservation not found.' })
+  // findOne(@Param('id') id: string) {
+  //   return this.reservationsService.findOne(id);
+  // }
 
   @Post(':id/add-user')
   @ApiOperation({ summary: 'Add a new user to the reservation.' })
   @ApiParam({
     name: 'id',
     description: 'ID of the reservation.',
-
   })
   @ApiBody({
     description: 'Add a new user to the reservation.',
@@ -86,32 +85,32 @@ export class ReservationsController {
   })
   @ApiResponse({
     status: 200,
-    description: 'User added succesfully.'
+    description: 'User added succesfully.',
   })
   @ApiResponse({
     status: 404,
-    description: 'Reservation not found.'
+    description: 'Reservation not found.',
   })
   @ApiResponse({
     status: 400,
-    description: 'User already belongs to the reservation.'
+    description: 'User already belongs to the reservation.',
   })
   async addUserToReservation(
     @Param('id') id: string,
-    @Body() addUserDto: ReservationAddUserDto
+    @Body() addUserDto: ReservationAddUserDto,
   ) {
-    return await this.reservationsService.addUserToReservation(id, addUserDto)
+    return await this.reservationsService.addUserToReservation(id, addUserDto);
   }
 
   @Post(':id/add-users')
   @ApiOperation({ summary: 'Add an array of new users to the reservation.' })
   @ApiParam({
     name: 'id',
-    description: 'ID of the reservation.'
+    description: 'ID of the reservation.',
   })
   @ApiBody({
     description: 'Add new users to the reservation.',
-    type: ReservationAddUsersDto
+    type: ReservationAddUsersDto,
   })
   @ApiResponse({
     status: 200,
@@ -121,8 +120,8 @@ export class ReservationsController {
         message: 'Users added succesfully.',
         addedUsers: ['123e4567-e89b-12d3-a456-426614174000'],
         existingUsers: ['456e7890-a12b-34c5-a678-987654321000'],
-      }
-    }
+      },
+    },
   })
   @ApiResponse({
     status: 404,
@@ -134,33 +133,13 @@ export class ReservationsController {
   })
   async addUsersToReservation(
     @Param('id') id: string,
-    @Body() addUsersDto: ReservationAddUsersDto
+    @Body() addUsersDto: ReservationAddUsersDto,
   ) {
-    return await this.reservationsService.addUsersToReservation(id, addUsersDto)
+    return await this.reservationsService.addUsersToReservation(
+      id,
+      addUsersDto,
+    );
   }
-
-  // @Patch(':id')
-  // @ApiOperation({ summary: 'Update a reservation by ID' })
-  // @ApiParam({
-  //   name: 'id',
-  //   description: 'ID of the reservation to update',
-  //   type: 'string',
-  // })
-  // @ApiBody({
-  //   description: 'Data to update the reservation',
-  //   type: UpdateReservationDto,
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Reservation updated successfully.',
-  // })
-  // @ApiResponse({ status: 404, description: 'Reservation not found.' })
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateReservationDto: UpdateReservationDto,
-  // ) {
-  //   return await this.reservationsService.update(id, updateReservationDto)
-  // }
 
   @Patch(':id/type')
   @ApiOperation({ summary: 'Update a reservation type by ID' })
@@ -180,7 +159,7 @@ export class ReservationsController {
   })
   @ApiResponse({
     status: 404,
-    description: 'Reservation not found.'
+    description: 'Reservation not found.',
   })
   async updateReservationType(
     @Param('id') id: string,
@@ -199,21 +178,24 @@ export class ReservationsController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Removed user from the reservation.'
+    description: 'Removed user from the reservation.',
   })
   @ApiResponse({
     status: 404,
-    description: 'Reservation not found.'
+    description: 'Reservation not found.',
   })
   @ApiResponse({
     status: 400,
-    description: 'User does not belong to the reservation.'
+    description: 'User does not belong to the reservation.',
   })
   async removeUserFromReservation(
     @Param('id') id: string,
-    @Body() removeUserDto: ReservationRemoveUserDto
+    @Body() removeUserDto: ReservationRemoveUserDto,
   ) {
-    return await this.reservationsService.removeUserFromReservation(id, removeUserDto)
+    return await this.reservationsService.removeUserFromReservation(
+      id,
+      removeUserDto,
+    );
   }
 
   @Delete(':id')
@@ -231,5 +213,4 @@ export class ReservationsController {
   remove(@Param('id') id: string) {
     return this.reservationsService.remove(id);
   }
-
 }

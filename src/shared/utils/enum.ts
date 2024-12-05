@@ -14,6 +14,7 @@ export enum Type {
   Crew = 'crew',
   Transport = 'transport',
   Accommodation = 'accommodation',
+  Other = 'Otro',
 }
 
 export enum ImgExtension {

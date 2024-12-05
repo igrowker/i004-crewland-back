@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Type } from 'src/shared/utils/enum';
 import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 
@@ -9,6 +10,9 @@ export class Reservations {
   // array de usuarios que conforman la reservation/crew
   @Column('simple-array', { nullable: true })
   userIds: string[];
+
+  @Column()
+  peopleAmount : number
 
   // id del post al que se referencia la reservation
   @Column('uuid')
