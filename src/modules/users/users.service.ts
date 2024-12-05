@@ -165,7 +165,7 @@ export class UsersService {
   async getAllUsersForPublications(): Promise<User[]> {
     try {
       return await this.userRepository.find({
-        select: ['name', 'image'],
+        select: ['id', 'name', 'image'],
       });
     } catch (error) {
       if (error instanceof HttpException) {
