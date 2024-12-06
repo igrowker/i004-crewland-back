@@ -3,6 +3,7 @@ import {
   IsArray,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsUUID,
 } from 'class-validator';
@@ -38,4 +39,12 @@ export class CreateReservationDto {
   })
   @IsOptional()
   userIds?: string[];
+
+  @ApiProperty({
+    description: 'Number of people in the reservation',
+    type: 'number',
+  })
+  @IsNotEmpty({ message: 'People amount is a required field' })
+  @IsNumber({}, { message: 'People amount must be a number' })
+  peopleAmount: number;
 }

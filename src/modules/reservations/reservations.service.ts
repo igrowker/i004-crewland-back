@@ -26,7 +26,7 @@ export class ReservationsService {
     createReservationDto: CreateReservationDto,
   ): Promise<Reservations> {
     try {
-      const { type, postId, userIds = [] } = createReservationDto;
+      const { type, postId, userIds = [], peopleAmount } = createReservationDto;
 
       const existingReservation = await this.reservationsRepository.findOne({
         where: { postId },
@@ -41,12 +41,14 @@ export class ReservationsService {
         type,
         postId,
         userIds,
+        peopleAmount,
       });
 
       return await this.reservationsRepository.save(reservation);
     } catch (error) {
+      console.error('Error detallado:', error);
       throw new BadRequestException(
-        'Se han enviado datos inválidos mientras se creaba la reserva.',
+        `Se han enviado datos inválidos mientras se creaba la reserva: ${error.message}`,
       );
     }
   }
@@ -73,11 +75,10 @@ export class ReservationsService {
 
   async findAll() {
     try {
-      return await this.reservationsRepository.find({
-        relations: ['users'],
-      });
+      return await this.reservationsRepository.find();
     } catch (error) {
-      throw new Error(`Error fetching reservations`);
+      console.error('Error fetching reservations:', error);
+      throw new InternalServerErrorException('Error al obtener las reservas');
     }
   }
 
