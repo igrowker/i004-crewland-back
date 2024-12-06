@@ -57,21 +57,21 @@ export class ReservationsController {
     return this.reservationsService.findAll();
   }
 
-  // @Get(':id')
-  // @ApiOperation({ summary: 'Get a specific reservation by ID' })
-  // @ApiParam({
-  //   name: 'id',
-  //   description: 'ID of the reservation to retrieve',
-  //   type: 'string',
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Returns the reservation data.',
-  // })
-  // @ApiResponse({ status: 404, description: 'Reservation not found.' })
-  // findOne(@Param('id') id: string) {
-  //   return this.reservationsService.findOne(id);
-  // }
+  @Get(':id')
+  @ApiOperation({ summary: 'Get a specific reservation by ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID of the reservation to retrieve',
+    type: 'string',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns the reservation data.',
+  })
+  @ApiResponse({ status: 404, description: 'Reservation not found.' })
+  findOne(@Param('id') id: string) {
+    return this.reservationsService.findOne(id);
+  }
 
   @Post(':id/add-user')
   @ApiOperation({ summary: 'Add a new user to the reservation.' })
