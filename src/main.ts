@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = app.get(WinstonLoggerService);
 
-  // app.enableCors();
+  app.enableCors();
   app.use(logger.use.bind(logger));
   app.use(bodyParser.json());
   app.use(new ErrorHandlingCloudinary().use);
