@@ -14,43 +14,53 @@ import { ReservationAddUserDto } from './dto/reservation.add-user.dto';
 import { ReservationAddUsersDto } from './dto/reservation.add-more-users.dto';
 import { ReservationRemoveUserDto } from './dto/reservation.remove-user.dto';
 import { ReservationUpdateTypeDto } from './dto/reservation.update-type.dto';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class ReservationsService {
   constructor(
     @InjectRepository(Reservations)
     private readonly reservationsRepository: Repository<Reservations>,
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(
+  async createReservation(
     createReservationDto: CreateReservationDto,
   ): Promise<Reservations> {
-    try {
-      const { type, postId, userIds = [], peopleAmount } = createReservationDto;
+    const { type, postId, peopleAmount, userIds } = createReservationDto;
 
-      const existingReservation = await this.reservationsRepository.findOne({
-        where: { postId },
-      });
-      if (existingReservation) {
-        throw new BadRequestException(
-          'Una reserva ya esta asociada a este post',
-        );
-      }
+    // Busca a los usuarios por sus IDs
+    const users = await this.usersRepository.findByIds(userIds);
 
-      const reservation = this.reservationsRepository.create({
-        type,
-        postId,
-        userIds,
-        peopleAmount,
-      });
-
-      return await this.reservationsRepository.save(reservation);
-    } catch (error) {
-      console.error('Error detallado:', error);
-      throw new BadRequestException(
-        `Se han enviado datos inválidos mientras se creaba la reserva: ${error.message}`,
+    if (!users.length) {
+      throw new NotFoundException(
+        'No se encontraron usuarios con los IDs proporcionados.',
       );
     }
+
+    // Crea la reserva y la asocia a los usuarios
+    const reservation = this.reservationsRepository.create({
+      type,
+      postId,
+      peopleAmount,
+      users,
+    });
+
+    return this.reservationsRepository.save(reservation);
+  }
+
+  async findAllReservationsByUser(userId: string): Promise<Reservations[]> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['reservations'],
+    });
+
+    if (!user) {
+      throw new NotFoundException(`No se encontró el usuario con ID ${userId}`);
+    }
+
+    return user.reservations;
   }
 
   async findOne(reservationId: string): Promise<Reservations> {
@@ -242,3 +252,5 @@ export class ReservationsService {
     }
   }
 }
+
+// id de usuario llega por o params.
