@@ -6,7 +6,10 @@ import {
   Column,
   UpdateDateColumn,
   CreateDateColumn,
+  JoinTable,
+  ManyToMany,
 } from 'typeorm';
+import { User } from 'src/modules/users/entities/user.entity';
 
 @Entity('reservations')
 export class Reservations {
@@ -18,7 +21,7 @@ export class Reservations {
   userIds: string[];
 
   @Column()
-  peopleAmount : number
+  peopleAmount: number;
 
   // id del post al que se referencia la reservation
   @Column('uuid')
@@ -40,6 +43,14 @@ export class Reservations {
   })
   status: 'active' | 'inactive';
 
+  @ManyToMany(() => User, (user) => user.reservations, { cascade: true })
+  @JoinTable({
+    name: 'reservation_users', // Nombre de la tabla intermedia
+    joinColumn: { name: 'reservation_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
+  })
+  users: User[];
+
   // timestamp de cuando ha sido creada
   @CreateDateColumn({
     type: 'timestamp',
@@ -55,3 +66,4 @@ export class Reservations {
   })
   lastEdited: Date;
 }
+

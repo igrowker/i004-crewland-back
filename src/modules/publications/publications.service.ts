@@ -18,7 +18,6 @@ export class PublicationsService {
   async create(
     festivalId: string,
     createPublicationDto: CreatePublicationDto,
-    // userId: string,
   ): Promise<Publication> {
     try {
       const festival = await this.festivalService.findOneFestival(festivalId);
@@ -35,7 +34,6 @@ export class PublicationsService {
 
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,
-        // userId,
         festivalId,
         creationDate,
         creationTime,
