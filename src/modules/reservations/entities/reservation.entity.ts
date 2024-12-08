@@ -18,7 +18,7 @@ export class Reservations {
   userIds: string[];
 
   @Column()
-  peopleAmount : number
+  peopleAmount: number;
 
   // id del post al que se referencia la reservation
   @Column('uuid')
