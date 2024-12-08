@@ -9,6 +9,8 @@ import { FestivalsModule } from '../festivals/festivals.module';
 import { GeneralEntityValidationGuard } from 'src/shared/guards/user-validator/general-validator.guard';
 import { FestivalsService } from '../festivals/festivals.service';
 import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
+import { UsersModule } from '../users/users.module';
+import { UsersService } from '../users/users.service';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
     ConfigModule,
     FestivalsModule,
     CloudinaryModule,
+    UsersModule
   ],
 
   controllers: [PublicationsController],
@@ -27,6 +30,7 @@ import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
     PublicationsService,
     FestivalsService,
     GeneralEntityValidationGuard,
+    UsersService
   ],
 })
-export class PublicationsModule {}
+export class PublicationsModule { }
