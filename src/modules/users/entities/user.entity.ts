@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Column,
   Entity,
+  JoinColumn,
+  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -93,7 +96,9 @@ export class User {
   @OneToMany(() => Publication, (publication) => publication.user)
   publications: Publication[];
 
-  @ManyToMany(() => Room, (room) => room.users)
+  @ManyToMany(() => Room, (room) => room.users, { eager: true })
+  @JoinTable()
+  // @JoinColumn({ name: 'roomId' })
   rooms: Room[];
 
   toJSON() {

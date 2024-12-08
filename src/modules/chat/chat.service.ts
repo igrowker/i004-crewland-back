@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
@@ -23,10 +24,12 @@ export class ChatService {
 
   // Método para obtener todas las salas asociadas a un usuario
   async getRoomsByUser(userId: string): Promise<Room[]> {
+    
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['rooms'], // Cargar las salas relacionadas con el usuario
     });
+
 
     if (!user) {
       this.logger.warn(`Usuario con id ${userId} no encontrado`);
@@ -43,15 +46,27 @@ export class ChatService {
       throw new Error('Ambos usuarios son requeridos para crear una sala');
     }
 
-    const roomName = `room_${userId1}_${userId2}`;
-    this.logger.log(`Intentando crear o recuperar la sala: ${roomName}`);
+    const user1 = await this.userRepository.findOne({ where: { id: userId1 } });
+    const user2 = await this.userRepository.findOne({ where: { id: userId2 } });
 
-    let room = await this.roomRepository.findOne({ where: { name: roomName } });
+    if (!user1 || !user2) {
+      throw new Error('Uno o ambos usuarios no existen');
+    }
+    // const roomName = `room_${userId1}_${userId2}`;
+    // this.logger.log(`Intentando crear o recuperar la sala: ${roomName}`);
+
+    const sortedIds = [userId1, userId2].sort(); // Ordenar los IDs alfabéticamente para evitar salas duplicadas cuando el user id 1 intecambia lugar con el user id 2
+    const roomName = `room_${sortedIds[0]}_${sortedIds[1]}`;
+
+    let room = await this.roomRepository.findOne({ where: { name: roomName }, relations: ['users'] });
+
+    console.log(room);
 
     if (!room) {
       room = this.roomRepository.create({
         id: uuidv4(),
         name: roomName,
+        users: [user1, user2],
       });
 
       try {

@@ -45,6 +45,9 @@ export class UsersService {
         ...createUserDto,
         password: hashedPassword,
         image: dotEnvOptions.DEFAULT_IMG_USER_CLOUDINARY,
+        // chats: [],
+        // publications: [],
+        // rooms: [],
       });
       return await this.userRepository.save(user);
     } catch (error) {
@@ -163,9 +166,11 @@ export class UsersService {
 
   async getAllUsersForPublications(): Promise<User[]> {
     try {
-      return await this.userRepository.find({
+      const users = await this.userRepository.find({
         select: ['id', 'name', 'image'],
       });
+
+      return users;
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

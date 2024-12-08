@@ -40,6 +40,19 @@ export class ChatGateway {
       client.emit('joinedRoom', {
         roomId: room.id,
         roomName: room.name,
+        usersInfo: room.users.map((user) => ({
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          image: user.image,
+        })), // Solo enviamos datos relevantes de los usuarios
+        messages: room?.messages?.map((message) => ({
+          id: message.id,
+          senderId: message.senderId,
+          content: message.content,
+          createdAt: message.createdAt,
+        })),
       });
 
       this.logger.log(

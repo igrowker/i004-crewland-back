@@ -58,8 +58,8 @@ export class UsersController {
   }
 
   @Get('/for-publications')
-  @Roles(Role.User)
-  @UseGuards(JwtAuthGuard, RoleGuard)
+  // @Roles(Role.User)
+  // @UseGuards(JwtAuthGuard, RoleGuard)
   async getAllUsersForPublications() {
     return this.usersService.getAllUsersForPublications();
   }
