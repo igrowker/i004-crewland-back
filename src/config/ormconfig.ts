@@ -18,7 +18,7 @@ export const dataSourceOptions: DataSourceOptions = {
   username: dotEnvOptions.DB_USERNAME,
   password: dotEnvOptions.DB_PASSWORD,
   database: dotEnvOptions.DB_NAME,
-  dropSchema: true,
+  dropSchema: false,
   // url: dotEnvOptions.DATABASE_URL,
   synchronize: true,
   logging: false,

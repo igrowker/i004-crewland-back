@@ -59,6 +59,7 @@
 - **Logística compleja y soluciones dispersas**: Asistir a festivales no solo implica encontrar compañía, sino también resolver problemas logísticos como transporte y alojamiento. Actualmente, los asistentes deben usar múltiples plataformas para organizar su viaje, lo que genera estrés y dificulta la planificación. Esta falta de una solución centralizada termina alejando a muchos de cumplir el sueño de participar en estos eventos.
 
 ---
+
 <div style="text-align: center;">
   <h2>Solución Propuesta</h2>
 </div>
@@ -67,19 +68,21 @@
 
 - **Gestión centralizada:**: Desarrollar una solución integral que combine opciones para transporte, alojamiento cercano y planificación de eventos. Esto simplificaría la organización, eliminando la necesidad de usar múltiples plataformas y reduciendo el estrés asociado a la logística.
 
-- **Acceso a información relevante**:  Proveer un sistema que recopile y centralice información sobre festivales importantes, incluyendo fechas, ubicaciones y actividades, permitiendo a los usuarios planificar con tiempo y evitar la desorganización.
+- **Acceso a información relevante**: Proveer un sistema que recopile y centralice información sobre festivales importantes, incluyendo fechas, ubicaciones y actividades, permitiendo a los usuarios planificar con tiempo y evitar la desorganización.
+
 ---
+
 <div style="text-align: center;">
   <h2>Configuración del Proyecto (Local)</h2>
 </div>
 
 ### Paso 1: Instalar PostgreSQL y Node.JS
+
 - Descarga e instala PostgreSQL en tu máquina local desde el siguiente enlace:  
   [PostgreSQL Download](https://www.postgresql.org/download/)
 
-- Descarga e instala Node en tu máquina local desde el siguiente enlace:    
+- Descarga e instala Node en tu máquina local desde el siguiente enlace:  
   [NodeJS Download](https://nodejs.org/en) --version 20.3.1
-
 
 ### Paso 2: Instalar Dependencias
 
@@ -88,99 +91,103 @@ $ npm install
 ```
 
 ### Paso 3: Configurar Prisma ORM
+
 ```bash
 # Instalar TypeORM y PostgreSQL
 $ npm install @nestjs/typeorm typeorm pg
 ```
+
 ```bash
 # Dentro de carpeta del proyecto
 $ npm install @prisma/client
 ```
 
 ### Paso 4: Configurar el archivo .env
+
 Crea un archivo .env en la raíz del proyecto para almacenar las credenciales de la base de datos. La configuración debe incluir lo siguiente:
+
 ```bash
 # Variables de Entorno
 
 ## Configuración General
 
-- PORT:  
-  Puerto en el que se ejecuta la aplicación.  
+- PORT:
+  Puerto en el que se ejecuta la aplicación.
 
-- FRONTEND_URL:  
-  URL del frontend de la aplicación.  
+- FRONTEND_URL:
+  URL del frontend de la aplicación.
 
 ## JWT (Json Web Token)
 
-- JWT_SECRET:  
-  Secreto utilizado para firmar el token JWT. Este valor debe ser único y seguro.  
+- JWT_SECRET:
+  Secreto utilizado para firmar el token JWT. Este valor debe ser único y seguro.
 
-- JWT_TOKEN_EXPIRED:  
+- JWT_TOKEN_EXPIRED:
 
 ## Base de Datos (TypeORM/PostgreSQL)
-- DB_PORT:  
+- DB_PORT:
 
-- DB_HOST:  
-  Dirección del host de la base de datos.  
+- DB_HOST:
+  Dirección del host de la base de datos.
 
-- DB_USERNAME:  
-  Nombre de usuario para la base de datos PostgreSQL.  
+- DB_USERNAME:
+  Nombre de usuario para la base de datos PostgreSQL.
 
-- DB_PASSWORD:  
-  Contraseña del usuario para la base de datos PostgreSQL.  
+- DB_PASSWORD:
+  Contraseña del usuario para la base de datos PostgreSQL.
 
-- DB_NAME:  
-  Nombre de la base de datos a utilizar.  
+- DB_NAME:
+  Nombre de la base de datos a utilizar.
 
-- DB_MIGRATE_DATA:  
-  Determina si se deben ejecutar migraciones automáticamente al iniciar la aplicación.  
+- DB_MIGRATE_DATA:
+  Determina si se deben ejecutar migraciones automáticamente al iniciar la aplicación.
 
 ## Twilio (Para envío de mensajes)
 
-- TWILIO_ACCOUNT_SID:  
-  SID de cuenta de Twilio, utilizado para autenticar solicitudes.  
+- TWILIO_ACCOUNT_SID:
+  SID de cuenta de Twilio, utilizado para autenticar solicitudes.
 
-- TWILIO_AUTH_TOKEN:  
-  Token de autenticación de Twilio.  
+- TWILIO_AUTH_TOKEN:
+  Token de autenticación de Twilio.
 
-- TWILIO_WHATSAPP_NUMBER:  
-  Número de WhatsApp de Twilio para el envío de mensajes.  
+- TWILIO_WHATSAPP_NUMBER:
+  Número de WhatsApp de Twilio para el envío de mensajes.
 
 
 ## SendGrid (Para envío de correos electrónicos)
 
-- SENDGRID_AUTH_TOKEN:  
-  Token de autenticación de SendGrid.  
+- SENDGRID_AUTH_TOKEN:
+  Token de autenticación de SendGrid.
 
-- SENDGRID_API_KEY:  
-  Clave API de SendGrid.  
+- SENDGRID_API_KEY:
+  Clave API de SendGrid.
 
-- SENDGRID_FROM_EMAIL:  
-  Dirección de correo electrónico desde la cual se enviarán los correos.  
+- SENDGRID_FROM_EMAIL:
+  Dirección de correo electrónico desde la cual se enviarán los correos.
 
-- SENDGRID_REPLY_TO:  
-  Dirección de correo electrónico a la que se deben enviar las respuestas.  
+- SENDGRID_REPLY_TO:
+  Dirección de correo electrónico a la que se deben enviar las respuestas.
 
 
 ## Cloudinary (Para manejo de imágenes)
 
-- CLOUDINARY_URL:  
-  URL de autenticación para la conexión con Cloudinary.  
+- CLOUDINARY_URL:
+  URL de autenticación para la conexión con Cloudinary.
 
-- CLOUDINARY_API_KEY:  
-  Clave API de Cloudinary.  
+- CLOUDINARY_API_KEY:
+  Clave API de Cloudinary.
 
-- CLOUDINARY_API_KEY_SECRET:  
-  Secreto de la clave API de Cloudinary.  
+- CLOUDINARY_API_KEY_SECRET:
+  Secreto de la clave API de Cloudinary.
 
-- CLOUDINARY_API_KEY_NAME:  
-  Nombre de la cuenta de Cloudinary.  
+- CLOUDINARY_API_KEY_NAME:
+  Nombre de la cuenta de Cloudinary.
 
-- MAX_SIZE_IMAGE:  
-  Tamaño máximo permitido para las imágenes cargadas.  
+- MAX_SIZE_IMAGE:
+  Tamaño máximo permitido para las imágenes cargadas.
 
-- DEFAULT_IMG_EVENT_CLOUDINARY:  
-  URL de imagen por defecto para los eventos, en caso de no tener una imagen personalizada.  
+- DEFAULT_IMG_EVENT_CLOUDINARY:
+  URL de imagen por defecto para los eventos, en caso de no tener una imagen personalizada.
 ```
 
 ## Paso 5: Compilar y ejecutar proyecto
@@ -197,6 +204,7 @@ $ npm run start:prod
 ```
 
 ## Estructura del Proyecto
+
 ```plaintext
 i004-crewlane-back/
 ├── .github/                    # Configuración y flujos de trabajo de GitHub
@@ -238,9 +246,10 @@ i004-crewlane-back/
 ### Rutas Disponibles para Swagger
 
 **Interfaz Interactiva de Swagger**
-   - **URL**: [http://localhost:3000/docs](http://localhost:3000/docs)
-   - **Descripción**: Esta ruta sirve la interfaz de usuario de Swagger UI, donde puedes ver todos los endpoints documentados, sus métodos, parámetros, y ejemplos de respuesta. Además, puedes realizar peticiones directamente desde esta interfaz para probar los diferentes endpoints de la API.
-   Esta ruta proporciona la especificación completa de la API en formato JSON. Es útil para integraciones automáticas y para generar clientes de API en diferentes lenguajes de programación.
+
+- **URL**: [http://localhost:3000/docs](http://localhost:3000/docs)
+- **Descripción**: Esta ruta sirve la interfaz de usuario de Swagger UI, donde puedes ver todos los endpoints documentados, sus métodos, parámetros, y ejemplos de respuesta. Además, puedes realizar peticiones directamente desde esta interfaz para probar los diferentes endpoints de la API.
+  Esta ruta proporciona la especificación completa de la API en formato JSON. Es útil para integraciones automáticas y para generar clientes de API en diferentes lenguajes de programación.
 
 ### Backend
 
@@ -248,7 +257,6 @@ i004-crewlane-back/
 - **Repositorio**: [https://github.com/igrowker/i003-eventmap-back](https://github.com/igrowker/i003-eventmap-back)
 - **Documentacion**: [Swagger](https://i003-eventmap-back-dev-latest.onrender.com/docs)
 - **Despliegue a produccion**: [https://github.com/igrowker/i003-eventmap-back/actions/workflows/ci-deploy-to-prod.yml/badge.svg](https://github.com/igrowker/i003-eventmap-back/actions/workflows/ci-deploy-to-prod.yml/badge.svg)
-
 
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="https://i.ibb.co/nRDTzg5/Modo-de-aislamiento.png" alt="EventMap">
