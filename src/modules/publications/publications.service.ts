@@ -18,7 +18,6 @@ export class PublicationsService {
   async create(
     festivalId: string,
     createPublicationDto: CreatePublicationDto,
-    // userId: string,
   ): Promise<Publication> {
     try {
       const festival = await this.festivalService.findOneFestival(festivalId);
@@ -35,13 +34,18 @@ export class PublicationsService {
 
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,
-        // userId,
         festivalId,
         creationDate,
         creationTime,
       });
 
-      return await this.publicationRepository.save(newPublication);
+      console.log(newPublication);
+
+      const aux = await this.publicationRepository.save(newPublication);
+
+      console.log(aux);
+
+      return aux;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new Error('Failed to create publication');

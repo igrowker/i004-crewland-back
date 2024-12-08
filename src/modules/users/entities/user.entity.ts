@@ -13,6 +13,7 @@ import { Message } from 'src/modules/chat/entities/message.entity';
 import { Exclude, instanceToPlain } from 'class-transformer';
 import { Publication } from 'src/modules/publications/entities/publication.entity';
 import { Room } from 'src/modules/chat/entities/room.entity';
+import { Reservations } from 'src/modules/reservations/entities/reservation.entity';
 
 @Entity('users')
 export class User {
@@ -92,7 +93,9 @@ export class User {
   @ManyToMany(() => Message, (chat) => chat.senderId)
   chats: Message[];
 
-  // Relación con publicaciones
+  @ManyToMany(() => Reservations, (reservation) => reservation.users)
+  reservations: Reservations[];
+
   @OneToMany(() => Publication, (publication) => publication.user)
   publications: Publication[];
 

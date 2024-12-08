@@ -19,7 +19,6 @@ import {
 } from '@nestjs/swagger';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationAddUserDto } from './dto/reservation.add-user.dto';
 import { ReservationAddUsersDto } from './dto/reservation.add-more-users.dto';
 import { ReservationRemoveUserDto } from './dto/reservation.remove-user.dto';
@@ -44,7 +43,7 @@ export class ReservationsController {
   })
   @ApiResponse({ status: 400, description: 'Bad request.' })
   create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+    return this.reservationsService.createReservation(createReservationDto);
   }
 
   @Get('/all')
@@ -70,7 +69,7 @@ export class ReservationsController {
   })
   @ApiResponse({ status: 404, description: 'Reservation not found.' })
   findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(id);
+    return this.reservationsService.findAllReservationsByUser(id);
   }
 
   @Post(':id/add-user')
