@@ -45,18 +45,18 @@ export class ChatService {
     if (!userId1 || !userId2) {
       throw new Error('Ambos usuarios son requeridos para crear una sala');
     }
-
     const user1 = await this.userRepository.findOne({ where: { id: userId1 } });
     const user2 = await this.userRepository.findOne({ where: { id: userId2 } });
-
     if (!user1 || !user2) {
       throw new Error('Uno o ambos usuarios no existen');
     }
     // const roomName = `room_${userId1}_${userId2}`;
     // this.logger.log(`Intentando crear o recuperar la sala: ${roomName}`);
 
-    const sortedIds = [userId1, userId2].sort(); // Ordenar los IDs alfabéticamente para evitar salas duplicadas cuando el user id 1 intecambia lugar con el user id 2
-    const roomName = `room_${sortedIds[0]}_${sortedIds[1]}`;
+    // const sortedIds = [userId1, userId2].sort(); // Ordenar los IDs alfabéticamente para evitar salas duplicadas cuando el user id 1 intecambia lugar con el user id 2
+    // const roomName = `room_${sortedIds[0]}_${sortedIds[1]}`;
+
+    const roomName = `room_${uuidv4()}`;
 
     let room = await this.roomRepository.findOne({ where: { name: roomName }, relations: ['users'] });
 
