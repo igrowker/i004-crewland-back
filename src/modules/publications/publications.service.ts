@@ -6,6 +6,7 @@ import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { FindPublicationsDto } from './dto/find-publications.dto';
 import { FestivalsService } from '../festivals/festivals.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class PublicationsService {
@@ -13,12 +14,14 @@ export class PublicationsService {
     @InjectRepository(Publication)
     private readonly publicationRepository: Repository<Publication>,
     private readonly festivalService: FestivalsService,
-  ) {}
+    private readonly usersService: UsersService,
+
+  ) { }
 
   async create(
     festivalId: string,
     createPublicationDto: CreatePublicationDto,
-    // userId: string,
+    userId: string,
   ): Promise<Publication> {
     try {
       const festival = await this.festivalService.findOneFestival(festivalId);
@@ -27,15 +30,21 @@ export class PublicationsService {
         throw new NotFoundException(`Festival with ID ${festivalId} not found`);
       }
 
+      const user = await this.usersService.getUserById(userId);
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+
       const now = new Date();
       const creationDate = now.toLocaleDateString('es-ES');
       const creationTime = now
         .toLocaleTimeString('es-ES', { hour12: false })
         .slice(0, 5);
 
+
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,
-        // userId,
+        user,
         festivalId,
         creationDate,
         creationTime,

@@ -101,7 +101,7 @@ export class ChatService {
 
     const messages = await this.messageRepository.find({
       where: { room: { id: roomId } },
-      select: ['id', 'content', 'createdAt', 'senderId'], // Seleccionar solo campos necesarios
+      select: ['id', 'content', 'createdAt', 'senderId'],
       order: { createdAt: 'ASC' },
     });
 

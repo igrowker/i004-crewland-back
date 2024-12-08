@@ -4,7 +4,6 @@ import {
   Column,
   OneToMany,
   ManyToMany,
-  JoinTable,
 } from 'typeorm';
 import { Message } from './message.entity';
 import { User } from 'src/modules/users/entities/user.entity';
@@ -21,6 +20,5 @@ export class Room {
   messages: Message[];
 
   @ManyToMany(() => User, (user) => user.rooms)
-  @JoinTable()
   users: User[];
 }
