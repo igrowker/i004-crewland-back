@@ -5,9 +5,12 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcryptjs';
 import { CloudinaryService } from 'src/shared/cloudinary/cloudinary.service';
+import { SendGridService } from 'src/shared/mail/sendgrid/sendgrid.service';
 import dotEnvOptions from 'src/config/dotenv.config';
+import * as bcrypt from 'bcryptjs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +18,27 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly sendGridService: SendGridService,
   ) {}
+
+  async loadTemplateWithCode(): Promise<string> {
+    const templatePath = path.resolve(
+      __dirname,
+      '../../shared/utils/registerTemplate.html',
+    );
+    console.log('Ruta de la plantilla:', templatePath); // Verifica si la ruta es correcta
+    try {
+      const template = await fs.promises.readFile(templatePath, 'utf8');
+      console.log('Plantilla cargada correctamente');
+      return template;
+    } catch (error) {
+      console.error('Error al cargar la plantilla:', error); // Muestra el error si no se puede cargar la plantilla
+      throw new HttpException(
+        'Error al cargar la plantilla',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     try {
@@ -25,12 +48,14 @@ export class UsersService {
       if (existingEmail) {
         throw new HttpException('Email en uso', HttpStatus.CONFLICT);
       }
+
       const existingUser = await this.userRepository.findOne({
         where: [{ username: createUserDto.username }],
       });
       if (existingUser) {
         throw new HttpException('Usuario en uso', HttpStatus.CONFLICT);
       }
+
       const existingPhone = await this.userRepository.findOne({
         where: [{ tel: createUserDto.tel }],
       });
@@ -40,14 +65,35 @@ export class UsersService {
           HttpStatus.CONFLICT,
         );
       }
+
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
       const user = this.userRepository.create({
         ...createUserDto,
         password: hashedPassword,
         image: dotEnvOptions.DEFAULT_IMG_USER_CLOUDINARY,
       });
-      return await this.userRepository.save(user);
+      const savedUser = await this.userRepository.save(user);
+
+      // Cargar y verificar la plantilla
+      const template = await this.loadTemplateWithCode();
+      console.log('Plantilla cargada:', template);
+
+      // Reemplazar variables dinámicas en la plantilla (si es necesario)
+      const personalizedTemplate = template; // Si tienes placeholders para reemplazar, hazlo aquí
+
+      console.log('Enviando correo con plantilla personalizada...');
+      const subject = '¡Bienvenido a nuestra plataforma!';
+      await this.sendGridService.sendEmail(
+        savedUser.email,
+        subject,
+        'Gracias por registrarte en nuestra plataforma.',
+        personalizedTemplate,
+      );
+      console.log('Correo enviado correctamente');
+
+      return savedUser;
     } catch (error) {
+      console.error('Error al crear el usuario:', error);
       if (error instanceof HttpException) {
         throw error;
       }

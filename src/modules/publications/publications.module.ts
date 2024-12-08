@@ -11,6 +11,7 @@ import { FestivalsService } from '../festivals/festivals.service';
 import { CloudinaryModule } from 'src/shared/cloudinary/cloudinary.module';
 import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
+import { SendgridModule } from 'src/shared/mail/sendgrid/sendgrid.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { UsersService } from '../users/users.service';
     FestivalsModule,
     CloudinaryModule,
     UsersModule,
+    SendgridModule,
   ],
 
   controllers: [PublicationsController],
