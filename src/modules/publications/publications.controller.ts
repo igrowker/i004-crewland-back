@@ -28,7 +28,7 @@ import {
 @ApiBearerAuth()
 @Controller('publications')
 export class PublicationsController {
-  constructor(private readonly publicationsService: PublicationsService) { }
+  constructor(private readonly publicationsService: PublicationsService) {}
 
   @Post(':festivalId') //
   @ApiBearerAuth()
@@ -52,7 +52,7 @@ export class PublicationsController {
     return this.publicationsService.create(
       festivalId,
       createPublicationDto,
-      userId
+      userId,
     );
   }
 

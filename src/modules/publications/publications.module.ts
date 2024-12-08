@@ -22,7 +22,7 @@ import { UsersService } from '../users/users.service';
     ConfigModule,
     FestivalsModule,
     CloudinaryModule,
-    UsersModule
+    UsersModule,
   ],
 
   controllers: [PublicationsController],
@@ -30,7 +30,7 @@ import { UsersService } from '../users/users.service';
     PublicationsService,
     FestivalsService,
     GeneralEntityValidationGuard,
-    UsersService
+    UsersService,
   ],
 })
-export class PublicationsModule { }
+export class PublicationsModule {}
