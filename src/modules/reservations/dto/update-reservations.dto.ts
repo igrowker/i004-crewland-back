@@ -9,7 +9,7 @@
 // } from 'class-validator';
 // import { Type } from 'src/shared/utils/enum';
 
-// export class CreateReservationDto {
+// export class UpdateReservationDto {
 //   @ApiProperty({
 //     description: 'Reserve type (crew/accommodation/transport)',
 //     enum: Type,
@@ -38,7 +38,7 @@
 //     message: 'Each user ID must be a valid UUID.',
 //   })
 //   @IsOptional()
-//   userIds?: string[];
+//   userIds: string[];
 
 //   @ApiProperty({
 //     description: 'Number of people in the reservation',
