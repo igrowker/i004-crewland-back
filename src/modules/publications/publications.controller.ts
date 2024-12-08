@@ -46,13 +46,13 @@ export class PublicationsController {
   async create(
     @Param('festivalId') festivalId: string,
     @Body() createPublicationDto: CreatePublicationDto,
-    // @Request() req,
+    @Request() req,
   ) {
-    // const userId = req.user.id;
+    const userId = req.user.id;
     return this.publicationsService.create(
       festivalId,
       createPublicationDto,
-      // userId,
+      userId,
     );
   }
 
