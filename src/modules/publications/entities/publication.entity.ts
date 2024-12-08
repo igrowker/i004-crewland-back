@@ -27,7 +27,7 @@ export class Publication {
   @Column({ type: 'uuid', nullable: true })
   userId: string;
 
-  @Column({ type: 'uuid', nullable: false })
+  @Column({ type: 'uuid', nullable: true })
   festivalId: string;
 
   @Column({ type: 'varchar', nullable: false })

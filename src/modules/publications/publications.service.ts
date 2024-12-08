@@ -15,8 +15,7 @@ export class PublicationsService {
     private readonly publicationRepository: Repository<Publication>,
     private readonly festivalService: FestivalsService,
     private readonly usersService: UsersService,
-
-  ) { }
+  ) {}
 
   async create(
     festivalId: string,
@@ -40,7 +39,6 @@ export class PublicationsService {
       const creationTime = now
         .toLocaleTimeString('es-ES', { hour12: false })
         .slice(0, 5);
-
 
       const newPublication = this.publicationRepository.create({
         ...createPublicationDto,

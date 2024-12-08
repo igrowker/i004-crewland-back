@@ -6,7 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './config/ormconfig';
 import { FestivalsModule } from './modules/festivals/festivals.module';
-import { ReservationsModule } from './modules/reservations/reservations.module';
+// import { ReservationsModule } from './modules/reservations/reservations.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { PublicationsModule } from './modules/publications/publications.module';
 import { ResponseFormatInterceptor } from './shared/interceptors/response-format.interceptor';
@@ -22,7 +22,7 @@ import dotEnvOptions from './config/dotenv.config';
   imports: [
     AuthModule,
     UsersModule,
-    ReservationsModule,
+    // ReservationsModule,
     ChatModule,
     PublicationsModule,
     FestivalsModule,
