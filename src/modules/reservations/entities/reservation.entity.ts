@@ -66,4 +66,3 @@ export class Reservations {
   })
   lastEdited: Date;
 }
-
