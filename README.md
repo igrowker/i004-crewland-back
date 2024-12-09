@@ -7,22 +7,22 @@
 </div>
 
 <div style="text-align: center; padding: 20px;">
-  <a href="https://www.linkedin.com/in/ulises-rodriguez-desarrolloweb-fullstack/" target="_blank" style="margin: 10px;">
+  <a href="https://www.linkedin.com/in/ulises-rodriguez-desarrolloweb-fullstack/" target="_blank" style="margin: 2px;">
     <img src="https://img.shields.io/badge/Ulises Rodriguez%20-stackedit?style=for-the-badge&logo=rocket&logoColor=%23000000&logoSize=auto&color=%235bca1b" alt="Ulises Rodriguez Badge">
   </a>
-  <a href="https://github.com/octa-quintero" target="_blank" style="margin: 10px;">
+  <a href="https://github.com/octa-quintero" target="_blank" style="margin: 2px;">
     <img src="https://img.shields.io/badge/Octavio Quintero-stackedit?style=for-the-badge&logo=rocket&logoColor=%23000000&logoSize=auto&color=%235bca1b" alt="Octavio Quintero Badge">
   </a>
-  <a href="http://linkedin.com/in/santiagobalbarrey" target="_blank" style="margin: 10px;">
+  <a href="www.linkedin.com/in/agustinbirman" target="_blank" style="margin: 2px;">
     <img src="https://img.shields.io/badge/Agustin Hernan Birman Pereyra%20-stackedit?style=for-the-badge&logo=rocket&logoColor=%23000000&logoSize=auto&color=%235bca1b" alt="Santiago Balbarrey Badge">
   </a>
-    <a href="https://www.linkedin.com/in/ulises-rodriguez-desarrolloweb-fullstack/" target="_blank" style="margin: 10px;">
+    <a href="https://www.linkedin.com/in/eduardo-criado-web-developer/" target="_blank" style="margin: 2px;">
     <img src="https://img.shields.io/badge/Eduardo Sanchez Criado%20-stackedit?style=for-the-badge&logo=rocket&logoColor=%23000000&logoSize=auto&color=%235bca1b" alt="Ulises Rodriguez Badge">
   </a>
-  <a href="http://linkedin.com/in/santiagobalbarrey" target="_blank" style="margin: 10px;">
+  <a href="http://linkedin.com/in/santiagobalbarrey" target="_blank" style="margin: 2px;">
     <img src="https://img.shields.io/badge/Santiago Balbarrey%20-stackedit?style=for-the-badge&logo=rocket&logoColor=%23000000&logoSize=auto&color=%235bca1b" alt="Santiago Balbarrey Badge">
   </a>
-  <a href="https://github.com/octa-quintero" target="_blank" style="margin: 10px;">
+  <a href="https://www.linkedin.com/in/pau-julian-lopez/" target="_blank" style="margin: 2px;">
     <img src="https://img.shields.io/badge/Pau Julian Lopez-stackedit?style=for-the-badge&logo=rocket&logoColor=%23000000&logoSize=auto&color=%235bca1b" alt="Octavio Quintero Badge">
   </a>
 </div>
@@ -32,22 +32,23 @@
 </div>
 
 <div style="text-align: center;">
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/TypeORM-262627?style=for-the-badge&logo=typeorm&logoColor=white" alt="TypeORM"   style="margin: 5px;">
-  <img src="https://img.shields.io/badge/WebSockets-1B76D0?style=for-the-badge&logo=websocket&logoColor=white" alt="WebSockets" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/ChatGateway-00BFAE?style=for-the-badge&logo=chat&logoColor=white" alt="ChatGateway" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens" alt="JWT" style="margin: 5px;">
-<img src="https://img.shields.io/badge/SendGrid-008BB9?style=for-the-badge&logo=sendgrid&logoColor=white" alt="SendGrid" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" alt="Postman" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/TextBelt-FF4500?style=for-the-badge&logo=message&logoColor=white" alt="TextBelt" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black" alt="Prettier" style="margin: 5px;">
-  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions" style="margin: 5px;">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/TypeORM-262627?style=for-the-badge&logo=typeorm&logoColor=white" alt="TypeORM"   style="margin: 1px;">
+  <img src="https://img.shields.io/badge/WebSockets-1B76D0?style=for-the-badge&logo=websocket&logoColor=white" alt="WebSockets" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/ChatGateway-00BFAE?style=for-the-badge&logo=chat&logoColor=white" alt="ChatGateway" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white" alt="Cloudinary" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens" alt="JWT">
+<img src="https://img.shields.io/badge/SendGrid-008BB9?style=for-the-badge&logo=sendgrid&logoColor=white" alt="SendGrid" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white" alt="Postman" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/TextBelt-FF4500?style=for-the-badge&logo=message&logoColor=white" alt="TextBelt" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black" alt="Prettier" style="margin: 1px;">
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions" style="margin: 1px;">
 </div>
 
 <div style="text-align: center;">
@@ -244,12 +245,14 @@ i004-crewlane-back/
 
 ### Backend
 
-- **Despliegue**: [https://i003-eventmap-back-dev-latest.onrender.com](https://i003-eventmap-back-dev-latest.onrender.com)
-- **Repositorio**: [https://github.com/igrowker/i003-eventmap-back](https://github.com/igrowker/i003-eventmap-back)
-- **Documentacion**: [Swagger](https://i003-eventmap-back-dev-latest.onrender.com/docs)
-- **Despliegue a produccion**: [https://github.com/igrowker/i003-eventmap-back/actions/workflows/ci-deploy-to-prod.yml/badge.svg](https://github.com/igrowker/i003-eventmap-back/actions/workflows/ci-deploy-to-prod.yml/badge.svg)
+- **Despliegue**: [http://crewland.crabdance.com/home](http://crewland.crabdance.com/home)
+- **Repositorio**: [https://github.com/igrowker/i004-crewland-back](https://github.com/igrowker/i004-crewland-back)
+- **Documentacion**: [Swagger](https://i004-eventmap-back-dev-latest.onrender.com/docs)
 
+---
 
 <div style="display: flex; justify-content: center; align-items: center;">
   <img src="https://i.ibb.co/nRDTzg5/Modo-de-aislamiento.png" alt="EventMap">
 </div>
+
+---
